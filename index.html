@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -497,6 +498,7 @@
     <button class="btn btn-archive" onclick="showScanArchive()">🔍 Scan Archive</button>
     <button class="btn btn-archive" onclick="document.getElementById('sidebarFileInput').click()">📤 Import Issue</button>
     <input type="file" id="sidebarFileInput" accept=".html,.htm" style="display:none;" onchange="handleIssueUpload(event)">
+    <button class="btn btn-archive" onclick="window.open('help.html','_blank')">❓ Help & Guide</button>
     <button class="btn btn-secondary" onclick="resetAll()">Clear & New Issue</button>
   </div>
 </aside>
@@ -2487,13 +2489,18 @@ STRUCTURE:
 - body: 400 to 500 words. 5 to 6 paragraphs with double newline between. Open with the real situation from the article, build the systems analysis, name what operators get wrong, give a clear strategic read.
 - takeaway: 1 to 2 sentences. The single most actionable conclusion.
 - angle: The Game Angle. 2 to 3 sentences. Flip the obvious reading of this feature. Use an analogy from outside hospitality if it sharpens the point. Show where rational behaviour produces an absurd outcome without naming any psychological bias by its textbook term. Should feel like the smartest, most uncomfortable observation in the room. Make the reader see their own situation differently.
-- source_url: "${story.url}"
+- source_url: the direct URL to the original source article. If the story URL provided is a real article URL use it. If not, find and return the best real URL for this story. This field is REQUIRED — never leave it blank or null.
 
 Return ONLY valid JSON, no markdown:
-{"headline":"...","deck":"...","body":"para 1\\n\\npara 2\\n\\n...","takeaway":"...","angle":"...","source_url":"${story.url}"}`;
+{"headline":"...","deck":"...","body":"para 1\\n\\npara 2\\n\\n...","takeaway":"...","angle":"...","source_url":"${story.url || 'https://'}"}`;
+
+// Fallback: if source_url missing from response, use story.url
 
   const raw = await callClaude(prompt, 'Write the complete Deep Dive. Return JSON only.', 2000, true);
-  return JSON.parse(raw);
+  const result = JSON.parse(raw);
+  // Ensure source_url is always populated
+  if (!result.source_url && story.url) result.source_url = story.url;
+  return result;
 }
 
 function renderWrittenPreview() {
@@ -2694,8 +2701,10 @@ STORY: 3 paragraphs with double newline between:
 - Paragraph 2: Why it matters to the wider industry at this moment
 - Paragraph 3: What other operators can take from their approach
 
+Also return url: the best available reference link — their website, a recent news article, Google Maps listing, or Instagram. A real working URL. REQUIRED.
+
 Return ONLY valid JSON, no markdown:
-{"name":"${c.name}","story":"para 1\\n\\npara 2\\n\\npara 3","location":"${c.location}","category":"${c.category}"}`;
+{"name":"${c.name}","story":"para 1\\n\\npara 2\\n\\npara 3","location":"${c.location}","category":"${c.category}","url":"https://..."}`;
 
   try {
     const raw = await callClaude(prompt, 'Write the complete Community Spotlight. Return JSON only.', 1000, false);
@@ -2894,7 +2903,7 @@ async function runDeepDiveSearch() {
   results.innerHTML = '<div class="ai-finder-status">Finding a real story and writing the full deep dive. This takes 20 to 40 seconds...</div>';
 
   try {
-    const story = { headline: query, source: '', url: '' };
+    const story = { headline: query, source: '', url: query }; // use query as search context so AI finds a real URL
     const r = await writeDeepDive(story);
 
     _staged.deepdive = r;
