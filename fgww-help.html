@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGWW — Help & Operations Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1726; font-family: 'DM Sans', sans-serif; color: #fff; }
+
+  .hero {
+    background: #0f1f38;
+    padding: 48px 40px 36px;
+    border-bottom: 1px solid rgba(244,167,185,0.15);
+  }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #f4a7b9; margin-bottom: 10px; }
+  .hero-title { font-family: 'Playfair Display', Georgia, serif; font-size: 36px; font-weight: 900; line-height: 1.1; margin-bottom: 8px; }
+  .hero-title span { color: #f4a7b9; }
+  .hero-sub { font-size: 13px; color: rgba(255,255,255,0.45); max-width: 480px; line-height: 1.7; }
+
+  .nav {
+    background: #0f1f38;
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(244,167,185,0.12);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav a {
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 14px 18px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav a:hover { color: #f4a7b9; border-bottom-color: rgba(244,167,185,0.4); }
+
+  .content { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  .section { margin-bottom: 56px; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #f4a7b9;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(244,167,185,0.12);
+  }
+
+  .card {
+    background: #0f1f38;
+    border: 1px solid rgba(244,167,185,0.12);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 16px; }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .step:last-child { border-bottom: none; padding-bottom: 0; }
+  .step-num {
+    width: 22px; height: 22px;
+    background: rgba(244,167,185,0.12);
+    color: #f4a7b9;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.7); }
+  .step-body strong { color: #fff; }
+  .step-body .note { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; display: block; }
+  .key {
+    display: inline-block;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-family: monospace;
+    color: #fff;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .tip {
+    background: rgba(244,167,185,0.06);
+    border: 1px solid rgba(244,167,185,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-top: 12px;
+  }
+  .tip strong { color: #f4a7b9; }
+
+  .warning {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-top: 12px;
+  }
+  .warning strong { color: #fbbf24; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(244,167,185,0.12);
+    color: #f4a7b9;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 2px 7px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .flow-step {
+    background: rgba(244,167,185,0.1);
+    border: 1px solid rgba(244,167,185,0.2);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f4a7b9;
+  }
+  .flow-arrow { color: rgba(255,255,255,0.2); font-size: 16px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #f4a7b9; padding: 8px 12px; border-bottom: 1px solid rgba(244,167,185,0.15); }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); vertical-align: top; }
+  td strong { color: #fff; }
+  tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Operations Manual</div>
+  <div class="hero-title">Food Game <span>Weekly Wrap</span></div>
+  <div class="hero-sub">Everything you need to run, update, and maintain the newsletter engine. Reference this before asking for help.</div>
+</div>
+
+<nav class="nav">
+  <a href="#workflow">Weekly Workflow</a>
+  <a href="#github">Updating GitHub</a>
+  <a href="#install">Installing App</a>
+  <a href="#substack">Substack</a>
+  <a href="#archive">Archive & Import</a>
+  <a href="#troubleshoot">Troubleshooting</a>
+  <a href="#files">File Reference</a>
+</nav>
+
+<div class="content">
+
+  <!-- WEEKLY WORKFLOW -->
+  <div class="section" id="workflow">
+    <div class="section-label">How to build an issue</div>
+    <div class="section-title">Weekly Workflow</div>
+
+    <div class="flow">
+      <div class="flow-step">1 Set Date</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">2 Scan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">3 Select Stories</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">4 Write</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">5 Editorial</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">6 Review</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">7 Export</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span> Build This Issue — Full Flow</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Set issue number and date</strong> in the sidebar — top left fields. Date should be the Friday of publication week.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Click ⚡ Build This Issue</strong> — AI scans 22 hospitality and economics sources for the past 7 days. Takes 2–3 minutes. Wait for it to finish.<span class="note">Rate limit: 180 second cooldown between API calls. Don't click twice.</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select stories</strong> from the scan results — pick 4 to 6. Classify each as Industry or Economics. Click Write Selected Stories.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Stories are written</strong> automatically and loaded into the editor tabs — News, Economics, Deep Dive.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Click ✦ Write Editorial & Game Angle</strong> in the sidebar — AI reads the full issue and writes the intro. Review and edit.</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Review each tab</strong> — Intro, News, Economics, Deep Dive, Resources, Spotlight. Edit any section directly in the text fields.</div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Save to Archive</strong> — click Save Issue in the sidebar before exporting.</div></div>
+        <div class="step"><div class="step-num">8</div><div class="step-body"><strong>Export HTML</strong> — click Export HTML → Copy to clipboard → paste into Substack.</div></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">✦</span> AI Buttons</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Write Editorial & Game Angle</strong> — reads whole issue, writes intro. Use after all stories are done.</div></div>
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>✦ Spotlight</strong> — AI finds and writes the operator spotlight. In the Spotlight tab.</div></div>
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>✦ Resources</strong> — AI suggests 3 relevant tools/guides. In the Resources tab.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">⏱</span> Rate Limits</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>180 second cooldown</strong> between API calls — the engine enforces this automatically.</div></div>
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>429 error</strong> = too many requests. Engine will auto-retry after 90 seconds, up to 2 times.</div></div>
+          <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Don't click twice</strong> — if something is running, wait for the progress indicator to finish.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPDATING GITHUB -->
+  <div class="section" id="github">
+    <div class="section-label">Keeping the engine current</div>
+    <div class="section-title">Updating the File on GitHub</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">✏️</span> How to replace index.html (the main engine file)</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Go to <strong>github.com</strong> → click your <strong>fgww</strong> repo</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Click <strong>index.html</strong> in the file list to open it</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Click the <strong>pencil icon ✏️</strong> in the top right of the file view (hover over it — it says "Edit this file")</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Click inside the editor → <strong>Cmd + A</strong> to select all → <strong>Backspace</strong> to delete</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body">Open the new HTML file in TextEdit or any text editor → <strong>Cmd + A</strong> → <strong>Cmd + C</strong> to copy</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body">Switch back to GitHub → <strong>Cmd + V</strong> to paste</div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-body">Scroll down → click <strong>Commit changes</strong> → click <strong>Commit changes</strong> again in the popup</div></div>
+        <div class="step"><div class="step-num">8</div><div class="step-body">Wait 60 seconds → hard refresh the live URL: <strong>Cmd + Shift + R</strong></div></div>
+      </div>
+      <div class="tip"><strong>Tip:</strong> The live URL updates within 60 seconds of committing. The PWA on your devices picks up the update automatically next time you open it.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📁</span> How to upload a new file to the repo</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Go to your <strong>fgww</strong> repo on github.com</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Click <strong>Add file → Upload files</strong></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Drag your file(s) onto the upload area</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Click <strong>Commit changes</strong></div></div>
+      </div>
+      <div class="warning"><strong>Note:</strong> If you're replacing index.html via upload, delete the old one first — click the file → three dots ··· → Delete file → Commit. Then upload and rename the new one.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🔗</span> Your key URLs</div>
+      <table>
+        <tr><th>What</th><th>URL</th></tr>
+        <tr><td><strong>Live app</strong></td><td>https://yourusername.github.io/fgww</td></tr>
+        <tr><td><strong>GitHub repo</strong></td><td>https://github.com/yourusername/fgww</td></tr>
+        <tr><td><strong>GitHub Pages settings</strong></td><td>github.com → fgww repo → Settings → Pages</td></tr>
+      </table>
+      <div class="tip"><strong>Replace "yourusername"</strong> with your actual GitHub username throughout.</div>
+    </div>
+  </div>
+
+  <!-- INSTALLING THE APP -->
+  <div class="section" id="install">
+    <div class="section-label">PWA Installation</div>
+    <div class="section-title">Installing on Your Devices</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">💻</span> MacBook — Chrome</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Open your live URL in <strong>Google Chrome</strong></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Look for <strong>⊕ install icon</strong> in the right side of the address bar — click it<span class="note">If not visible: click ⋮ three-dot menu → "Install Food Game Weekly Wrap"</span></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Click <strong>Install</strong></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Find it in <strong>Launchpad</strong> or <strong>Cmd + Space</strong> search for FGWW → drag to Dock</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">💻</span> MacBook — Safari 17+</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Open your live URL in <strong>Safari</strong></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">In the menu bar: <strong>File → Add to Dock</strong></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Click <strong>Add</strong></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📱</span> iPhone — Safari</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Open your live URL in <strong>Safari</strong></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Tap the <strong>Share button</strong> — box with arrow at bottom of screen</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Scroll down → tap <strong>Add to Home Screen</strong></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Rename to <strong>FGWW</strong> → tap <strong>Add</strong></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📱</span> iPad — Safari</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Open your live URL in <strong>Safari</strong></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Tap the <strong>Share button</strong> — box with arrow at top of screen near address bar</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Tap <strong>Add to Home Screen</strong></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Rename to <strong>FGWW</strong> → tap <strong>Add</strong></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip"><strong>Re-installing after an update:</strong> You don't need to reinstall — the app updates automatically in the background. Just close and reopen it.</div>
+  </div>
+
+  <!-- SUBSTACK -->
+  <div class="section" id="substack">
+    <div class="section-label">Publishing</div>
+    <div class="section-title">Posting to Substack</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📨</span> How to post each issue</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">In FGWW engine — click <strong>Export HTML</strong> → click <strong>Copy to Clipboard</strong></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Go to <strong>substack.com</strong> → click <strong>Create → Article</strong></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">In the Substack editor, click the <strong>⋮ menu</strong> or look for an <strong>HTML / Embed</strong> option to paste raw HTML<span class="note">Substack's editor has a hidden HTML mode — look for &lt;/&gt; icon or use the Edit menu</span></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Paste your HTML → switch back to visual mode to preview</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body">Add a <strong>subject line</strong> and <strong>preview text</strong> before sending</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body">Click <strong>Continue</strong> → choose audience → <strong>Publish & Send</strong> or <strong>Schedule</strong></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚙️</span> Substack Dashboard</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Dashboard:</strong> substack.com/dashboard — your main control panel</div></div>
+        <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Settings:</strong> substack.com/settings — publication name, URL, branding</div></div>
+        <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Subscribers:</strong> Dashboard → Subscribers tab</div></div>
+        <div class="step"><div class="step-num">→</div><div class="step-body"><strong>Your publication URL:</strong> foodgameweeklywrap.substack.com (or your chosen subdomain)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHIVE & IMPORT -->
+  <div class="section" id="archive">
+    <div class="section-label">Data management</div>
+    <div class="section-title">Archive & Import</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">💾</span> Saving an Issue</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Click <strong>Save Issue</strong> in the sidebar</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Issue saves to browser <strong>localStorage</strong> — stays on this device/browser</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Also click <strong>Export HTML → Download</strong> to save a portable backup file</div></div>
+        </div>
+        <div class="warning"><strong>Important:</strong> localStorage is tied to the browser. If you clear browser data, saved issues are lost. Always keep exported HTML files as backups.</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📂</span> Loading a Past Issue</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Click <strong>📁 Issue Archive</strong> in the sidebar</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Click any saved issue to preview it</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Click <strong>Load into Editor</strong> to edit it</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📤</span> Importing from an Exported File</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Click <strong>📤 Import Issue</strong> in the sidebar</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Select an exported <strong>.html</strong> file from your Downloads</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Issue loads into the editor automatically</div></div>
+        </div>
+        <div class="tip"><strong>Note:</strong> Only files exported from this engine can be imported — the file must contain embedded FGWW data.</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🔍</span> Scan Archive</div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Click <strong>🔍 Scan Archive</strong> in the sidebar</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">View past scan results — stories found in previous weeks</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Reuse a past scan instead of running a new one</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="section" id="troubleshoot">
+    <div class="section-label">When things go wrong</div>
+    <div class="section-title">Troubleshooting</div>
+
+    <div class="card">
+      <table>
+        <tr><th>Problem</th><th>Fix</th></tr>
+        <tr>
+          <td><strong>PWA install icon not showing in Chrome</strong></td>
+          <td>Hard refresh: <span class="key">Cmd+Shift+R</span>. Wait 10 seconds on the page. Check Chrome ⋮ menu for install option.</td>
+        </tr>
+        <tr>
+          <td><strong>App not updating after GitHub change</strong></td>
+          <td>Wait 60 seconds after committing. Then hard refresh: <span class="key">Cmd+Shift+R</span>. Or close and reopen the app.</td>
+        </tr>
+        <tr>
+          <td><strong>API call fails / spinning forever</strong></td>
+          <td>Wait for the 180s cooldown. Check your internet connection. If it persists, reload the page — your editor data is saved in localStorage.</td>
+        </tr>
+        <tr>
+          <td><strong>429 error</strong></td>
+          <td>Too many API requests. Engine auto-retries after 90s. Just wait — don't click again.</td>
+        </tr>
+        <tr>
+          <td><strong>Lost my work after reload</strong></td>
+          <td>Click <strong>📁 Issue Archive</strong> — if you saved before reloading it'll be there. Otherwise check Downloads for any exported HTML files and use Import Issue.</td>
+        </tr>
+        <tr>
+          <td><strong>Preview shows raw HTML code</strong></td>
+          <td>Click the <strong>Preview</strong> button in the mode toggle (top right of main area) to switch to rendered view.</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub Pages not updating</strong></td>
+          <td>Go to repo → Settings → Pages — check for a yellow building indicator. Wait for green checkmark, then hard refresh.</td>
+        </tr>
+        <tr>
+          <td><strong>Can't find the app on Mac</strong></td>
+          <td><span class="key">Cmd+Space</span> → type FGWW or Food Game. Or open Launchpad (rocket icon in Dock) and look there.</td>
+        </tr>
+        <tr>
+          <td><strong>Substack not accepting HTML</strong></td>
+          <td>Look for the &lt;/&gt; HTML toggle in Substack's editor toolbar. Some browsers need you to use the Edit menu → HTML Source.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- FILE REFERENCE -->
+  <div class="section" id="files">
+    <div class="section-label">What each file does</div>
+    <div class="section-title">File Reference</div>
+
+    <div class="card">
+      <table>
+        <tr><th>File</th><th>What it is</th><th>Where it lives</th></tr>
+        <tr>
+          <td><strong>index.html</strong></td>
+          <td>The main newsletter engine — the whole app</td>
+          <td>GitHub repo root + your device (installed PWA)</td>
+        </tr>
+        <tr>
+          <td><strong>manifest.json</strong></td>
+          <td>PWA configuration — app name, icon, colours for install</td>
+          <td>GitHub repo root — must stay alongside index.html</td>
+        </tr>
+        <tr>
+          <td><strong>food-game-weekly-wrap-v4-pwa.html</strong></td>
+          <td>Latest engine file from Claude — rename to index.html when uploading</td>
+          <td>Your Downloads folder</td>
+        </tr>
+        <tr>
+          <td><strong>food-game-wrap-[N].html</strong></td>
+          <td>Exported newsletter issues — one per issue. Keep these as backups.</td>
+          <td>Your Downloads folder</td>
+        </tr>
+        <tr>
+          <td><strong>fgww-logo.html</strong></td>
+          <td>Logo preview page — use to export icons for Substack</td>
+          <td>Your Downloads folder</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tip"><strong>Golden rule:</strong> Always keep a copy of the latest engine file in your Downloads as a backup. GitHub is the live version, Downloads is your safety net.</div>
+  </div>
+
+</div>
+</body>
+</html>
