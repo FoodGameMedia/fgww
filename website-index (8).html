@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Game Media — The Rules Have Changed</title>
+<meta name="description" content="Food Game Media. Behavioural, systems-led insight for Australian hospitality. Consulting, newsletter, podcast, and the upcoming book by Julian Blok.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.3s ease;
+}
+.nav.hidden { transform: translateY(-100%); }
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px; cursor: pointer;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; padding: 120px 40px 80px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(244,167,185,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(36,59,107,0.4) 0%, transparent 60%);
+}
+/* Hero background image */
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1600&q=80') center/cover no-repeat;
+  opacity: 0.07;
+}
+.hero-content {
+  position: relative; z-index: 1;
+  max-width: 860px; text-align: center;
+}
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 24px; font-weight: 600;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(44px, 6.5vw, 80px);
+  font-weight: 900; line-height: 1.02;
+  margin-bottom: 12px;
+  opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+}
+.hero h1 span { color: var(--pink); }
+.hero-sub {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  color: var(--pink); font-style: italic;
+  margin-bottom: 32px;
+  opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+}
+.hero-desc {
+  font-size: 17px; color: var(--text-body);
+  max-width: 640px; margin: 0 auto 48px; line-height: 1.8;
+  opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+}
+.hero-actions {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.25s; border: none; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+.scroll-indicator {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  opacity: 0; animation: fadeUp 0.8s 1.2s forwards;
+}
+.scroll-indicator span {
+  display: block; width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--pink), transparent);
+}
+
+/* ═══ SECTIONS ═══ */
+.section { padding: var(--section-gap) 40px; max-width: 1200px; margin: 0 auto; }
+.section-full { padding: var(--section-gap) 0; }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--pink); font-weight: 700; margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900; line-height: 1.1; margin-bottom: 20px;
+}
+.section-title span { color: var(--pink); }
+.section-intro {
+  font-size: 17px; color: var(--text-body);
+  max-width: 680px; line-height: 1.8; margin-bottom: 56px;
+}
+
+/* ═══ IMAGE STRIP ═══ */
+.img-strip {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  height: 280px; overflow: hidden;
+}
+.img-strip-item {
+  background-size: cover; background-position: center;
+  position: relative;
+}
+.img-strip-item::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, var(--navy), transparent 30%, transparent 70%, var(--navy));
+}
+
+/* ═══ ABOUT ═══ */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.about-pull {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; font-style: italic;
+  color: var(--pink); line-height: 1.5;
+  border-left: 3px solid var(--pink);
+  padding-left: 24px; margin: 32px 0;
+}
+.about-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+}
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 900;
+  color: var(--pink); line-height: 1; margin-bottom: 6px;
+}
+.stat-label { font-size: 13px; color: var(--grey); line-height: 1.4; }
+.about-text p {
+  color: var(--text-body); font-size: 16px;
+  margin-bottom: 20px; line-height: 1.8;
+}
+.about-text .hl { color: var(--white); font-weight: 500; }
+.banking-credits {
+  display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0;
+}
+.banking-credit {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 16px;
+  font-size: 12px; font-weight: 600;
+  color: var(--grey); letter-spacing: 0.5px;
+}
+
+/* ═══ PRODUCTS ═══ */
+.products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.product-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 48px 40px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.product-card:hover { border-color: rgba(244,167,185,0.45); transform: translateY(-4px); }
+.product-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--pink-bright));
+  opacity: 0; transition: opacity 0.3s;
+}
+.product-card:hover::before { opacity: 1; }
+.product-icon {
+  width: 48px; height: 48px;
+  background: rgba(244,167,185,0.1);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; font-size: 22px;
+}
+.product-icon-col { margin-bottom: 24px; }
+.icon-einstein-box, .icon-broadsheet-box, .icon-mic-box, .icon-bookcover-box {
+  width: 200px; height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(244,167,185,0.05);
+  border: 1px solid rgba(244,167,185,0.12);
+  border-radius: 16px; overflow: hidden;
+}
+.product-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px; font-weight: 700; margin-bottom: 10px;
+}
+.product-tag {
+  display: inline-block;
+  font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--pink); font-weight: 600; margin-bottom: 16px;
+}
+.product-card p { color: var(--text-body); font-size: 17px; line-height: 1.75; margin-bottom: 18px; }
+.product-link {
+  font-size: 15px; font-weight: 600; color: var(--pink);
+  text-decoration: none; display: inline-flex;
+  align-items: center; gap: 6px; transition: gap 0.2s;
+}
+.product-link:hover { gap: 12px; }
+
+/* ═══ CLIENTS ═══ */
+.clients-section {
+  padding: 80px 40px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.015);
+}
+.clients-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+.clients-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 48px;
+}
+.clients-grid {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; align-items: center;
+  gap: 48px 64px;
+}
+.client-logo {
+  height: 104px; width: auto; max-width: 240px;
+  object-fit: contain;
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+.client-logo:hover { opacity: 1; }
+
+/* ═══ BOOK ═══ */
+.book-section {
+  display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start;
+  max-width: 780px;
+}
+.book-cover {
+  background: linear-gradient(145deg, var(--navy-mid), var(--navy));
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 60px 40px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.book-cover::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 60%; height: 100%;
+  background: linear-gradient(135deg, transparent 49.5%, var(--pink) 49.5%, var(--pink) 50.5%, transparent 50.5%);
+  opacity: 0.08;
+}
+.book-mock {
+  width: 220px; height: 320px;
+  background: linear-gradient(145deg, #1a2f52, #0f1f38);
+  border: 2px solid var(--border);
+  border-radius: 4px 12px 12px 4px;
+  margin: 0 auto;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 30px 24px; position: relative;
+  box-shadow: 8px 4px 24px rgba(0,0,0,0.4);
+}
+.book-mock-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900;
+  line-height: 1.15; text-align: center; margin-bottom: 8px;
+}
+.book-mock-title span { color: var(--pink); }
+.book-mock-sub {
+  font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--grey); text-align: center;
+}
+.book-mock-author {
+  position: absolute; bottom: 24px;
+  font-size: 11px; color: var(--pink);
+  font-weight: 500; letter-spacing: 1px;
+}
+.book-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 900;
+  margin-bottom: 20px; line-height: 1.15;
+}
+.book-content h3 span { color: var(--pink); }
+.book-content p { color: var(--text-body); font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
+.book-themes { display: flex; flex-wrap: wrap; gap: 10px; margin: 32px 0; }
+.book-theme {
+  background: rgba(244,167,185,0.08);
+  border: 1px solid rgba(244,167,185,0.15);
+  border-radius: 20px; padding: 8px 18px;
+  font-size: 12px; color: var(--pink); font-weight: 500;
+}
+
+/* ═══ PODCAST ═══ */
+.podcast-section {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center;
+}
+.podcast-visual {
+  background: linear-gradient(135deg, rgba(244,167,185,0.06), rgba(233,30,140,0.04));
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 48px; text-align: center;
+}
+.podcast-icon-large {
+  width: 96px; height: 96px;
+  background: rgba(244,167,185,0.12);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 40px;
+}
+.coming-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--pink-bright), var(--pink));
+  color: var(--navy); padding: 6px 16px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 24px;
+}
+
+/* ═══ NEWSLETTER CTA ═══ */
+.newsletter-cta {
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 72px 64px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.newsletter-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(244,167,185,0.1), transparent 60%);
+}
+.newsletter-cta > * { position: relative; z-index: 1; }
+.newsletter-cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 900; margin-bottom: 16px;
+}
+.newsletter-cta h2 span { color: var(--pink); }
+.newsletter-cta p {
+  color: var(--text-body); font-size: 16px;
+  max-width: 560px; margin: 0 auto 36px; line-height: 1.7;
+}
+.newsletter-features {
+  display: flex; gap: 40px; justify-content: center;
+  margin-bottom: 36px; flex-wrap: wrap;
+}
+.newsletter-feature {
+  font-size: 13px; color: var(--grey);
+  display: flex; align-items: center; gap: 8px;
+}
+.newsletter-feature::before { content: '\2713'; color: var(--pink); font-weight: 700; }
+
+/* ═══ CONTACT ═══ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.contact-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700; margin-bottom: 20px;
+}
+.contact-info p { color: var(--text-body); font-size: 15px; line-height: 1.7; margin-bottom: 32px; }
+.contact-detail {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+}
+.contact-detail-icon {
+  width: 40px; height: 40px;
+  background: rgba(244,167,185,0.1);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.contact-detail-text { font-size: 14px; color: var(--text-body); }
+.contact-detail-text strong { color: var(--white); display: block; margin-bottom: 2px; }
+.contact-form { display: flex; flex-direction: column; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--grey);
+}
+.form-group input, .form-group textarea, .form-group select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; color: var(--white);
+  transition: border-color 0.2s; outline: none;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--pink); }
+.form-group input:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown) {
+  border-color: var(--red);
+}
+.form-error { color: var(--red); font-size: 12px; margin-top: 4px; display: none; }
+.form-group.has-error input,
+.form-group.has-error textarea { border-color: var(--red); }
+.form-group.has-error .form-error { display: block; }
+.form-group textarea { resize: vertical; min-height: 140px; }
+.form-group select option { background: var(--navy); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* ═══ FOOTER ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 900;
+}
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  font-size: 13px; color: var(--grey);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--pink); }
+.footer-copy {
+  font-size: 12px; color: rgba(255,255,255,0.3);
+  width: 100%; text-align: center; margin-top: 24px;
+}
+
+/* ═══ PAGE TRANSITIONS ═══ */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══ CMS ═══ */
+.cms-toggle {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--pink-bright); color: var(--white);
+  border: none; font-size: 20px; cursor: pointer;
+  z-index: 2000; display: none;
+  box-shadow: 0 4px 20px rgba(233,30,140,0.4);
+}
+.cms-toggle.visible { display: flex; align-items: center; justify-content: center; }
+.cms-panel {
+  position: fixed; top: 0; right: -480px; bottom: 0;
+  width: 460px; background: var(--navy-mid);
+  border-left: 1px solid var(--border);
+  z-index: 2001; transition: right 0.35s ease;
+  overflow-y: auto; padding: 32px;
+}
+.cms-panel.open { right: 0; }
+.cms-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000; display: none;
+}
+.cms-overlay.open { display: block; }
+.cms-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 32px;
+}
+.cms-header h3 { font-family: 'Playfair Display', serif; font-size: 20px; }
+.cms-close { background: none; border: none; color: var(--grey); font-size: 24px; cursor: pointer; }
+.cms-section { margin-bottom: 32px; }
+.cms-section h4 {
+  font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--pink);
+  margin-bottom: 16px; font-weight: 700;
+}
+.cms-field { margin-bottom: 16px; }
+.cms-field label { display: block; font-size: 12px; color: var(--grey); margin-bottom: 6px; font-weight: 500; }
+.cms-field input, .cms-field textarea {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--white); outline: none;
+}
+.cms-field textarea { min-height: 100px; resize: vertical; }
+.cms-field input:focus, .cms-field textarea:focus { border-color: var(--pink); }
+.cms-save {
+  background: var(--pink); color: var(--navy);
+  border: none; padding: 12px 28px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  width: 100%; margin-top: 8px;
+}
+.cms-save:hover { background: var(--pink-bright); color: var(--white); }
+.cms-note { font-size: 11px; color: var(--grey); margin-top: 8px; line-height: 1.5; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .about-grid, .book-section, .podcast-section, .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .products-grid { grid-template-columns: 1fr; }
+  .product-card { grid-template-columns: 1fr; }
+  .product-card .product-icon-col { grid-row: 1; grid-column: 1; margin-bottom: 16px; }
+  .section { padding: 80px 24px; }
+  .hero { padding: 120px 24px 80px; }
+  .newsletter-cta { padding: 48px 28px; }
+  .form-row { grid-template-columns: 1fr; }
+  .clients-grid { gap: 32px 48px; }
+  .img-strip { height: 180px; }
+  .cms-panel { width: 100%; right: -100%; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 36px; }
+  .about-stats { grid-template-columns: 1fr; }
+  .newsletter-features { flex-direction: column; align-items: center; }
+  .img-strip { grid-template-columns: 1fr; height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" onclick="navigateTo('home')">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="#about" onclick="smoothNav('about')">About</a>
+      <a href="#consulting" onclick="smoothNav('consulting')">Services</a>
+      <a href="#book" onclick="smoothNav('book')">The Book</a>
+      <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a>
+      <a href="#newsletter" onclick="smoothNav('newsletter')">Newsletter</a>
+      <a href="#" class="nav-cta" onclick="navigateTo('contact'); return false;">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="smoothNav('about'); closeMobile();">About</a>
+  <a href="#consulting" onclick="smoothNav('consulting'); closeMobile();">Services</a>
+  <a href="#book" onclick="smoothNav('book'); closeMobile();">The Book</a>
+  <a href="#podcast" onclick="smoothNav('podcast'); closeMobile();">Podcast</a>
+  <a href="#newsletter" onclick="smoothNav('newsletter'); closeMobile();">Newsletter</a>
+  <a href="#" onclick="navigateTo('contact'); closeMobile(); return false;">Contact</a>
+</div>
+
+<!-- ═══════ HOME ═══════ -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Behavioural &bull; Systems-Led &bull; Australian Hospitality</div>
+    <h1>The Rules Have <span>Changed.</span></h1>
+    <div class="hero-sub">The question is whether you&rsquo;re still playing the old game.</div>
+    <p class="hero-desc">
+      Australian hospitality is full of good people working hard inside systems that have quietly become more fragile. Food Game Media exists to name what changed, explain why effort alone stopped working, and help the industry redesign the game so it's actually winnable again.
+    </p>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-primary" onclick="navigateTo('contact'); return false;">Work With Us &rarr;</a>
+      <a href="#about" class="btn btn-outline" onclick="smoothNav('about')">Why We Exist</a>
+    </div>
+  </div>
+  <div class="scroll-indicator"><span></span></div>
+</section>
+
+<!-- IMAGE STRIP -->
+<div class="img-strip">
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80');"></div>
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80');"></div>
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80');"></div>
+</div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="about-grid">
+    <div>
+      <div class="section-eyebrow reveal">The Supplier's Lens</div>
+      <h2 class="section-title reveal">Sixteen years reading <span>spreadsheets.</span> Ten years reading <span>kitchens.</span></h2>
+      <div class="about-text">
+        <p class="reveal">Julian Blok spent sixteen years in investment banking &mdash; across Goldman Sachs, Morgan Stanley, Bankers Trust, and Citibank &mdash; doing what banking teaches you to do: find the pattern underneath the noise. Strip out the narrative. Ask what's actually driving the number.</p>
+
+        
+
+        <p class="reveal">Then in 2014, he did what any sensible person would do at the peak of a banking career: he left it all to run a hospitality supplies warehouse.</p>
+
+        <div class="about-pull reveal">"Suppliers don't just see invoices. We see patterns. We see the same problems described in different accents, across different venues, with the same emotional toll."</div>
+
+        <p class="reveal">Over the next decade, he grew that business from $500K to $5M &mdash; building commercial kitchens, supplying national brands, and having a front-row seat to <span class="hl">thousands of hospitality operations at every level</span>. Not from the dining room. From the loading dock, the walk-in, the service call at 11pm on a Friday.</p>
+
+        <p class="reveal">That vantage point &mdash; banker's brain, supplier's eyes &mdash; is what makes Food Game Media different. Most industry commentary comes from chefs, operators, or journalists. This comes from someone who spent a decade watching the same failure modes repeat across venues of every size, concept, and ambition &mdash; and couldn't stop asking <em>why</em>.</p>
+
+        <p class="reveal">The answer, it turns out, isn't that people don't care enough. It's that hospitality asks care to compensate for systems that were never designed for the pressure they're now under. <span class="hl">That's not a motivation problem. It's a design problem.</span></p>
+      </div>
+    </div>
+    <div>
+      <div class="about-stats reveal">
+        <div class="stat-card">
+          <div class="stat-number">16</div>
+          <div class="stat-label">Years in investment banking &amp; financial analytics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Years inside the hospitality supply chain</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1000s</div>
+          <div class="stat-label">Venues served, observed, and stress-tested</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">10x</div>
+          <div class="stat-label">Revenue growth: $500K to $5M pre-COVID</div>
+        </div>
+      </div>
+
+      <!-- Second image strip in about section -->
+      <div style="margin-top: 32px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);" class="reveal">
+        <div style="height: 200px; background: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80') center/cover; position: relative;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(15,31,56,0.7), transparent);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="consulting">
+  <div class="section-eyebrow reveal">What We Do</div>
+  <h2 class="section-title reveal">Four ways to see the <span>game clearly.</span></h2>
+  <p class="section-intro reveal">
+    Every arm of Food Game Media serves the same purpose: making the invisible machinery of Australian hospitality visible &mdash; so the people inside it can stop running on adrenaline and start running on design.
+  </p>
+  <div class="products-grid">
+
+    <div class="product-card reveal">
+      <div class="product-icon-col">
+        <div class="icon-einstein-box"><img src="Einstein.png" alt="Consulting" style="width:200px;height:200px;object-fit:cover;"></div>
+      </div>
+      <div class="product-tag">Consulting</div>
+      <h3>Advisory &amp; Consulting</h3>
+      <p>
+        Here's what most consultants won't tell you: your venue probably doesn't have a strategy problem. It has a systems problem wearing a strategy costume. We work with independent operators, multi-site groups, and the broader hospitality ecosystem on the structural issues that effort alone can't fix &mdash; margin leakage, operational fragility, cognitive overload, and the invisible costs that show up as Tuesday chaos.
+      </p>
+      <p>
+        No motivational speeches. No laminated frameworks. Just a clear-eyed look at the machine you're actually running &mdash; and how to redesign it so normal people, on normal days, produce consistently good outcomes. Based in Sydney. National reach.
+      </p>
+      <a href="#" class="product-link" onclick="navigateTo('contact'); return false;">Start a conversation &rarr;</a>
+    </div>
+
+    <div class="product-card reveal">
+      <div class="product-icon-col">
+        <div class="icon-broadsheet-box"><img src="Newsletter.png" alt="Newsletter" style="width:200px;height:200px;object-fit:cover;"></div>
+      </div>
+      <div class="product-tag">Newsletter</div>
+      <h3>Food Game Weekly Wrap</h3>
+      <p>
+        Every Friday, one email that cuts through the noise of Australian hospitality. FGWW is the analytical briefing for people who are too busy running a venue to read everything &mdash; but too invested in the game to miss what matters. Industry news, data, behavioural patterns, and the occasional uncomfortable truth, delivered without fluff, motivational padding, or sponsored content.
+      </p>
+      <p>
+        Written through the supplier's lens. Which means you get the perspective that most industry media misses entirely: the view from behind the scenes, where the real patterns live.
+      </p>
+      <a href="#newsletter" class="product-link" onclick="smoothNav('newsletter')">Subscribe free &rarr;</a>
+    </div>
+
+    <div class="product-card reveal">
+      <div class="product-icon-col">
+        <div class="icon-mic-box"><img src="Podcast.png" alt="Podcast" style="width:200px;height:200px;object-fit:cover;"></div>
+      </div>
+      <div class="product-tag">Podcast &mdash; Coming Soon</div>
+      <h3>The Food Game Podcast</h3>
+      <p>
+        Candid, story-led conversations with the people who actually know where the bodies are buried in Australian hospitality. Operators, executives, suppliers, chefs, lawyers, accountants, landlords &mdash; the full ecosystem. Not a "tips" show. Not a highlight reel. The stories, pressure points, and invisible work that the industry rarely says out loud.
+      </p>
+      <p>
+        Warm, funny, and occasionally absurd &mdash; because hospitality often is. But the purpose is serious: clarity without shame. YouTube-led, with audio on all major platforms.
+      </p>
+      <a href="#" class="product-link" onclick="navigateTo('contact'); return false;">Watch on YouTube &rarr;</a>
+    </div>
+
+    <div class="product-card reveal">
+      <div class="product-icon-col">
+        <div class="icon-bookcover-box"><img src="Book.png" alt="Book" style="width:200px;height:200px;object-fit:cover;"></div>
+      </div>
+      <div class="product-tag">Book &mdash; Coming Mid 2026</div>
+      <h3>The Food Game</h3>
+      <p>
+        <em>Why Hospitality Sucks &mdash; and How We Can Fix It.</em> The book that names what every operator has felt but couldn't quite articulate: the game changed, and nobody updated the rulebook. A behavioural, systems-led explanation of why being busy stopped meaning being safe &mdash; and what the industry can do about it.
+      </p>
+      <p>
+        Not a manual. Not a pep talk. A calm, sharp, occasionally funny account of the game as it's actually played &mdash; written for the people who play it.
+      </p>
+      <a href="#" class="product-link" onclick="navigateTo('contact'); return false;">Learn more &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients-section">
+  <div class="clients-inner">
+    <div class="clients-label reveal">Trusted By</div>
+    <div class="clients-grid reveal">
+      <img src="img_02.png" alt="Qantas" class="client-logo">
+      <img src="img_03.png" alt="dnata" class="client-logo">
+      <img src="img_04.jpg" alt="Fishbowl" class="client-logo">
+      <img src="img_05.webp" alt="PFD Food Services" class="client-logo">
+      <img src="img_06.jpg" alt="Dee Why RSL" class="client-logo">
+      <img src="img_07.webp" alt="RaRa" class="client-logo">
+    </div>
+  </div>
+</section>
+
+<!-- VENUE IMAGE STRIP -->
+<div class="img-strip">
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800&q=80');"></div>
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80');"></div>
+  <div class="img-strip-item" style="background-image: url('https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=800&q=80');"></div>
+</div>
+
+<!-- BOOK -->
+<section class="section" id="book">
+  <div class="book-section">
+    <div class="book-content">
+      <div class="section-eyebrow reveal">The Book &mdash; Coming Mid 2026</div>
+      <h3 class="reveal">Hospitality didn't <span>break.</span> It wore down. Quietly. Gradually. <span>Plausibly.</span></h3>
+      <p class="reveal">
+        Then COVID came along and removed the last layer of padding that was stopping everyone from feeling it properly. Before that, the industry survived on a series of unspoken buffers &mdash; softer enforcement, easier labour, forgiving customers, flexible landlords. That world doesn't exist anymore. But the industry still behaves as if it does.
+      </p>
+      <p class="reveal">
+        The Food Game argues that the pain isn't a motivation problem. It's a design problem. The book moves from what changed, to where the pressure actually comes from, to how humans behave under it, to why "calm" is the rarest and most valuable outcome a venue can produce.
+      </p>
+      <p class="reveal">
+        The reader experience is designed to feel like: <em>"This is what I've been feeling, but couldn't name."</em>
+      </p>
+      <div class="book-themes reveal">
+        <span class="book-theme">Behavioural Economics</span>
+        <span class="book-theme">Systems Design</span>
+        <span class="book-theme">Margin &amp; Fragility</span>
+        <span class="book-theme">Emotional Labour</span>
+        <span class="book-theme">Operational Calm</span>
+        <span class="book-theme">The Invisible Tax</span>
+      </div>
+      <a href="#" class="btn btn-primary reveal" onclick="navigateTo('contact'); return false;">Register Interest &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- PODCAST -->
+<section class="section" id="podcast">
+  <div class="podcast-section">
+    <div>
+      <div class="section-eyebrow reveal">The Food Game Podcast</div>
+      <h2 class="section-title reveal">The stories that reveal the <span>actual rules.</span></h2>
+      <p class="section-intro reveal">
+        Everyone in hospitality has a story where one small thing &mdash; a sick dishwasher, a late delivery, a surprise inspection &mdash; cascaded into a week of pain. Those aren't anecdotes. They're data. And they reveal the rules of the game more honestly than any industry report.
+      </p>
+      <p class="section-intro reveal" style="margin-top: -32px;">
+        The Food Game Podcast captures those stories from across the ecosystem: operators, executives, suppliers, chefs, landlords, lawyers, accountants &mdash; anyone who touches the machinery of a venue. It's warm, candid, and occasionally absurd. Because hospitality is all three.
+      </p>
+      <div class="coming-badge reveal">Coming Soon</div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;" class="reveal">
+        <a href="#" class="btn btn-primary" onclick="navigateTo('contact'); return false;">YouTube &rarr;</a>
+        <span class="btn btn-outline" style="opacity: 0.5; cursor: default;">Apple Podcasts — Coming Soon</span>
+        <span class="btn btn-outline" style="opacity: 0.5; cursor: default;">Substack — Coming Soon</span>
+      </div>
+    </div>
+    <div class="podcast-visual reveal">
+      <div class="podcast-icon-large">&#127908;</div>
+      <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; margin-bottom: 8px;">
+        The Food <span style="color: var(--pink);">Game</span>
+      </div>
+      <div style="font-size: 13px; color: var(--grey); margin-bottom: 24px;">Podcast</div>
+      <div style="font-size: 15px; color: var(--text-body); line-height: 1.6; font-style: italic; max-width: 280px; margin: 0 auto;">
+        "That's when you realise the Food Game doesn't care how hard you worked&hellip;"
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER CTA -->
+<section class="section" id="newsletter">
+  <div class="newsletter-cta reveal">
+    <div class="section-eyebrow" style="text-align: center;">Food Game Weekly Wrap</div>
+    <h2>The briefing for people who <span>play the game.</span></h2>
+    <p>
+      Every Friday. One email. The news, data, and behavioural patterns that matter to Australian hospitality &mdash; explained with context and candour. No fluff. No sponsors. No motivational padding. Just the supplier's lens on an industry that deserves better analysis.
+    </p>
+    <div class="newsletter-features">
+      <span class="newsletter-feature">Weekly industry analysis</span>
+      <span class="newsletter-feature">Behavioural insights</span>
+      <span class="newsletter-feature">Data-driven</span>
+      <span class="newsletter-feature">Free</span>
+    </div>
+    <a href="#" class="btn btn-primary" id="subscribe-btn" onclick="navigateTo('contact'); return false;">Subscribe on Substack &rarr;</a>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══════ CONTACT PAGE ═══════ -->
+<div class="page" id="page-contact">
+  <div style="height: 72px;"></div>
+  <section class="section" style="padding-top: 80px;">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-eyebrow">Get In Touch</div>
+        <h2 class="section-title">Let's talk about <span>the game.</span></h2>
+        <p>
+          Whether you're an independent operator who knows things need to change, a multi-site group looking for a different lens, or a professional in the hospitality ecosystem who's tired of the same conversations &mdash; we'd like to hear from you. No pitch decks. No funnels. Just a conversation about what's actually going on.
+        </p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">&#9993;</div>
+          <div class="contact-detail-text">
+            <strong>Email</strong>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="147c7178787b54727b7b70737579717971707d753a777b793a7561">[email&#160;protected]</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">&#127760;</div>
+          <div class="contact-detail-text">
+            <strong>Website</strong>
+            foodgamemedia.com.au
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">&#128205;</div>
+          <div class="contact-detail-text">
+            <strong>Location</strong>
+            Sydney, Australia &mdash; National reach
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="c-firstname">First Name</label>
+            <input type="text" id="c-firstname" name="firstname" required placeholder="First name" minlength="2" pattern="[A-Za-z\s\-']{2,}" title="Please enter a valid first name">
+            <span class="form-error">Please enter your first name</span>
+          </div>
+          <div class="form-group">
+            <label for="c-lastname">Last Name</label>
+            <input type="text" id="c-lastname" name="lastname" required placeholder="Last name" minlength="2" pattern="[A-Za-z\s\-']{2,}" title="Please enter a valid last name">
+            <span class="form-error">Please enter your last name</span>
+          </div>
+          <div class="form-group">
+            <label for="c-email">Email</label>
+            <input type="email" id="c-email" name="email" required placeholder="you@example.com">
+            <span class="form-error">Please enter a valid email address</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="c-interest">I'm Interested In</label>
+          <select id="c-interest" name="interest">
+            <option value="consulting">Consulting &amp; Advisory</option>
+            <option value="newsletter">Food Game Weekly Wrap</option>
+            <option value="podcast">Podcast (Guest / Collaboration)</option>
+            <option value="book">The Book</option>
+            <option value="general">General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" name="message" required minlength="10" placeholder="What's on your mind..."></textarea>
+          <span class="form-error">Please enter a message (at least 10 characters)</span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Send Message &rarr;</button>
+        <div id="formStatus" style="font-size: 14px; color: var(--green); display: none;"></div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="#about" onclick="smoothNav('about')">About</a>
+      <a href="#consulting" onclick="smoothNav('consulting')">Services</a>
+      <a href="#book" onclick="smoothNav('book')">Book</a>
+      <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a>
+      <a href="#newsletter" onclick="smoothNav('newsletter')">Newsletter</a>
+      <a href="#" onclick="navigateTo('contact'); return false;">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<!-- ═══════ CMS ═══════ -->
+<button class="cms-toggle" id="cmsToggle" onclick="openCMS()" title="Edit Content">&#9998;</button>
+<div class="cms-overlay" id="cmsOverlay" onclick="closeCMS()"></div>
+<div class="cms-panel" id="cmsPanel">
+  <div class="cms-header">
+    <h3>Edit Content</h3>
+    <button class="cms-close" onclick="closeCMS()">&times;</button>
+  </div>
+  <p class="cms-note" style="margin-bottom: 24px;">
+    Edit text and links below, then click Save. Changes persist in your browser. Press Ctrl+Shift+E to show/hide the edit button.
+  </p>
+  <div class="cms-section">
+    <h4>Hero</h4>
+    <div class="cms-field">
+      <label>Tagline</label>
+      <input type="text" id="cms-hero-tagline">
+    </div>
+    <div class="cms-field">
+      <label>Description</label>
+      <textarea id="cms-hero-desc"></textarea>
+    </div>
+  </div>
+  <div class="cms-section">
+    <h4>Links</h4>
+    <div class="cms-field">
+      <label>Substack Subscribe URL</label>
+      <input type="url" id="cms-subscribe-url" placeholder="https://yourname.substack.com">
+    </div>
+    <div class="cms-field">
+      <label>YouTube Channel URL</label>
+      <input type="url" id="cms-youtube-url" placeholder="https://youtube.com/@yourchannel">
+    </div>
+    <div class="cms-field">
+      <label>Apple Podcasts URL</label>
+      <input type="url" id="cms-apple-url" placeholder="https://podcasts.apple.com/...">
+    </div>
+  </div>
+  <button class="cms-save" onclick="saveCMS()">Save Changes</button>
+  <button class="cms-save" style="background: transparent; color: var(--grey); border: 1px solid var(--border); margin-top: 8px;" onclick="resetCMS()">Reset to Defaults</button>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ═══ NAVIGATION ═══ */
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+  closeMobile();
+  setTimeout(initReveal, 100);
+}
+function smoothNav(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  closeMobile();
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  const cur = window.scrollY;
+  if (cur > lastScroll && cur > 200) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastScroll = cur;
+});
+
+/* ═══ REVEAL ═══ */
+function initReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+document.addEventListener('DOMContentLoaded', initReveal);
+
+/* ═══ CONTACT ═══ */
+function handleSubmit(e) {
+  e.preventDefault();
+  const f = e.target;
+  let valid = true;
+
+  // Clear previous errors
+  document.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+
+  // Validate first name
+  if (!f.firstname.value.trim() || f.firstname.value.trim().length < 2) {
+    f.firstname.closest('.form-group').classList.add('has-error');
+    valid = false;
+  }
+  // Validate last name
+  if (!f.lastname.value.trim() || f.lastname.value.trim().length < 2) {
+    f.lastname.closest('.form-group').classList.add('has-error');
+    valid = false;
+  }
+  // Validate email
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(f.email.value.trim())) {
+    f.email.closest('.form-group').classList.add('has-error');
+    valid = false;
+  }
+  // Validate message
+  if (!f.message.value.trim() || f.message.value.trim().length < 10) {
+    f.message.closest('.form-group').classList.add('has-error');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  const fullName = f.firstname.value.trim() + ' ' + f.lastname.value.trim();
+  const subj = encodeURIComponent('Food Game Media — ' + f.interest.value + ' enquiry from ' + fullName);
+  const body = encodeURIComponent('Name: ' + fullName + '\nEmail: ' + f.email.value + '\nInterest: ' + f.interest.value + '\n\n' + f.message.value);
+  window.location.href = 'mailto:hello@foodgamemedia.com.au?subject=' + subj + '&body=' + body;
+  document.getElementById('formStatus').style.display = 'block';
+  document.getElementById('formStatus').textContent = 'Opening your email client...';
+}
+
+/* ═══ CMS ═══ */
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+    e.preventDefault();
+    document.getElementById('cmsToggle').classList.toggle('visible');
+  }
+});
+function openCMS() {
+  document.getElementById('cmsPanel').classList.add('open');
+  document.getElementById('cmsOverlay').classList.add('open');
+  const s = JSON.parse(localStorage.getItem('fgm-cms') || '{}');
+  document.getElementById('cms-hero-tagline').value = s.heroTagline || document.querySelector('.hero-sub').textContent;
+  document.getElementById('cms-hero-desc').value = s.heroDesc || document.querySelector('.hero-desc').textContent.trim();
+  document.getElementById('cms-subscribe-url').value = s.subscribeUrl || '';
+  document.getElementById('cms-youtube-url').value = s.youtubeUrl || '';
+  document.getElementById('cms-apple-url').value = s.appleUrl || '';
+}
+function closeCMS() {
+  document.getElementById('cmsPanel').classList.remove('open');
+  document.getElementById('cmsOverlay').classList.remove('open');
+}
+function saveCMS() {
+  const data = {
+    heroTagline: document.getElementById('cms-hero-tagline').value,
+    heroDesc: document.getElementById('cms-hero-desc').value,
+    subscribeUrl: document.getElementById('cms-subscribe-url').value,
+    youtubeUrl: document.getElementById('cms-youtube-url').value,
+    appleUrl: document.getElementById('cms-apple-url').value,
+  };
+  localStorage.setItem('fgm-cms', JSON.stringify(data));
+  applyCMS(data);
+  closeCMS();
+}
+function applyCMS(d) {
+  if (d.heroTagline) document.querySelector('.hero-sub').textContent = d.heroTagline;
+  if (d.heroDesc) document.querySelector('.hero-desc').textContent = d.heroDesc;
+  if (d.subscribeUrl) document.getElementById('subscribe-btn').href = d.subscribeUrl;
+}
+function resetCMS() { localStorage.removeItem('fgm-cms'); location.reload(); }
+document.addEventListener('DOMContentLoaded', () => {
+  const s = JSON.parse(localStorage.getItem('fgm-cms') || '{}');
+  if (Object.keys(s).length) applyCMS(s);
+});
+
+// ── EINSTEIN: recolour yellow to pink, black to transparent ──
+document.querySelectorAll('.einstein-canvas').forEach(function(c) {
+  var ctx = c.getContext('2d');
+  var img = new Image();
+  img.onload = function() {
+    ctx.drawImage(img, 0, 0, 176, 176);
+    var id = ctx.getImageData(0, 0, 176, 176);
+    var d = id.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var brightness = (d[i] + d[i+1] + d[i+2]) / 3;
+      if (d[i+3] < 10) continue;
+      if (brightness > 80) {
+        var f = brightness / 255;
+        d[i] = Math.round(244 * f);
+        d[i+1] = Math.round(167 * f);
+        d[i+2] = Math.round(185 * f);
+      } else {
+        d[i+3] = 0;
+      }
+    }
+    ctx.putImageData(id, 0, 0);
+  };
+  img.src = "PLACEHOLDER";
+});
+
+// ── MIC: recolour to navy silhouette on pink gradient ──
+document.querySelectorAll('.mic-canvas').forEach(function(c) {
+  var ctx = c.getContext('2d');
+  var img = new Image();
+  img.onload = function() {
+    ctx.drawImage(img, 8, 0, 160, 176);
+    var id = ctx.getImageData(0, 0, 176, 176);
+    var d = id.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var brightness = (d[i] + d[i+1] + d[i+2]) / 3;
+      if (d[i+3] < 10) continue;
+      if (brightness < 120) {
+        var f = 1 - (brightness / 120);
+        d[i] = 15; d[i+1] = 31; d[i+2] = 56;
+        d[i+3] = Math.round(255 * f);
+      } else {
+        d[i+3] = 0;
+      }
+    }
+    ctx.putImageData(id, 0, 0);
+  };
+  img.src = "Podcast.png";
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const s = JSON.parse(localStorage.getItem('fgm-cms') || '{}');
+  if (Object.keys(s).length) applyCMS(s);
+});
+
+function initReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+document.addEventListener('DOMContentLoaded', initReveal);
+</script>
+</body>
+</html>
