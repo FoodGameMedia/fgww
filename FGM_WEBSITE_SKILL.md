@@ -269,7 +269,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Primary email | julian@foodgamemedia.com.au |
 | GitHub repo (website + SKILL) | https://github.com/FoodGameMedia/fgww |
 | GitHub repo (Contrarian) | https://github.com/FoodGameMedia/fgww (confirm if separate) |
-| Cloudflare Worker URL | [ADD YOUR WORKER URL DIRECTLY IN GITHUB] |
+| Cloudflare Worker URL | young-fog-3045fgww-proxy.julian-68d.workers.dev |
 | Anthropic API key | `sk-ant-...` [stored in Worker env var — never paste here] |
 | Substack URL | [ADD DIRECTLY IN GITHUB] |
 
