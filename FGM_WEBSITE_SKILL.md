@@ -271,7 +271,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | GitHub repo (Contrarian) | https://github.com/FoodGameMedia/fgww (confirm if separate) |
 | Cloudflare Worker URL | young-fog-3045fgww-proxy.julian-68d.workers.dev |
 | Anthropic API key | `sk-ant-...` [stored in Worker env var — never paste here] |
-| Substack URL | [ADD DIRECTLY IN GITHUB] |
+| Substack URL | https://foodgameweeklywrap.substack.com/ |
 
 ---
 
