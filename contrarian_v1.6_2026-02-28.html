@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Contrarian — Archive | Food Game Media</title>
+<meta name="description" content="Business and culture seen sideways. The consensus is usually wrong. Every piece by The Contrarian, Food Game Media.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.3s ease;
+}
+.nav.hidden { transform: translateY(-100%); }
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ PAGE HEADER ═══ */
+.page-header {
+  padding: 140px 40px 72px;
+  position: relative; overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 100%, rgba(244,167,185,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 85% 10%, rgba(36,59,107,0.35) 0%, transparent 60%);
+}
+.page-header-inner {
+  max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+}
+.page-eyebrow {
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 20px; font-weight: 600;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 900; line-height: 1.05;
+  margin-bottom: 20px;
+}
+.page-header h1 span { color: var(--pink); }
+.page-header-desc {
+  font-size: 17px; color: var(--text-body);
+  max-width: 600px; line-height: 1.8;
+}
+.header-rule {
+  border: none; border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+/* ═══ ARCHIVE MAIN ═══ */
+.archive-wrap {
+  max-width: 1200px; margin: 0 auto; padding: 64px 40px 120px;
+}
+
+/* ═══ FILTER / SORT BAR ═══ */
+.archive-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; margin-bottom: 48px; flex-wrap: wrap;
+}
+.archive-count {
+  font-size: 13px; color: var(--grey); font-weight: 500;
+}
+.archive-count span { color: var(--pink); font-weight: 700; }
+.sort-toggle {
+  display: flex; gap: 4px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 4px;
+}
+.sort-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 6px 16px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600; color: var(--grey);
+  letter-spacing: 0.5px; transition: all 0.2s;
+}
+.sort-btn.active { background: rgba(244,167,185,0.15); color: var(--pink); }
+.sort-btn:hover:not(.active) { color: var(--white); }
+
+/* ═══ ISSUE GRID ═══ */
+.issue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ═══ ISSUE CARD ═══ */
+.issue-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+  text-decoration: none; color: inherit;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.issue-card:hover {
+  border-color: rgba(244,167,185,0.45);
+  transform: translateY(-4px);
+}
+.issue-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--pink-bright));
+  opacity: 0; transition: opacity 0.3s;
+}
+.issue-card:hover::before { opacity: 1; }
+
+.card-header {
+  padding: 28px 28px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px;
+}
+.issue-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--pink); letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.issue-date {
+  font-size: 12px; color: var(--grey); font-weight: 500;
+  white-space: nowrap;
+}
+.card-body { padding: 16px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+.issue-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; line-height: 1.25;
+  margin-bottom: 12px; color: var(--white);
+}
+.issue-tagline {
+  font-size: 14px; color: var(--text-body);
+  line-height: 1.65; flex: 1; margin-bottom: 24px;
+}
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(244,167,185,0.1);
+}
+.read-link {
+  font-size: 13px; font-weight: 600; color: var(--pink);
+  display: flex; align-items: center; gap: 6px;
+  transition: gap 0.2s;
+}
+.issue-card:hover .read-link { gap: 10px; }
+.card-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--navy);
+  background: var(--pink); padding: 3px 10px;
+  border-radius: 10px;
+}
+
+/* ═══ LOADING STATE ═══ */
+.archive-loading {
+  text-align: center; padding: 80px 0;
+  color: var(--grey);
+}
+.loading-spinner {
+  width: 40px; height: 40px;
+  border: 2px solid rgba(244,167,185,0.15);
+  border-top-color: var(--pink);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ ERROR STATE ═══ */
+.archive-error {
+  text-align: center; padding: 80px 0; display: none;
+}
+.archive-error p {
+  color: var(--text-body); font-size: 16px; margin-bottom: 24px;
+}
+.archive-error a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 8px;
+  background: var(--pink); color: var(--navy);
+  font-weight: 600; font-size: 14px; text-decoration: none;
+  transition: all 0.2s;
+}
+.archive-error a:hover { background: var(--pink-bright); color: var(--white); }
+
+/* ═══ EMPTY STATE ═══ */
+.archive-empty {
+  text-align: center; padding: 80px 0; display: none;
+  color: var(--grey); font-size: 15px;
+}
+
+/* ═══ SUBSCRIBE STRIP ═══ */
+.subscribe-strip {
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 56px 64px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  margin-bottom: 0;
+}
+.subscribe-strip::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 120%, rgba(244,167,185,0.1), transparent 60%);
+}
+.subscribe-strip > * { position: relative; z-index: 1; }
+.subscribe-strip h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 900; margin-bottom: 12px;
+}
+.subscribe-strip h2 span { color: var(--pink); }
+.subscribe-strip p {
+  color: var(--text-body); font-size: 15px;
+  max-width: 480px; margin: 0 auto 28px; line-height: 1.7;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  background: var(--pink); color: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: all 0.25s; border: none;
+}
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+
+/* ═══ FOOTER ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  font-size: 13px; color: var(--grey);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--pink); }
+.footer-copy {
+  font-size: 12px; color: rgba(255,255,255,0.3);
+  width: 100%; text-align: center; margin-top: 24px;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .issue-grid { grid-template-columns: repeat(2, 1fr); }
+  .page-header { padding: 120px 24px 56px; }
+  .archive-wrap { padding: 48px 24px 80px; }
+  .subscribe-strip { padding: 40px 28px; }
+}
+@media (max-width: 600px) {
+  .issue-grid { grid-template-columns: 1fr; }
+  .archive-controls { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">The Book</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html" class="active">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#book" onclick="closeMobile()">The Book</a>
+  <a href="/#podcast" onclick="closeMobile()">Podcast</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ═══ PAGE HEADER ═══ -->
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">The Contrarian · Food Game Media</div>
+    <h1>The argument <span>nobody's making.</span></h1>
+    <p class="page-header-desc">
+      Business and culture seen sideways. Behavioural, observational, opinion — every piece newest first.
+    </p>
+    <hr class="header-rule">
+  </div>
+</header>
+
+<!-- ═══ ARCHIVE ═══ -->
+<main class="archive-wrap">
+
+  <div class="archive-controls">
+    <div class="archive-count">
+      <span id="issue-count">—</span> pieces published
+    </div>
+    <div class="sort-toggle">
+      <button class="sort-btn active" id="sort-newest" onclick="setSort('newest')">Newest first</button>
+      <button class="sort-btn" id="sort-oldest" onclick="setSort('oldest')">Oldest first</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="archive-loading" id="loadingState">
+    <div class="loading-spinner"></div>
+    <p>Loading issues&hellip;</p>
+  </div>
+
+  <!-- Error -->
+  <div class="archive-error" id="errorState">
+    <p>Couldn't load the archive right now. You can browse all pieces directly.</p>
+    <a href="https://foodgamemedia.github.io/The-Contrarian/archive.html" target="_blank" rel="noopener">
+      Browse archive directly &rarr;
+    </a>
+  </div>
+
+  <!-- Empty -->
+  <div class="archive-empty" id="emptyState">
+    <p>No pieces found. Check back soon.</p>
+  </div>
+
+  <!-- Grid -->
+  <div class="issue-grid" id="issueGrid"></div>
+
+  <!-- Subscribe strip -->
+  <div style="padding-top: 72px;">
+    <div class="subscribe-strip">
+      <h2>Want more? <span>Read the newsletter.</span></h2>
+      <p>The Food Game Weekly Wrap lands every Friday. Industry analysis, behavioural patterns, and the occasional uncomfortable truth.</p>
+      <a href="/newsletter.html" class="btn-primary">
+        Browse the newsletter &rarr;
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Book</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+/* ═══ NAV HIDE ON SCROLL ═══ */
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  const cur = window.scrollY;
+  if (cur > lastScroll && cur > 200) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastScroll = cur;
+});
+function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+/* ═══ ARCHIVE DATA ═══ */
+const ARCHIVE_URL = 'https://foodgamemedia.github.io/The-Contrarian/archive.json';
+
+let allArticles = [];
+let sortOrder = 'newest';
+
+function setSort(order) {
+  sortOrder = order;
+  document.getElementById('sort-newest').classList.toggle('active', order === 'newest');
+  document.getElementById('sort-oldest').classList.toggle('active', order === 'oldest');
+  renderArticles();
+}
+
+function renderArticles() {
+  const grid = document.getElementById('issueGrid');
+  const sorted = sortOrder === 'newest' ? [...allArticles] : [...allArticles].reverse();
+
+  if (sorted.length === 0) {
+    document.getElementById('emptyState').style.display = 'block';
+    grid.innerHTML = '';
+    return;
+  }
+  document.getElementById('emptyState').style.display = 'none';
+
+  grid.innerHTML = sorted.map((article, idx) => {
+    const isLatest = idx === 0 && sortOrder === 'newest';
+    return `
+      <a class="issue-card" href="${article.url}" aria-label="Read: ${escapeHTML(article.headline)}">
+        <div class="card-header">
+          <div class="issue-number">The Contrarian</div>
+          <div class="issue-date">${article.date || ''}</div>
+        </div>
+        <div class="card-body">
+          <div class="issue-title">${escapeHTML(article.headline || '')}</div>
+          <div class="card-footer">
+            <span class="read-link">Read the piece &rarr;</span>
+            ${isLatest ? '<span class="card-badge">Latest</span>' : ''}
+          </div>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function showError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+}
+
+/* ═══ FETCH ARCHIVE ═══ */
+async function loadArchive() {
+  try {
+    const res = await fetch(ARCHIVE_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('No JSON');
+    const data = await res.json();
+    allArticles = Array.isArray(data) ? data : [];
+    document.getElementById('issue-count').textContent = allArticles.length;
+    document.getElementById('loadingState').style.display = 'none';
+    renderArticles();
+  } catch (err) {
+    showError();
+  }
+}
+
+loadArchive();
+</script>
+</body>
+</html>
