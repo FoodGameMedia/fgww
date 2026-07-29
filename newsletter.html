@@ -1,3 +1,17 @@
+<!--
+  Food Game Media - Newsletter Archive Page (newsletter.html) v1.2
+  File: newsletter_archive-subdomain-repoint_v1.2_2026-07-29-1550.html
+  Repo: FoodGameMedia/fgww (public website, GitHub Pages) - commit as newsletter.html
+  Live at: foodgamemedia.com.au/newsletter.html
+  Data source: newsletter.foodgamemedia.com.au (GitHub Pages custom subdomain on fgww-engine)
+
+  v1.2 (Wed 29 Jul 2026): Repointed ARCHIVE_URL, ARCHIVE_HTML_URL, and the per-issue
+       link builder from foodgamemedia.github.io/fgww-engine to the new custom subdomain
+       newsletter.foodgamemedia.com.au. Deploy ONLY after the subdomain resolves and
+       archive.json loads on it, otherwise the archive list will render blank.
+  v1.1 (Wed 29 Jul 2026): escapeHTML now decodes entities before escaping - fixes
+       double-encoded titles such as "Socceroos&#39;".
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,9 +466,9 @@ function toggleMobile() { document.getElementById('mobileMenu').classList.toggle
 function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
 
 /* ═══ ARCHIVE DATA ═══ */
-const ARCHIVE_URL = 'https://foodgamemedia.github.io/fgww-engine/archive.json';
+const ARCHIVE_URL = 'https://newsletter.foodgamemedia.com.au/archive.json';
 // Fallback: parse the archive.html page if JSON is unavailable
-const ARCHIVE_HTML_URL = 'https://foodgamemedia.github.io/fgww-engine/archive.html';
+const ARCHIVE_HTML_URL = 'https://newsletter.foodgamemedia.com.au/archive.html';
 
 let allIssues = [];
 let sortOrder = 'newest';
@@ -483,7 +497,7 @@ function renderIssues() {
 
   grid.innerHTML = sorted.map((issue, idx) => {
     const isLatest = idx === 0 && sortOrder === 'newest';
-    const url = issue.url || `https://foodgamemedia.github.io/fgww-engine/newsletters/food-game-wrap-${String(issue.number).padStart(3,'0')}.html`;
+    const url = issue.url || `https://newsletter.foodgamemedia.com.au/newsletters/food-game-wrap-${String(issue.number).padStart(3,'0')}.html`;
 
     return `
       <a class="issue-card" href="${url}" target="_blank" rel="noopener" aria-label="Read issue ${issue.number}: ${escapeHTML(issue.title || '')}">
