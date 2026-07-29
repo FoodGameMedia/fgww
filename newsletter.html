@@ -486,7 +486,7 @@ function renderIssues() {
     const url = issue.url || `https://foodgamemedia.github.io/fgww-engine/newsletters/food-game-wrap-${String(issue.number).padStart(3,'0')}.html`;
 
     return `
-      <a class="issue-card" href="${url}" target="_blank" rel="noopener" aria-label="Read issue ${issue.number}: ${issue.title}">
+      <a class="issue-card" href="${url}" target="_blank" rel="noopener" aria-label="Read issue ${issue.number}: ${escapeHTML(issue.title || '')}">
         <div class="card-header">
           <div class="issue-number">Issue #${issue.number}</div>
           <div class="issue-date">${issue.date || ''}</div>
@@ -503,8 +503,16 @@ function renderIssues() {
   }).join('');
 }
 
+// Decode any HTML entities first, then re-escape once for safe injection. This handles
+// legacy issue data whose titles or taglines were stored already-encoded (for example an
+// apostrophe saved as &#39;). Idempotent: plain and pre-encoded text both render correctly.
+function decodeEntities(str) {
+  const t = document.createElement('textarea');
+  t.innerHTML = String(str);
+  return t.value;
+}
 function escapeHTML(str) {
-  return String(str)
+  return decodeEntities(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
