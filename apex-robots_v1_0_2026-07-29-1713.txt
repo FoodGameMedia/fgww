@@ -1,0 +1,9 @@
+# foodgamemedia.com.au
+# All content open to all crawlers, including AI crawlers
+# (GPTBot, OAI-SearchBot, PerplexityBot, ClaudeBot, Google-Extended).
+
+User-agent: *
+Allow: /
+
+Sitemap: https://foodgamemedia.com.au/sitemap.xml
+Sitemap: https://newsletter.foodgamemedia.com.au/sitemap.xml
