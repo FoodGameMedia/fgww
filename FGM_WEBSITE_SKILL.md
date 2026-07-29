@@ -155,6 +155,13 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 - Model: always use the latest Claude Sonnet model available
 - All prompts should include explicit output format instructions
 
+### Newsletter Archive Page (`/newsletter`)
+
+- Served by `newsletter.html` in this repo (`FoodGameMedia/fgww`), mapped to `foodgamemedia.com.au/newsletter`.
+- It loads issue data from `archive.json` at `https://foodgamemedia.github.io/fgww-engine/archive.json` (Attempt 1), falling back to parsing `archive.html` (Attempt 2), then a heuristic anchor scan (Attempt 3).
+- Each issue `title` and `tagline` is injected via `innerHTML` after passing through `escapeHTML()`.
+- IMPORTANT: some stored issue data is already HTML-encoded (see Section 8), so `escapeHTML()` decodes entities once via `decodeEntities()` before re-escaping. This is idempotent: plain and pre-encoded values both render correctly. Do not remove that decode step.
+
 ---
 
 ## 5. Site Structure
@@ -164,12 +171,12 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | `/` | Live | Home — brand intro, services overview, newsletter CTA |
 | `/about` | Planned | Julian's background, philosophy, the Food Game narrative |
 | `/consulting` | Planned | Services: behavioural outcomes, systems-led change |
-| `/newsletter` | Planned | FGWW archive — past issues hosted on-site |
+| `/newsletter` | Live | FGWW archive: `newsletter.html` reads `archive.json` and renders past issues as cards |
 | `/contrarian` | Planned | The Contrarian column — embedded from GitHub |
 | `/podcast` | Placeholder | Podcast page — content TBC |
 | `/contact` | Planned | Enquiry form or mailto CTA |
 
-> **Note:** The site returned a 404 at time of writing — domain may be in development or DNS propagating. Treat all pages as in-development unless Julian confirms live status.
+> **Note:** `/newsletter` is live and serving the FGWW archive (25+ issues published). Other routes below may still be in development, so confirm live status with Julian before deployment work.
 
 ---
 
@@ -229,6 +236,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | 10 | Never create a new page without matching the existing nav and footer exactly |
 | 11 | Never use the pink (`#c0185d`) for body copy — accent and CTAs only |
 | 12 | Never sign off newsletter content as anything other than JB |
+| 13 | When rendering stored issue data (titles, taglines), decode HTML entities once before re-escaping. Some legacy data is already encoded, and escaping it again double-encodes it |
 
 ---
 
@@ -244,6 +252,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Font fallbacks | Google Fonts won't load in offline/preview environments — always set Georgia / Arial as fallbacks |
 | Base64 images | Large base64 embedded images make files slow to open in editors — use sparingly outside of brand suite exports |
 | Cloudflare Worker | If Claude API calls fail in the newsletter engine, check Worker is deployed and API key env var is set |
+| Double-encoded titles | Legacy issue data in `archive.json` can store a title already HTML-encoded (e.g. issue #25's apostrophe saved as `&#39;`, from an older FGWW engine build). Rendering that through `escapeHTML()` double-encodes it, so the browser prints a literal `&#39;`. Fixed in `newsletter.html`: `escapeHTML()` now decodes entities once (`decodeEntities()`) before re-escaping. Keep new issue titles plain in the data source |
 
 ---
 
@@ -282,7 +291,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Home page | Unknown — confirm with Julian | Site was 404 at SKILL creation |
 | About page | Not confirmed live | Planned |
 | Consulting page | Not confirmed live | Planned |
-| FGWW newsletter archive | Planned — not yet on site | Issues exist in Substack + GitHub |
+| FGWW newsletter archive | Live | `newsletter.html` reads `archive.json`; issues also on Substack + GitHub |
 | The Contrarian embed | Planned | Tool exists, embed needs wiring to `/contrarian` page |
 | Podcast page | Placeholder only | Content TBC |
 | Contact page | Not confirmed live | Planned |
