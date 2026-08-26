@@ -1,0 +1,13 @@
+# Food Game Media — Netlify redirects
+# v1.0 (2026-08-26)
+# Repo: FoodGameMedia/fgww — commit as _redirects at the repo root (no extension)
+
+# Feed lives where the issues live. These keep the apex URLs working for anything
+# that was handed the foodgamemedia.com.au form.
+/newsletter/rss.xml    https://newsletter.foodgamemedia.com.au/rss.xml     301!
+/newsletter/feed.json  https://newsletter.foodgamemedia.com.au/feed.json   301!
+/rss.xml               https://newsletter.foodgamemedia.com.au/rss.xml     301!
+/feed.json             https://newsletter.foodgamemedia.com.au/feed.json   301!
+
+# Pretty URL for the archive page
+/newsletter            /newsletter.html                                    200
