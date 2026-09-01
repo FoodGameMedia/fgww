@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     THE QUIET ADVANTAGE TEST — Food Game Media
+     File: quiet-advantage.html
+     Version: 1.3 | 2026-08-27 (Sydney)
+     v1.3: Supabase project URL and publishable key set (fgm-quiet-advantage, Sydney).
+     v1.2: EMAIL_WORKER_URL set to the deployed fgm-mail Worker.
+     v1.1: intro rewritten for dual audience (book readers and cold arrivals),
+           commercial case for calm added, citation line removed. Approved.
+     Source docs: QAT_Instrument_Spec_v1.0 (approved), QAT_Copy_Deck_v1.1 (approved)
+     Design system: inherited exactly from live index.html (main branch)
+     Backend: Supabase (see QAT_CONFIG below — paste project URL and anon key)
+     Email: Cloudflare Worker + Resend (stage 4 — EMAIL_WORKER_URL optional)
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Quiet Advantage Test — Food Game Media</title>
+<meta name="description" content="Five questions about a flat Tuesday. Four minutes. Free. Find out whether your venue is held up by its design or carried by its people. From The Food Game by Julian Blok.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV (inherited from index) ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px; cursor: pointer;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ BUTTONS (inherited) ═══ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.25s; border: none; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+/* ═══ FORMS (inherited) ═══ */
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--grey);
+}
+.form-group input, .form-group select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; color: var(--white);
+  transition: border-color 0.2s; outline: none;
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--pink); }
+.form-error { color: var(--red); font-size: 12px; margin-top: 4px; display: none; }
+.form-group.has-error input, .form-group.has-error select { border-color: var(--red); }
+.form-group.has-error .form-error { display: block; }
+.form-group select option { background: var(--navy); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* ═══ PAGE ═══ */
+.qat-wrap { max-width: 860px; margin: 0 auto; padding: 150px 40px 100px; }
+.qat-step { display: none; }
+.qat-step.active { display: block; animation: fadeUp 0.5s ease forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+.qat-kicker {
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--pink); margin-bottom: 18px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(34px, 5vw, 52px); font-weight: 900;
+  line-height: 1.15; margin-bottom: 26px;
+}
+.qat-intro p { color: var(--text-body); font-size: 17px; margin-bottom: 18px; max-width: 640px; }
+.qat-intro .qat-cite { font-style: italic; color: var(--grey); font-size: 14px; margin-bottom: 36px; }
+
+h2.qat-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 3.4vw, 32px); font-weight: 700;
+  margin: 0 0 10px;
+}
+.qat-sub { color: var(--grey); font-size: 15px; margin-bottom: 36px; }
+
+/* Questions */
+.q-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 32px;
+  margin-bottom: 26px;
+}
+.q-num {
+  font-size: 12px; font-weight: 700; letter-spacing: 1.6px;
+  color: var(--pink); text-transform: uppercase; margin-bottom: 10px;
+}
+.q-text { font-size: 17px; font-weight: 500; line-height: 1.6; margin-bottom: 20px; }
+.q-opts { display: flex; flex-direction: column; gap: 10px; }
+.q-opt {
+  display: flex; align-items: flex-start; gap: 12px;
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 13px 16px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-size: 15px; color: var(--text-body);
+}
+.q-opt:hover { border-color: var(--pink); }
+.q-opt input { accent-color: var(--pink-bright); margin-top: 5px; flex-shrink: 0; }
+.q-opt.selected { border-color: var(--pink); background: rgba(244,167,185,0.07); color: var(--white); }
+.q-missing { border-color: var(--red) !important; }
+
+.qat-actions { margin-top: 40px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.qat-note { font-size: 13px; color: var(--grey); }
+.qat-alert {
+  display: none; margin-top: 18px; padding: 14px 18px;
+  border: 1px solid var(--red); border-radius: 10px;
+  color: var(--red); font-size: 14px;
+}
+.qat-alert.show { display: block; }
+
+/* Details form */
+.qat-form { display: flex; flex-direction: column; gap: 20px; }
+.qat-check { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--text-body); cursor: pointer; }
+.qat-check input { accent-color: var(--pink-bright); margin-top: 5px; flex-shrink: 0; }
+.qat-check a { color: var(--pink); }
+.hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+
+/* Result */
+.r-scorecard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px; margin-bottom: 36px; text-align: center;
+}
+.r-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 64px; font-weight: 900; line-height: 1; color: var(--pink);
+}
+.r-score small { font-size: 22px; color: var(--grey); font-weight: 400; }
+.r-band {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700; margin: 14px 0 16px;
+}
+.r-reading { color: var(--text-body); font-size: 16px; max-width: 620px; margin: 0 auto; text-align: left; }
+.r-priorities h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 700; margin-bottom: 24px;
+}
+.p-block {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--pink);
+  border-radius: 12px;
+  padding: 28px 30px; margin-bottom: 22px;
+}
+.p-block h4 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+.p-block p { color: var(--text-body); font-size: 15px; margin-bottom: 14px; }
+.p-block p:last-child { margin-bottom: 0; }
+.p-block strong { color: var(--white); }
+.r-cta {
+  background: rgba(244,167,185,0.06);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 32px; margin-top: 36px;
+}
+.r-cta h3 { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; margin-bottom: 12px; }
+.r-cta p { color: var(--text-body); font-size: 15px; }
+.r-cta a { color: var(--pink); }
+.r-emailnote { font-size: 13px; color: var(--grey); margin-top: 18px; }
+
+/* Account */
+.acct-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px; max-width: 560px;
+}
+.acct-box h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+.acct-box > p { color: var(--text-body); font-size: 15px; margin-bottom: 26px; }
+.acct-msg { font-size: 14px; margin-top: 16px; display: none; }
+.acct-msg.ok { color: var(--green); display: block; }
+.acct-msg.err { color: var(--red); display: block; }
+
+/* Privacy modal */
+.pv-overlay {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  background: rgba(15,31,56,0.85); backdrop-filter: blur(6px);
+  padding: 24px; overflow-y: auto;
+}
+.pv-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.pv-modal {
+  background: var(--navy-mid); border: 1px solid var(--border);
+  border-radius: 16px; max-width: 640px; width: 100%;
+  padding: 40px; margin: 60px 0;
+}
+.pv-modal h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+.pv-modal h3 { font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--pink); margin: 20px 0 6px; }
+.pv-modal p { color: var(--text-body); font-size: 15px; }
+.pv-modal a { color: var(--pink); }
+.pv-close { margin-top: 28px; }
+
+/* ═══ FOOTER (inherited) ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--pink); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); width: 100%; text-align: center; margin-top: 24px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .qat-wrap { padding: 120px 24px 80px; }
+  .form-row { grid-template-columns: 1fr; }
+  .q-card { padding: 24px 20px; }
+  .r-scorecard { padding: 30px 22px; }
+  .acct-box, .pv-modal { padding: 30px 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#book" onclick="closeMobile()">Books</a>
+  <a href="/#podcast" onclick="closeMobile()">Podcast</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<div class="qat-wrap">
+
+  <!-- ═══════ STEP 1: INTRO + QUESTIONS ═══════ -->
+  <section class="qat-step active" id="step-questions">
+    <div class="qat-intro">
+      <div class="qat-kicker">Free &middot; Four minutes &middot; Five questions</div>
+      <h1>The Quiet Advantage Test</h1>
+      <p>Every hospitality venue is held up by one of two things: its design, or its people. Busy nights hide the difference. An ordinary day shows it: someone away, a delivery late, a service slipping ten minutes behind. What happens next is the truest reading of your business you will ever get.</p>
+      <p>The Quiet Advantage Test measures exactly that. Five questions about that ordinary day. Four minutes. Free. Your result comes back with a score, an honest reading of it, and the two questions most worth acting on first, on screen and in your inbox.</p>
+      <p>If you have arrived here from the closing chapter of The Food Game, these are the same five questions, now scored, so you can act on them and measure what moves in three months. If you found this test on its own, you need nothing more than a venue you know well and the willingness to answer honestly. The book behind it argues one thing: calm venues are not lucky, they are designed, one small decision at a time. And calm is the goal because calm is where the money is. A calm venue keeps its staff, protects its margins, and gives guests a room they can feel settled in, because nobody is performing crisis management beside their table. It is the one advantage a competitor cannot copy by spending more, and this test shows you where yours starts.</p>
+    </div>
+
+    <h2 class="qat-h2">Five questions about a flat Tuesday</h2>
+    <p class="qat-sub">Answer for the venue you run, on an ordinary day, not your best one.</p>
+
+    <div id="questionList"><!-- built by JS from QAT.questions --></div>
+
+    <div class="qat-actions">
+      <button class="btn btn-primary" onclick="QAT.toQuestionsNext()">Continue</button>
+      <span class="qat-note">Your answers are scored on the next screen.</span>
+    </div>
+    <div class="qat-alert" id="qAlert">Answer all five questions to continue. The unanswered ones are marked.</div>
+  </section>
+
+  <!-- ═══════ STEP 2: DETAILS ═══════ -->
+  <section class="qat-step" id="step-details">
+    <h2 class="qat-h2">Where to send the result</h2>
+    <p class="qat-sub">Your details also tell us what kind of venue we are reading. The diagnosis is only as honest as the inputs.</p>
+
+    <div class="qat-form" id="detailsForm">
+      <p class="hp-field"><label>Leave this field empty: <input type="text" id="f-company" name="company" tabindex="-1" autocomplete="off"></label></p>
+
+      <div class="form-row">
+        <div class="form-group" data-field="first_name">
+          <label for="f-first">First name</label>
+          <input type="text" id="f-first" autocomplete="given-name">
+          <span class="form-error">Enter your first name.</span>
+        </div>
+        <div class="form-group" data-field="last_name">
+          <label for="f-last">Last name</label>
+          <input type="text" id="f-last" autocomplete="family-name">
+          <span class="form-error">Enter your last name.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="email">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" placeholder="you@venue.com.au" autocomplete="email">
+          <span class="form-error">Enter a valid email address. The result lands here.</span>
+        </div>
+        <div class="form-group" data-field="mobile">
+          <label for="f-mobile">Mobile</label>
+          <input type="tel" id="f-mobile" placeholder="04xx xxx xxx" autocomplete="tel">
+          <span class="form-error">Enter a valid Australian mobile number.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="venue_name">
+          <label for="f-venue">Venue name</label>
+          <input type="text" id="f-venue" autocomplete="organization">
+          <span class="form-error">Enter your venue name.</span>
+        </div>
+        <div class="form-group" data-field="venue_type">
+          <label for="f-vtype">Venue type</label>
+          <select id="f-vtype">
+            <option value="">Select&hellip;</option>
+            <option>Cafe</option>
+            <option>Restaurant</option>
+            <option>Pub or bar</option>
+            <option>Club</option>
+            <option>QSR or takeaway</option>
+            <option>Catering or events</option>
+            <option>Multi-venue group</option>
+            <option>Other</option>
+          </select>
+          <span class="form-error">Select your venue type.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="role">
+          <label for="f-role">Your role</label>
+          <select id="f-role">
+            <option value="">Select&hellip;</option>
+            <option>Owner</option>
+            <option>Owner-operator</option>
+            <option>GM or venue manager</option>
+            <option>Head chef</option>
+            <option>Other</option>
+          </select>
+          <span class="form-error">Select your role.</span>
+        </div>
+        <div class="form-group" data-field="street_address">
+          <label for="f-street">Street address</label>
+          <input type="text" id="f-street" autocomplete="street-address">
+          <span class="form-error">Enter the venue street address.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="suburb">
+          <label for="f-suburb">Suburb</label>
+          <input type="text" id="f-suburb" autocomplete="address-level2">
+          <span class="form-error">Enter the suburb.</span>
+        </div>
+        <div class="form-group" data-field="state">
+          <label for="f-state">State</label>
+          <select id="f-state">
+            <option value="">Select&hellip;</option>
+            <option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option>
+            <option>SA</option><option>TAS</option><option>ACT</option><option>NT</option>
+          </select>
+          <span class="form-error">Select your state or territory.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="postcode">
+          <label for="f-postcode">Postcode</label>
+          <input type="text" id="f-postcode" inputmode="numeric" maxlength="4" autocomplete="postal-code">
+          <span class="form-error">Enter a four-digit postcode.</span>
+        </div>
+        <div class="form-group" data-field="employees_band">
+          <label for="f-emp">Number of employees</label>
+          <select id="f-emp">
+            <option value="">Select&hellip;</option>
+            <option>1&ndash;4</option>
+            <option>5&ndash;14</option>
+            <option>15&ndash;39</option>
+            <option>40 or more</option>
+          </select>
+          <span class="form-error">Select an employee band.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" data-field="covers_band">
+          <label for="f-covers">Covers in an ordinary week</label>
+          <select id="f-covers">
+            <option value="">Select&hellip;</option>
+            <option>Under 250</option>
+            <option>250&ndash;750</option>
+            <option>750&ndash;1,500</option>
+            <option>1,500&ndash;3,000</option>
+            <option>Over 3,000</option>
+          </select>
+          <span class="form-error">Select a covers band.</span>
+        </div>
+        <div class="form-group" data-field="turnover_band">
+          <label for="f-turnover">Approximate weekly turnover</label>
+          <select id="f-turnover">
+            <option value="">Select&hellip;</option>
+            <option>Under $10k</option>
+            <option>$10k&ndash;$25k</option>
+            <option>$25k&ndash;$50k</option>
+            <option>$50k&ndash;$100k</option>
+            <option>Over $100k</option>
+            <option>Prefer not to say</option>
+          </select>
+          <span class="form-error">Select a turnover band, or Prefer not to say.</span>
+        </div>
+      </div>
+
+      <label class="qat-check">
+        <input type="checkbox" id="f-fgww">
+        <span>Send me the Food Game Weekly Wrap. Free, weekly, no fluff.</span>
+      </label>
+
+      <div class="form-group" data-field="privacy_consent" style="gap:4px;">
+        <label class="qat-check" style="text-transform:none; letter-spacing:0; font-size:14px;">
+          <input type="checkbox" id="f-privacy">
+          <span>I agree to Food Game Media storing this information to deliver my result and follow up. <a href="#" onclick="openPrivacy(); return false;">Privacy, in plain English</a>.</span>
+        </label>
+        <span class="form-error">The result cannot be delivered without this.</span>
+      </div>
+
+      <div class="qat-actions">
+        <button class="btn btn-outline" onclick="QAT.backToQuestions()">Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="QAT.submit()">Score my venue</button>
+      </div>
+      <div class="qat-alert" id="dAlert">Fix the marked fields to continue.</div>
+    </div>
+  </section>
+
+  <!-- ═══════ STEP 3: RESULT ═══════ -->
+  <section class="qat-step" id="step-result">
+    <h2 class="qat-h2">Your result</h2>
+    <div class="r-scorecard">
+      <div class="r-score"><span id="rScore">0</span><small> / 20</small></div>
+      <div class="r-band" id="rBand"></div>
+      <p class="r-reading" id="rReading"></p>
+    </div>
+
+    <div class="r-priorities">
+      <h3>The two questions most worth acting on first</h3>
+      <div id="rBlocks"></div>
+    </div>
+
+    <div class="r-cta">
+      <h3>If you want a second pair of eyes</h3>
+      <p>Some readers want a person rather than a page, at least at the start. That is what Food Game Media is for. It begins with a free thirty-minute read-through of this result: we walk through your score together, and you leave knowing the two things to fix first, whether or not we ever speak again. Write to <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a> and mention your venue name.</p>
+    </div>
+
+    <p class="r-emailnote" id="rEmailNote">A copy of this result is on its way to your inbox.</p>
+
+    <div class="qat-actions">
+      <button class="btn btn-primary" onclick="QAT.toAccount()">Save my result</button>
+      <button class="btn btn-outline" onclick="QAT.finish()">Skip for now</button>
+    </div>
+  </section>
+
+  <!-- ═══════ STEP 4: ACCOUNT ═══════ -->
+  <section class="qat-step" id="step-account">
+    <div class="acct-box">
+      <h2>Save your result</h2>
+      <p>Retake the test in three months and see what moved. Your email is already filled in. Set a password and your results live here.</p>
+      <div class="qat-form">
+        <div class="form-group">
+          <label for="a-email">Email</label>
+          <input type="email" id="a-email" readonly>
+        </div>
+        <div class="form-group" data-field="password">
+          <label for="a-pass">Password</label>
+          <input type="password" id="a-pass" minlength="8" placeholder="At least 8 characters" autocomplete="new-password">
+          <span class="form-error">Use at least 8 characters.</span>
+        </div>
+        <div class="qat-actions" style="margin-top:10px;">
+          <button class="btn btn-primary" id="acctBtn" onclick="QAT.createAccount()">Create my account</button>
+          <button class="btn btn-outline" onclick="QAT.finish()">Skip for now</button>
+        </div>
+        <div class="acct-msg" id="acctMsg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ STEP 5: DONE ═══════ -->
+  <section class="qat-step" id="step-done">
+    <h2 class="qat-h2" id="doneHead">Done.</h2>
+    <p class="qat-sub" id="doneBody">Your result is in your inbox. Install one default a week, in the dull midweek hours when there is actually room to do it. The score that matters is the one that moves: come back in three months.</p>
+    <div class="qat-actions">
+      <a class="btn btn-outline" href="/">Back to Food Game Media</a>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════ PRIVACY MODAL ═══════ -->
+<div class="pv-overlay" id="pvOverlay" onclick="if(event.target===this)closePrivacy()">
+  <div class="pv-modal">
+    <h2>Privacy, in plain English</h2>
+    <h3>What we collect</h3>
+    <p>Your name, contact details, venue details and your test answers, exactly as you entered them.</p>
+    <h3>Why</h3>
+    <p>To score your test, show you the result, email it to you, and follow up if you ask us to. If you ticked the newsletter box, we also add you to the Food Game Weekly Wrap.</p>
+    <h3>Where it lives</h3>
+    <p>In a secured database hosted in Sydney. Your data stays in Australia. When you are signed in, only you can see your own record; otherwise only Food Game Media can.</p>
+    <h3>What we do not do</h3>
+    <p>We do not sell your information. We do not share it with anyone outside Food Game Media. If that ever changes for a new product, we will ask you first, and you can say no.</p>
+    <h3>Your rights</h3>
+    <p>Ask us what we hold, ask us to correct it, or ask us to delete it, any time: <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a>. We handle personal information in line with the Australian Privacy Principles.</p>
+    <button class="btn btn-primary pv-close" onclick="closePrivacy()">Close</button>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+/* Nav helpers (inherited pattern) */
+function toggleMobile(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+function openPrivacy(){ document.getElementById('pvOverlay').classList.add('open'); }
+function closePrivacy(){ document.getElementById('pvOverlay').classList.remove('open'); }
+</script>
+
+<script type="module">
+/* ═══════════════════════════════════════════════════════
+   CONFIGURATION — the only block that needs editing.
+   Paste values from the Supabase dashboard (Settings > API).
+   The anon key is safe to expose client-side; the database
+   is protected by row-level security, not by this key.
+   EMAIL_WORKER_URL is wired in stage 4; leave empty until then.
+   ═══════════════════════════════════════════════════════ */
+const QAT_CONFIG = {
+  SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
+  EMAIL_WORKER_URL: "https://fgm-mail.julian-68d.workers.dev"
+};
+
+/* ═══ Instrument (from QAT_Instrument_Spec_v1.0, approved) ═══ */
+const QUESTIONS = [
+  {
+    id: "q1",
+    text: "If your most experienced person does not turn up tomorrow, with no warning, does the day still work, or does it quietly become everyone else's emergency?",
+    opts: [
+      { s: 4, t: "The day runs as planned" },
+      { s: 3, t: "It works, with some juggling" },
+      { s: 2, t: "It becomes a hard day for everyone" },
+      { s: 1, t: "It quietly becomes everyone else's emergency" }
+    ]
+  },
+  {
+    id: "q2",
+    text: "Is there a decision your floor makes from scratch every single service that could have been made once, in advance, and then left alone?",
+    opts: [
+      { s: 4, t: "No, the recurring calls are decided and written down" },
+      { s: 3, t: "One or two still get made on the fly" },
+      { s: 2, t: "Several get relitigated most services" },
+      { s: 1, t: "Most calls are made from scratch, every service" }
+    ]
+  },
+  {
+    id: "q3",
+    text: "When a guest asks for something slightly unusual, does everyone on shift give roughly the same answer, or does it depend entirely on who happens to be standing in front of them?",
+    opts: [
+      { s: 4, t: "The same answer, whoever is asked" },
+      { s: 3, t: "Mostly the same, with the odd wobble" },
+      { s: 2, t: "It depends on who is standing in front of them" },
+      { s: 1, t: "Nobody is sure until a manager is found" }
+    ]
+  },
+  {
+    id: "q4",
+    text: "When a service slips ten minutes behind at seven, is the room level again by eight, or does it carry that early stumble all the way through to close?",
+    opts: [
+      { s: 4, t: "Level again within the hour" },
+      { s: 3, t: "It recovers, but it takes real effort" },
+      { s: 2, t: "It carries the stumble for most of the night" },
+      { s: 1, t: "It carries it all the way through to close" }
+    ]
+  },
+  {
+    id: "q5",
+    text: "Could you walk off the floor for two hours on an ordinary Tuesday and trust the night not to quietly come apart in your absence?",
+    opts: [
+      { s: 4, t: "Yes, without a second thought" },
+      { s: 3, t: "Yes, but the phone stays in my hand" },
+      { s: 2, t: "Only if nothing goes wrong" },
+      { s: 1, t: "No, the night needs me in the room" }
+    ]
+  }
+];
+
+const BANDS = [
+  { min: 18, name: "Held", reading: "The quiet advantage is already yours, and it is worth saying that almost nobody scores here. The job now is not improvement. It is protection: keep the defaults alive as staff change, and retake the test in three months to make sure the score belongs to the venue and not to a good month." },
+  { min: 14, name: "Built, with gaps", reading: "The design is doing most of the carrying, which puts you ahead of most of the industry. But two or three answers show where a person is still doing a system's job, and those are the places a bad fortnight will find first. Your two priority questions below are the map." },
+  { min: 9,  name: "Carried", reading: "This venue works because people hold it up, shift after shift. That is admirable and it is expensive: heroics are being spent daily to cover for decisions the business has not made. The good news is that the first fixes cost nothing but a quiet hour midweek. Start with the two below." },
+  { min: 5,  name: "Running on adrenaline", reading: "The ordinary day is being survived rather than run, and the honest answers you just gave are the reason this score is useful rather than insulting. Nothing here says the venue is doomed. It says the design is absent, and design can be installed: one default a week, starting with the two questions below." }
+];
+
+/* Diagnosis blocks (from QAT_Copy_Deck_v1.0, approved) */
+const DIAGNOSIS = {
+  q1: {
+    title: "The day that depends on one person",
+    body: "A day that stops working when one person does not turn up is not staffed by that person. It is owed to them. Everything they carry in their head, the prep rhythm, the supplier quirks, the way the till actually balances, is infrastructure the venue never built. The Food Game is brutal to businesses that rely on memory.",
+    fix: "First default: the prep list that survives the person who wrote it. Sit them down for twenty minutes in the dull midweek hours and write one page: what they check, in what order, and what they do when it is wrong. One page. Stick it where the work happens. Add a page a week until the day belongs to the venue again."
+  },
+  q2: {
+    title: "The decision made from scratch, every service",
+    body: "Every call your floor makes from scratch is a decision the business refused to make once. The comp, the substitution, the squeezing-in of one more table: relitigated nightly, under a guest's glare, by whoever happens to be holding the tray. That is not flexibility. It is a design gap wearing a service apron.",
+    fix: "First default: pre-make the one decision your floor argues out most often. Pick it, decide it once, in advance and in writing, and leave it alone. Generosity works better as policy than as improvisation."
+  },
+  q3: {
+    title: "The answer that depends on who is asked",
+    body: "When the answer depends on who is standing in front of the guest, the venue does not have a rule. It has a lottery. Staff feel it before guests do: the small stall, the glance toward the pass, the quiet contradiction between shifts. Hesitation is what coping looks like from the inside.",
+    fix: "First default: turn one hesitation into a clear rule, and say out loud who owns it. Find the single situation where people stall or contradict one another, settle the answer, and make it obvious who, on any given shift, applies it without stopping to ask."
+  },
+  q4: {
+    title: "The stumble that runs to close",
+    body: "A ten-minute slip at seven that is still being paid for at ten is not a pacing problem. It is a venue with no room to recover, where every minute is already spoken for and the first stumble compounds all night. Busy is fine. Brittle is the problem.",
+    fix: "First default: build one buffer where the day most often breaks. Fifteen minutes of slack in the roster, or a few covers' worth of prep on the bench, at the precise point things fall over. The late van or the unbooked table of nine should be met by room, not adrenaline."
+  },
+  q5: {
+    title: "The room that needs you in it",
+    body: "If the night quietly comes apart without you, the business is not a system. It is a performance, and you are in every scene. That is flattering right up until it is a ceiling: on your holidays, your second site, your sale price, and eventually your health.",
+    fix: "First default: name who owns the shift when you are not in the room, and hand them one written rule to run it by. Not a manual. One rule, one name, said out loud. Then take the two hours and see what actually breaks. Usually it is less than you fear, and every break is a map."
+  }
+};
+
+/* Tie-break priority: the book's install order */
+const TIE_ORDER = ["q2", "q3", "q4", "q1", "q5"];
+
+/* ═══ Supabase client (loaded only if configured) ═══ */
+let supabase = null;
+const configured = QAT_CONFIG.SUPABASE_URL.startsWith("https://");
+if (configured) {
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  supabase = createClient(QAT_CONFIG.SUPABASE_URL, QAT_CONFIG.SUPABASE_ANON_KEY);
+} else {
+  console.warn("QAT: Supabase not configured. The test runs, but nothing is stored or emailed. Paste the project URL and anon key into QAT_CONFIG.");
+}
+
+/* ═══ Engine ═══ */
+window.QAT = {
+  result: null,
+  submissionId: null,
+
+  scoreAnswers(answers) {
+    const score = Object.values(answers).reduce((a, b) => a + b, 0);
+    const band = BANDS.find(b => score >= b.min) || BANDS[BANDS.length - 1];
+    const priorities = Object.keys(answers)
+      .sort((a, b) => (answers[a] - answers[b]) || (TIE_ORDER.indexOf(a) - TIE_ORDER.indexOf(b)))
+      .slice(0, 2);
+    return { score, band, priorities };
+  },
+
+  getAnswers() {
+    const answers = {};
+    for (const q of QUESTIONS) {
+      const sel = document.querySelector(`input[name="${q.id}"]:checked`);
+      if (sel) answers[q.id] = parseInt(sel.value, 10);
+    }
+    return answers;
+  },
+
+  toQuestionsNext() {
+    const answers = this.getAnswers();
+    let ok = true;
+    for (const q of QUESTIONS) {
+      const card = document.getElementById(`card-${q.id}`);
+      const missing = !(q.id in answers);
+      card.classList.toggle("q-missing", missing);
+      if (missing) ok = false;
+    }
+    document.getElementById("qAlert").classList.toggle("show", !ok);
+    if (!ok) return;
+    this.showStep("step-details");
+  },
+
+  backToQuestions() { this.showStep("step-questions"); },
+
+  validateDetails() {
+    const v = {};
+    const get = id => document.getElementById(id).value.trim();
+    v.first_name = get("f-first");
+    v.last_name = get("f-last");
+    v.email = get("f-email");
+    v.mobile = get("f-mobile").replace(/[\s()-]/g, "");
+    v.venue_name = get("f-venue");
+    v.venue_type = get("f-vtype");
+    v.role = get("f-role");
+    v.street_address = get("f-street");
+    v.suburb = get("f-suburb");
+    v.state = get("f-state");
+    v.postcode = get("f-postcode");
+    v.employees_band = get("f-emp");
+    v.covers_band = get("f-covers");
+    v.turnover_band = get("f-turnover");
+    v.fgww_optin = document.getElementById("f-fgww").checked;
+    v.privacy_consent = document.getElementById("f-privacy").checked;
+
+    const errors = {};
+    if (!v.first_name) errors.first_name = 1;
+    if (!v.last_name) errors.last_name = 1;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = 1;
+    if (!/^(?:\+?61|0)4\d{8}$/.test(v.mobile)) errors.mobile = 1;
+    if (!v.venue_name) errors.venue_name = 1;
+    if (!v.venue_type) errors.venue_type = 1;
+    if (!v.role) errors.role = 1;
+    if (!v.street_address) errors.street_address = 1;
+    if (!v.suburb) errors.suburb = 1;
+    if (!v.state) errors.state = 1;
+    if (!/^\d{4}$/.test(v.postcode)) errors.postcode = 1;
+    if (!v.employees_band) errors.employees_band = 1;
+    if (!v.covers_band) errors.covers_band = 1;
+    if (!v.turnover_band) errors.turnover_band = 1;
+    if (!v.privacy_consent) errors.privacy_consent = 1;
+
+    document.querySelectorAll("#detailsForm .form-group[data-field]").forEach(g => {
+      g.classList.toggle("has-error", g.dataset.field in errors);
+    });
+    document.getElementById("dAlert").classList.toggle("show", Object.keys(errors).length > 0);
+    return Object.keys(errors).length ? null : v;
+  },
+
+  async submit() {
+    if (document.getElementById("f-company").value) return; /* honeypot */
+    const details = this.validateDetails();
+    if (!details) return;
+
+    const answers = this.getAnswers();
+    const { score, band, priorities } = this.scoreAnswers(answers);
+    this.result = { details, answers, score, band, priorities };
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true; btn.textContent = "Scoring\u2026";
+
+    let stored = false, emailed = false;
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("qat_submissions")
+          .insert({
+            ...details,
+            answers,
+            score,
+            band: band.name,
+            priorities
+          })
+          .select("id")
+          .single();
+        if (error) throw error;
+        this.submissionId = data.id;
+        stored = true;
+      } catch (e) {
+        console.error("QAT: submission storage failed", e);
+      }
+    }
+
+    if (QAT_CONFIG.EMAIL_WORKER_URL && stored) {
+      try {
+        const resp = await fetch(QAT_CONFIG.EMAIL_WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            submission_id: this.submissionId,
+            to: details.email,
+            first_name: details.first_name,
+            venue_name: details.venue_name,
+            score,
+            band: band.name,
+            priorities
+          })
+        });
+        emailed = resp.ok;
+      } catch (e) {
+        console.error("QAT: email dispatch failed", e);
+      }
+    }
+
+    this.renderResult(emailed);
+    btn.disabled = false; btn.textContent = "Score my venue";
+    this.showStep("step-result");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  renderResult(emailed) {
+    const { score, band, priorities } = this.result;
+    document.getElementById("rScore").textContent = score;
+    document.getElementById("rBand").textContent = band.name;
+    document.getElementById("rReading").textContent = band.reading;
+    document.getElementById("rBlocks").innerHTML = priorities.map(q => {
+      const d = DIAGNOSIS[q];
+      const fixParts = d.fix.split(". ");
+      const fixLead = fixParts.shift() + ".";
+      return `<div class="p-block">
+        <h4>${d.title}</h4>
+        <p>${d.body}</p>
+        <p><strong>${fixLead}</strong> ${fixParts.join(". ")}</p>
+      </div>`;
+    }).join("");
+    document.getElementById("rEmailNote").textContent = emailed
+      ? "A copy of this result is on its way to your inbox."
+      : "Save or screenshot this page; the emailed copy could not be sent just now.";
+  },
+
+  toAccount() {
+    document.getElementById("a-email").value = this.result.details.email;
+    this.showStep("step-account");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  async createAccount() {
+    const passGroup = document.querySelector('#step-account .form-group[data-field="password"]');
+    const pass = document.getElementById("a-pass").value;
+    const msg = document.getElementById("acctMsg");
+    passGroup.classList.toggle("has-error", pass.length < 8);
+    if (pass.length < 8) return;
+
+    if (!supabase) {
+      msg.className = "acct-msg err";
+      msg.textContent = "Accounts are not available just now. Your result email is your record; the retake link will find you.";
+      return;
+    }
+    const btn = document.getElementById("acctBtn");
+    btn.disabled = true;
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: this.result.details.email,
+        password: pass
+      });
+      if (error) throw error;
+      msg.className = "acct-msg ok";
+      msg.textContent = "Account created. Your result is saved against this email.";
+      setTimeout(() => this.finish(), 2200);
+    } catch (e) {
+      console.error("QAT: account creation failed", e);
+      msg.className = "acct-msg err";
+      msg.textContent = e.message && e.message.includes("already registered")
+        ? "This email already has an account. Sign in from the link in your result email."
+        : "Account creation failed. Your submission is safe; try again from the link in your result email.";
+    }
+    btn.disabled = false;
+  },
+
+  finish() {
+    this.showStep("step-done");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  showStep(id) {
+    document.querySelectorAll(".qat-step").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+};
+
+/* ═══ Build question cards ═══ */
+const list = document.getElementById("questionList");
+list.innerHTML = QUESTIONS.map((q, i) => `
+  <div class="q-card" id="card-${q.id}">
+    <div class="q-num">Question ${i + 1} of 5</div>
+    <div class="q-text">${q.text}</div>
+    <div class="q-opts">
+      ${q.opts.map(o => `
+        <label class="q-opt">
+          <input type="radio" name="${q.id}" value="${o.s}">
+          <span>${o.t}</span>
+        </label>`).join("")}
+    </div>
+  </div>`).join("");
+
+list.addEventListener("change", e => {
+  if (e.target.type !== "radio") return;
+  const card = e.target.closest(".q-card");
+  card.classList.remove("q-missing");
+  card.querySelectorAll(".q-opt").forEach(l => l.classList.remove("selected"));
+  e.target.closest(".q-opt").classList.add("selected");
+});
+</script>
+
+</body>
+</html>
