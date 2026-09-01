@@ -2,7 +2,12 @@
 <!-- ═══════════════════════════════════════════════════════════════
      THE QUIET ADVANTAGE TEST — Food Game Media
      File: quiet-advantage.html
-     Version: 1.3 | 2026-08-27 (Sydney)
+     Version: 1.4 | 2026-09-01 (Sydney)
+     v1.4: submission insert no longer requests the row back. .select("id").single()
+           made PostgREST apply the SELECT policy to the returned row; anonymous
+           submitters have no SELECT policy, so every submission failed with
+           42501 and rolled back, which also suppressed the result email.
+           submission_id dropped from the email Worker payload as a consequence.
      v1.3: Supabase project URL and publishable key set (fgm-quiet-advantage, Sydney).
      v1.2: EMAIL_WORKER_URL set to the deployed fgm-mail Worker.
      v1.1: intro rewritten for dual audience (book readers and cold arrivals),
@@ -837,7 +842,11 @@ window.QAT = {
     let stored = false, emailed = false;
     if (supabase) {
       try {
-        const { data, error } = await supabase
+        /* No .select() here on purpose. Asking for the row back requires a
+           SELECT policy, and anonymous submitters have none, so PostgREST
+           aborts the whole insert with 42501. Insert only, then trust the
+           absence of an error. */
+        const { error } = await supabase
           .from("qat_submissions")
           .insert({
             ...details,
@@ -845,11 +854,8 @@ window.QAT = {
             score,
             band: band.name,
             priorities
-          })
-          .select("id")
-          .single();
+          });
         if (error) throw error;
-        this.submissionId = data.id;
         stored = true;
       } catch (e) {
         console.error("QAT: submission storage failed", e);
@@ -862,7 +868,6 @@ window.QAT = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            submission_id: this.submissionId,
             to: details.email,
             first_name: details.first_name,
             venue_name: details.venue_name,
