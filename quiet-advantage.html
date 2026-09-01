@@ -2,7 +2,10 @@
 <!-- ═══════════════════════════════════════════════════════════════
      THE QUIET ADVANTAGE TEST — Food Game Media
      File: quiet-advantage.html
-     Version: 1.4 | 2026-09-01 (Sydney)
+     Version: 1.5 | 2026-09-01 (Sydney)
+     v1.5: covers bands rescaled (Under 100 to Over 1,500); name, venue, street
+           and suburb title-cased on blur; mobile formatted as 0400 000 000;
+           every step now opens scrolled to the top.
      v1.4: submission insert no longer requests the row back. .select("id").single()
            made PostgREST apply the SELECT policy to the returned row; anonymous
            submitters have no SELECT policy, so every submission failed with
@@ -389,7 +392,7 @@ h2.qat-h2 {
         </div>
         <div class="form-group" data-field="mobile">
           <label for="f-mobile">Mobile</label>
-          <input type="tel" id="f-mobile" placeholder="04xx xxx xxx" autocomplete="tel">
+          <input type="tel" id="f-mobile" placeholder="0400 000 000" autocomplete="tel">
           <span class="form-error">Enter a valid Australian mobile number.</span>
         </div>
       </div>
@@ -478,11 +481,12 @@ h2.qat-h2 {
           <label for="f-covers">Covers in an ordinary week</label>
           <select id="f-covers">
             <option value="">Select&hellip;</option>
-            <option>Under 250</option>
-            <option>250&ndash;750</option>
-            <option>750&ndash;1,500</option>
-            <option>1,500&ndash;3,000</option>
-            <option>Over 3,000</option>
+            <option>Under 100</option>
+            <option>100&ndash;300</option>
+            <option>300&ndash;600</option>
+            <option>600&ndash;1,000</option>
+            <option>1,000&ndash;1,500</option>
+            <option>Over 1,500</option>
           </select>
           <span class="form-error">Select a covers band.</span>
         </div>
@@ -955,6 +959,8 @@ window.QAT = {
   showStep(id) {
     document.querySelectorAll(".qat-step").forEach(s => s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
+    /* v1.5: every step opens at the top, so the first field is what you see. */
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 };
 
@@ -979,6 +985,28 @@ list.addEventListener("change", e => {
   card.classList.remove("q-missing");
   card.querySelectorAll(".q-opt").forEach(l => l.classList.remove("selected"));
   e.target.closest(".q-opt").classList.add("selected");
+});
+
+/* ═══ Input formatting (v1.5) ═══
+   Title-case never lowercases what was typed: it only lifts a lowercase
+   letter that starts a word. "julians bar & grill" becomes "Julians Bar &
+   Grill"; "JB's" and "MoVida" are left exactly as entered. Apostrophes are
+   deliberately not word boundaries, so "julian's" is not "Julian'S". */
+const titleCase = v => v.replace(/(^|[\s\-])([a-z])/g, (m, pre, ch) => pre + ch.toUpperCase());
+["f-first", "f-last", "f-venue", "f-street", "f-suburb"].forEach(id => {
+  const el = document.getElementById(id);
+  el.setAttribute("autocapitalize", "words");
+  el.addEventListener("blur", () => { el.value = titleCase(el.value.trim()); });
+});
+
+/* Mobile renders as 0400 000 000 while it is typed. Validation strips the
+   spaces again, so the stored value is unchanged. */
+const mobileField = document.getElementById("f-mobile");
+mobileField.addEventListener("input", () => {
+  let d = mobileField.value.replace(/\D/g, "");
+  if (d.startsWith("61")) d = "0" + d.slice(2);
+  d = d.slice(0, 10);
+  mobileField.value = [d.slice(0, 4), d.slice(4, 7), d.slice(7, 10)].filter(Boolean).join(" ");
 });
 </script>
 
