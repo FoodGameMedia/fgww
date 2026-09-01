@@ -1,5 +1,7 @@
 # Food Game Media — Website Project SKILL
 
+> **Version 1.4 | 2026-09-01 (Sydney).** v1.4 records the Supabase project moving to the FoodGameMedia Pro organisation and the empty Free organisation being deleted. v1.3 recorded the Quiet Advantage Test build (Sections 14–17), corrected the brand colours and deployment method to match the live site, and added the browser-automation working pattern. v1.2 and earlier are superseded.
+
 > **Session start confirmation line:**
 > "FGM Website SKILL loaded. Ready — what are we working on?"
 
@@ -79,33 +81,44 @@ Julian signs all newsletter content as **JB**
 
 | Token | Hex | Use |
 |-------|-----|-----|
-| Navy primary | `#0f1f38` | Headings, heavy UI elements |
-| Navy secondary | `#1a2f4e` | Backgrounds, cards |
-| Pink primary | `#c0185d` | Accent, CTAs, links |
-| Pink light | `#f4a7b9` | Borders, dividers |
-| Pink pale | `#f4e8ec` | Section backgrounds |
+| Navy (`--navy`) | `#0f1f38` | Page background, headings |
+| Navy mid (`--navy-mid`) | `#1a2f52` | Mobile menu, modals, cards |
+| Navy light (`--navy-light`) | `#243b6b` | Secondary surfaces |
+| Pink (`--pink`) | `#f4a7b9` | Primary accent: CTAs at rest, brand mark accent, labels, links |
+| Pink bright (`--pink-bright`) | `#e91e8c` | Hover states, emphasis, radio/checkbox accent |
+| Pink light (`--pink-light`) | `#fce4ec` | Pale tints |
+| Cream (`--cream`) | `#fdf8f5` | Light surfaces, email block backgrounds |
+| Grey (`--grey`) | `#8a9ab5` | Secondary text, nav links at rest |
+| Border (`--border`) | `rgba(244,167,185,0.22)` | Every hairline border and divider |
+| Body text (`--text-body`) | `rgba(255,255,255,0.82)` | Body copy on navy |
+| Green / Amber / Red | `#4ade80` / `#fbbf24` / `#f87171` | Status only |
 | Slate (newsletter bg) | `#cdc8d9` | FGWW email body background |
 | Warm Sand (alt) | `#d9cfc5` | Alternate newsletter bg |
 | Dusty Rose (alt) | `#e1c8d0` | Alternate newsletter bg |
-| White | `#ffffff` | Body copy backgrounds |
-| Text dark | `#111111` | Body copy |
+| White | `#ffffff` | Headings on navy; email body backgrounds |
+| Text dark | `#111111` | Body copy on white (emails, print) |
+
+> **Correction (v1.3):** earlier SKILL versions listed pink primary as `#c0185d`. That value appears nowhere on the live site. The live `index.html` `:root` block (main branch) is the authority; the table above reproduces it exactly. New pages copy the `:root` block from the live index verbatim rather than retyping values.
 
 ### Typography
 
 | Use | Font | Weight |
 |-----|------|--------|
-| Display / headlines | Georgia or Playfair Display | Bold / 700 |
-| Body copy | Arial or system sans-serif | 400 |
-| Subheadings / labels | Arial | 600, letter-spacing |
-| Signature / italic | Georgia italic | Bold italic |
+| Display / headlines | Playfair Display (Google Fonts) | 700 / 900 |
+| Body copy | DM Sans (Google Fonts) | 300–700 |
+| Subheadings / labels | DM Sans, uppercase, letter-spacing 1–2px | 600 |
+| Signature / italic | Playfair Display italic | 700 |
+| Email (HTML email only) | Georgia headings, Arial body | fallbacks by design |
+
+The live site imports Playfair Display, DM Sans and DM Serif Display from Google Fonts in one `<link>`. New pages copy that `<link>` verbatim from the live index.
 
 ### Logo Rules
 
-- Wordmark: "Food Game" in navy + "Media" in pink (`#c0185d`)
+- Wordmark: "Food Game" in white/navy + "Media" in pink (`#f4a7b9`; the live nav renders it via `--pink`)
 - Always horizontal lockup — never stacked unless explicitly approved
 - Minimum clear space: equal to cap-height on all sides
 - Never recolour, stretch, or add effects to the wordmark
-- Pink must always be `#c0185d` — not approximated
+- Pink must always be `#f4a7b9` (with `#e91e8c` for hover/emphasis) — not approximated
 
 ### Gmail Signature
 
@@ -126,7 +139,9 @@ The HTML email signature is fully coded and should not be regenerated from scrat
 | Layer | Detail |
 |-------|--------|
 | Frontend | Custom HTML5 / CSS3 / vanilla JS — no framework |
-| Hosting | foodgamemedia.com.au (live domain) |
+| Hosting | Netlify, auto-deploy from GitHub `FoodGameMedia/fgww` main branch (~5 min). Site name `cute-tiramisu-8f6def`. DNS zone for foodgamemedia.com.au lives in Netlify DNS (team `julian-zaydjhk`) |
+| Database + auth | Supabase project `fgm-quiet-advantage`, ref `bokqxbgnbiubwhivedvk`, region Sydney (ap-southeast-2), org **FoodGameMedia (Pro)**. See Section 14 |
+| Transactional email | Cloudflare Worker `fgm-mail` → Resend API, from `test@foodgamemedia.com.au`, reply-to `julian@`. Domain verified in Resend (region Tokyo ap-northeast-1). See Section 14 |
 | Content storage | GitHub (articles for The Contrarian stored as JSON/HTML) |
 | Newsletter engine | FGWW — separate single-file HTML app, Claude API via Cloudflare Worker proxy |
 | The Contrarian | Single-file HTML app, GitHub integration for article storage |
@@ -174,7 +189,11 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | `/newsletter` | Live | FGWW archive: `newsletter.html` reads `archive.json` and renders past issues as cards |
 | `/contrarian` | Planned | The Contrarian column — embedded from GitHub |
 | `/podcast` | Placeholder | Podcast page — content TBC |
-| `/contact` | Planned | Enquiry form or mailto CTA |
+| `/contact` | Live (index section) | Netlify Forms contact form on index v1.6 |
+| `/quiet-advantage` | Built v1.3, commit + live test pending | The Quiet Advantage Test (Section 14) |
+| `/diagnostic` | Planned | Live nine-question Diagnostic Card, pattern result (Section 15) |
+| `/matrix-mate` | Planned | Matrix Mate explainer page (Section 16) |
+| `/venue-by-design` | Planned | Venue by Design explainer page (Section 16) |
 
 > **Note:** `/newsletter` is live and serving the FGWW archive (25+ issues published). Other routes below may still be in development, so confirm live status with Julian before deployment work.
 
@@ -188,7 +207,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 2. Claude reads the relevant existing file (if provided) before writing anything
 3. Claude makes the targeted edit — minimal blast radius, never rewrite working sections
 4. Claude outputs the full updated file (not just the diff) so Julian can copy-paste or download
-5. Julian pastes into his local file and checks in browser before pushing
+5. Julian commits to `main` on GitHub (upload or paste); Netlify deploys automatically in ~5 minutes. The live GitHub `main` file is always the source of truth for the next edit, never a local copy
 
 ### For new pages:
 
@@ -214,7 +233,7 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 
 ### Deployment gotchas:
 
-- No CI/CD — changes go live by manual FTP or direct file edit
+- Deployment is Netlify auto-deploy from GitHub `main`; there is no FTP. Clean URLs work (`/quiet-advantage` serves `quiet-advantage.html`)
 - GitHub raw URLs for embedded content can have a **5-minute cache delay** — changes may not appear immediately
 - If The Contrarian embed is blank, check the GitHub raw URL is public and the filename matches exactly
 
@@ -234,7 +253,9 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | 8 | Never describe systems as replacing people — always "AI is the tool, people are the rule" |
 | 9 | Never use corporate language: leverage, synergy, ecosystem, solutions, exciting |
 | 10 | Never create a new page without matching the existing nav and footer exactly |
-| 11 | Never use the pink (`#c0185d`) for body copy — accent and CTAs only |
+| 11 | Never use the pinks (`#f4a7b9`, `#e91e8c`) for body copy — accent and CTAs only |
+| 14 | Never offer a direct download of any FGM instrument (Diagnostic Card PDF etc). Delivery is by email after capture, or a live online version. See Section 15 |
+| 15 | The Supabase publishable key and Worker URL may live in page source (they are public by design, protected by row-level security and CORS). The Supabase secret/service_role key, database password, and Resend API key never appear in any file or page |
 | 12 | Never sign off newsletter content as anything other than JB |
 | 13 | When rendering stored issue data (titles, taglines), decode HTML entities once before re-escaping. Some legacy data is already encoded, and escaping it again double-encodes it |
 
@@ -244,7 +265,8 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 
 | Issue | Detail |
 |-------|--------|
-| Site 404 | foodgamemedia.com.au was returning 404 at time of SKILL creation — confirm live status before any deployment work |
+| Diagnostic Card PDF footer | The current `diagnostic-card.pdf` prints "Confidential" and the tagline on top of each other in the footer of both pages (rendering defect, confirmed visually). Do not email it. Rebuild pending (Section 15) |
+| Supabase org placement | `fgm-quiet-advantage` lives in the **FoodGameMedia Pro** org (transferred 2026-09-01, +$10/month), so it does not pause. Never create FGM projects in a Free org: free-tier projects pause after 7 days idle and the instrument silently breaks between enquiries |
 | Substack HTML stripping | Substack removes custom HTML. Always use GitHub-hosted full design + Substack teaser |
 | GitHub cache delay | Raw GitHub URLs cache for ~5 mins. Embedded content won't update instantly after push |
 | Contrarian embed blank | Almost always a filename mismatch or the GitHub repo is set to private |
@@ -265,6 +287,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | GitHub | Article storage for The Contrarian + full newsletter hosting | Personal access token for write operations | Repo must be public for embed to work |
 | Substack | Newsletter distribution | Julian's Substack account | HTML stripped — teaser only |
 | Gmail | Email with custom HTML signature | julian@foodgamemedia.com.au | Signature installed via Email Signature Rescue Chrome extension |
+| Supabase | Test submissions + customer accounts | Publishable key in page (public); secret key never used client-side | Project ref `bokqxbgnbiubwhivedvk`; RLS on every table |
+| Resend | Transactional email sending | `RESEND_API_KEY` as encrypted secret in Worker `fgm-mail` (key name `fgm-mail-worker`, sending-only) | Domain foodgamemedia.com.au verified: DKIM `resend._domainkey`, MX + SPF on `send`, DMARC `_dmarc` p=none, all in Netlify DNS |
+| Cloudflare Worker `fgm-mail` | Email dispatch for QAT result (live), card delivery and diagnostic result (scaffolded) | No key in code; CORS locked to foodgamemedia.com.au and www | `https://fgm-mail.julian-68d.workers.dev` |
+| Netlify Forms | Contact form capture | none | index v1.6 |
 
 ---
 
@@ -278,7 +304,11 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Primary email | julian@foodgamemedia.com.au |
 | GitHub repo (website + SKILL) | https://github.com/FoodGameMedia/fgww |
 | GitHub repo (Contrarian) | https://github.com/FoodGameMedia/fgww (confirm if separate) |
-| Cloudflare Worker URL | young-fog-3045fgww-proxy.julian-68d.workers.dev |
+| Cloudflare Worker (Claude proxy) | young-fog-3045fgww-proxy.julian-68d.workers.dev |
+| Cloudflare Worker (mail) | fgm-mail.julian-68d.workers.dev (account id `68d5682ce8e4949039378baad0c0b45c`) |
+| Supabase project | `fgm-quiet-advantage`, ref `bokqxbgnbiubwhivedvk`, `https://bokqxbgnbiubwhivedvk.supabase.co`, org FoodGameMedia (Pro). Other orgs on the account: The95Platform (Pro) |
+| Netlify team / site | team `julian-zaydjhk`; site `cute-tiramisu-8f6def` serves foodgamemedia.com.au |
+| Resend team | `foodgamemedia` (also holds venuebydesign.com.au verified, matrixmate.com.au not started) |
 | Anthropic API key | `sk-ant-...` [stored in Worker env var — never paste here] |
 | Substack URL | https://foodgameweeklywrap.substack.com/ |
 
@@ -288,7 +318,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Home page | Unknown — confirm with Julian | Site was 404 at SKILL creation |
+| Home page | Live | index v1.6 on Netlify; Netlify Forms contact form |
+| Quiet Advantage Test | Built v1.3; commit to main and live end-to-end test pending | Section 14 |
+| Diagnostic Card (current PDF) | Live but flawed | Ungated direct download on index; footer defect; eight questions. Being replaced (Section 15) |
+| Matrix Mate / Venue by Design pages | Planned | Section 16 |
 | About page | Not confirmed live | Planned |
 | Consulting page | Not confirmed live | Planned |
 | FGWW newsletter archive | Live | `newsletter.html` reads `archive.json`; issues also on Substack + GitHub |
@@ -327,6 +360,8 @@ This file lives at:
 https://raw.githubusercontent.com/FoodGameMedia/fgww/main/FGM_WEBSITE_SKILL.md
 ```
 
+`raw.githubusercontent.com` is reachable from the Claude Project's bash tool (confirmed 2026-08-24, `curl` returns 200). Fetch it there. If a session's tooling cannot reach it, the project-knowledge copy is the fallback, and this file's version line says which is newer.
+
 ### Session start
 Every conversation in this Claude Project begins with Claude fetching the SKILL.md from its GitHub raw URL, reading it in full, then confirming with exactly one line:
 
@@ -340,3 +375,62 @@ Claude then waits. It does not summarise the SKILL, ask clarifying questions unp
 - Never rewrite a working page from scratch without explicit instruction
 - Never introduce dependencies (frameworks, libraries) not already in the codebase
 - Never produce content that violates the voice rules in Section 2
+
+---
+
+## 14. The Quiet Advantage Test (QAT) — architecture
+
+Approved documents (all in the Project): `QAT_Instrument_Spec_v1.0`, `QAT_Copy_Deck_v1.1`, `QAT_Supabase_Setup_v1.0`, `QAT_Email_Setup_v1.0`. Every word of page and email copy is in the deck; nothing is changed without a new approved deck version.
+
+**Instrument.** Five questions from the closing chapter of *The Food Game*, four-point answers scored 4→1, total out of 20. Bands: Held 18–20, Built with gaps 14–17, Carried 9–13, Running on adrenaline 5–8. Result = the two lowest-scoring questions; tie-break order Q2, Q3, Q4, Q1, Q5. Each maps to a fixed diagnosis block and first default.
+
+**Page** `quiet-advantage.html` (v1.3): flat HTML, inherits the live index design system verbatim. Flow: intro → five questions → details form → on-screen result → optional account creation (after the result, never before) → done. Privacy statement is an on-page modal. Config block near the bottom of the module script:
+```
+SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co"
+SUPABASE_ANON_KEY: "sb_publishable_..."   (publishable key, public by design)
+EMAIL_WORKER_URL: "https://fgm-mail.julian-68d.workers.dev"
+```
+Fields: first/last name, email, mobile (AU), venue name, venue type, role, street address, suburb, state, postcode, employees band, covers band, weekly turnover band (with Prefer not to say), FGWW opt-in, privacy consent. Honeypot field `company`.
+
+**Supabase.** Org FoodGameMedia (Pro), so the project never pauses. Table `public.qat_submissions` (all fields above + `answers jsonb`, `score int 5–20`, `band`, `priorities jsonb`, `created_at`). RLS on. Policies: insert for anon+authenticated with `privacy_consent = true`; select for authenticated where `email = auth.jwt()->>'email'`; no update/delete from the browser. Index on `email` (the canonical join key for the future Xenvia customer graph). Auth: email+password, Confirm email OFF. Julian reads everything in Table Editor; export CSV.
+
+**Email.** Page POSTs `{to, first_name, venue_name, score, priorities}` to the Worker. The Worker owns all copy, derives the band from the score itself, validates every field, escapes names, and sends via Resend from `Food Game Media <test@foodgamemedia.com.au>`, reply-to `julian@`. Subject: `Your Quiet Advantage result: [Band]`. Table-based inline-styled HTML. Handlers `card_delivery` and `dc_result` are scaffolded (return 503) for Sections 15 and 16 work.
+
+**Live test procedure** (before pointing anyone at it): incognito → `/quiet-advantage` → real email, venue `QAT TEST — DELETE` → confirm (a) on-screen result with "on its way to your inbox", (b) email received, (c) row in `qat_submissions`, (d) reply-to `julian@`. Delete the test row and any test user.
+
+**Decisions on record.** Pattern of the funnel: QAT is the self-serve instrument (score + two fixes); the Diagnostic Card is the guided one (pattern + consult). Accounts are the seed of the group customer record; consent is scoped to Food Game Media only; cross-product sharing (Matrix Mate, Xenvia, Venue by Design) requires its own explicit, revocable consent when the hub exists.
+
+---
+
+## 15. Diagnostic Card — decisions and pending rebuild
+
+- **No direct download, ever** (Hard Rule 14). Two paths only: do the diagnostic live at `/diagnostic` with the result emailed, or have the printable card emailed after a short capture (first name, email, venue name, FGWW opt-in, consent). `diagnostic-card.pdf` is to be deleted from the repo so the public URL dies; the rebuilt PDF is bundled inside the Worker as base64 and sent as an attachment.
+- **Nine questions, not eight.** The Signals domain (03 on the website) had no question. Approved Q5 — SIGNALS: *"How often do your staff have to verbally correct a guest — explaining how ordering works, what the venue does not do, or where they should be?"* Answers: Rarely — the room teaches the rules before anyone has to speak / Occasionally — a few predictable corrections each service / Regularly — the same explanations, every shift, to guests who could not have known / Constantly — correcting guests is simply part of the job here. New order: Q1–2 Throughput, Q3–4 Defaults, Q5 Signals, Q6 People Load, Q7 Operational Memory, Q8–9 Calm Index. Framing everywhere: "Nine questions. Five minutes. Six domains. One clear picture."
+- **PDF rebuild required** (footer defect, Section 8) with the ninth question; presented rendered for visual approval before any email goes out.
+- **Live version shows pattern, not prescription:** the answers mapped across the domains, where the load concentrates, then the free thirty-minute consult as the interpretation step. Answers ranked 1–4 internally for storage and retakes; no numeric score shown. Result page says the card reads six of the seven domains Venue by Design tracks weekly (the difference is the upsell, not an inconsistency).
+- Supabase tables to add: `dc_submissions`, `card_downloads`; Worker types `dc_result`, `card_delivery`.
+
+---
+
+## 16. Platform pages — Matrix Mate and Venue by Design
+
+Each gets its **own full page** (`matrix-mate.html`, `venue-by-design.html`) plus a Platforms section on the index linking through. CTAs mirror each platform's own site exactly: Matrix Mate → **Book a Demo** at matrixmate.com.au; Venue by Design → **Book your Deep Diagnostic** at venuebydesign.com.au. Never "sign up".
+
+**Matrix Mate terminology (use precisely):** category name *Intelligent Equipment Management*; **MM8** (the AI agent, included every tier from day one); **IUM** and **IUM record** (proper noun, never expanded); **IUM Tag** (durable QR, no app, 4-digit PIN); human-verified **OEM record**; **Marketplace** (multiple bids, fault history attached); **Pre-Sale Audit**; one fee per IUM, unlimited users. Approved category line: *"Matrix Mate defined the category — intelligent equipment management with an AI agent on every unit — a category with no incumbent to displace."* Never "no competitors" (contradicts The Calm Venue's own disclosure that a category exists).
+
+**Venue by Design terminology:** **Calm Index** (out of 10, "not a grade, it is a map"); **seven domains** (Throughput, Pacing, Defaults, People Load, Signals, Endings, Operational Memory); states Structural Risk 0–4 / Functional but Fragile 5–7 / Designed for Calm 8–10; **Deep Diagnostic** (forty questions, ninety-day design prescription, sixty-minute walkthrough); **Venue Pulse** (weekly loop). Tagline shared with the book: "Calm is not a personality trait. It is a design outcome."
+
+Copy is drafted from the manuscripts and the live sites, presented for approval before any page is built. One index edit carries the card rework, the Platforms section and the QAT homepage link together.
+
+---
+
+## 17. Browser automation (Claude in Chrome) — working pattern
+
+Learned 2026-08-25/27 driving Resend, Netlify, Cloudflare, Supabase and GitHub.
+
+- **Hard limits, regardless of instruction:** Claude never creates accounts, never types passwords to sign in, never copies or pastes API keys, secrets or tokens into any field, never solves CAPTCHAs. Julian does sign-ins and secret pastes; Claude does everything around them.
+- **Reliable inputs:** `find` (natural-language element search) → click by `ref`; `form_input` for fields and selects; verify every save with `get_page_text` or a screenshot. Coordinate clicks on modals are unreliable (modals move).
+- **When rendering breaks** (viewport reports 0x0, screenshots error, SPA buttons do not fire): the DOM channel usually still works. Use the platform's own API from the page context via `javascript_exec` with the signed-in session (worked first time for the Cloudflare Worker deploy: `PUT /api/v4/accounts/{id}/workers/scripts/{name}` multipart; `POST .../subdomain`). Supabase's dashboard API needs a bearer token Claude must not extract, so Supabase is driven through the UI (Monaco editors accept `monaco.editor.getEditors()[0].setValue(...)`; typed keystrokes do not land).
+- **Large payloads:** never hand-transcribe more than ~20KB of base64 into a call; corruption is likely. Chunk to ~6KB with length/edge verification per chunk, or hand the file to Julian for a 60-second upload.
+- **Connection drops** every few minutes under load and recover minutes later; each site also needs its own extension permission grant on first visit. Keep Chrome foregrounded; save server-side progress before each step; report exact state on every drop so nothing is redone.
+- Every browser-driven build ends with the on-prod vs pending ledger.
