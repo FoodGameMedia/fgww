@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     UNSUBSCRIBE — Food Game Media
+     File: unsubscribe.html
+     Version: 1.0 | 2026-09-02 (Sydney)
+     Serves /unsubscribe?u=<access_token>. One click, no confirmation,
+     no reason-picker. Calls the qat_unsubscribe security-definer
+     function, which is idempotent, so a prefetching mail client or a
+     second click changes nothing.
+     Copy: QAT_Copy_Deck_v1.4 section 7 (approved)
+     Design: nav, footer and tokens lifted verbatim from quiet-advantage.html v1.6
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsubscribed — Food Game Media</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* ═══ NAV (inherited from index) ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px; cursor: pointer;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ BUTTONS (inherited) ═══ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.25s; border: none; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+/* ═══ PAGE ═══ */
+.u-wrap { max-width: 620px; margin: 0 auto; padding: 170px 40px 120px; flex: 1; }
+.u-kicker {
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--pink); margin-bottom: 18px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 46px); font-weight: 900;
+  line-height: 1.15; margin-bottom: 24px;
+}
+.u-wrap p { color: var(--text-body); font-size: 16px; margin-bottom: 18px; }
+.u-wrap a { color: var(--pink); }
+.u-actions { margin-top: 34px; }
+.u-state { display: none; }
+.u-state.active { display: block; animation: fadeUp 0.4s ease forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ FOOTER (inherited) ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--pink); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); width: 100%; text-align: center; margin-top: 24px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .u-wrap { padding: 130px 24px 90px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#book" onclick="closeMobile()">Books</a>
+  <a href="/#podcast" onclick="closeMobile()">Podcast</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<div class="u-wrap">
+
+  <section class="u-state active" id="state-working">
+    <div class="u-kicker">One moment</div>
+    <h1>Taking you off the list.</h1>
+    <p>This takes a second.</p>
+  </section>
+
+  <section class="u-state" id="state-done">
+    <div class="u-kicker">Unsubscribed</div>
+    <h1>Done.</h1>
+    <p>You will not receive any more of these. Your result stays where it is, and you can retake the test any time you like at <a href="/quiet-advantage">foodgamemedia.com.au/quiet-advantage</a>.</p>
+    <p>If it was the timing rather than the emails, write to <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a> and say so.</p>
+    <div class="u-actions"><a class="btn btn-outline" href="/">Back to Food Game Media</a></div>
+  </section>
+
+  <section class="u-state" id="state-error">
+    <div class="u-kicker">That link did not work</div>
+    <h1>Something went wrong.</h1>
+    <p>The link may have been broken by your mail client, which sometimes happens. Write to <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a> and I will take you off the list by hand, same day.</p>
+    <div class="u-actions"><a class="btn btn-outline" href="/">Back to Food Game Media</a></div>
+  </section>
+
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/#podcast">Podcast</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+/* Nav helpers (inherited pattern) */
+function toggleMobile(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+</script>
+
+<script type="module">
+/* Publishable key, public by design. The unsubscribe function is
+   SECURITY DEFINER and authorises on the token, so this key grants
+   nothing beyond calling it. */
+const CONFIG = {
+  SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9"
+};
+
+function show(id) {
+  document.querySelectorAll(".u-state").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+const token = new URLSearchParams(location.search).get("u") || "";
+
+if (!/^[0-9a-f-]{36}$/i.test(token)) {
+  show("state-error");
+} else {
+  try {
+    const r = await fetch(CONFIG.SUPABASE_URL + "/rest/v1/rpc/qat_unsubscribe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: CONFIG.SUPABASE_ANON_KEY,
+        Authorization: "Bearer " + CONFIG.SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ p_token: token })
+    });
+    show(r.ok ? "state-done" : "state-error");
+  } catch (e) {
+    console.error("unsubscribe failed", e);
+    show("state-error");
+  }
+}
+</script>
+
+</body>
+</html>
