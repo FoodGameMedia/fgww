@@ -11,3 +11,12 @@
 
 # Pretty URL for the archive page
 /newsletter            /newsletter.html                                    200
+
+# Podcast hidden 2026-09-02. Markup is commented out in place on all six pages,
+# so restoring it is one edit. This keeps the old anchor from dead-ending.
+/podcast               /                                                   301
+
+# Hard Rule 14: no instrument is ever a direct download. Forced (!) so it
+# shadows diagnostic-card.pdf, which stays in the repo until the rebuilt
+# card is bundled into the Worker and delivered by email only.
+/diagnostic-card.pdf   /                                                   301!
