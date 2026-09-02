@@ -1,6 +1,6 @@
 # Food Game Media — Website Project SKILL
 
-> **Version 1.4 | 2026-09-01 (Sydney).** v1.4 records the Supabase project moving to the FoodGameMedia Pro organisation and the empty Free organisation being deleted. v1.3 recorded the Quiet Advantage Test build (Sections 14–17), corrected the brand colours and deployment method to match the live site, and added the browser-automation working pattern. v1.2 and earlier are superseded.
+> **Version 1.5 | 2026-09-02 (Sydney).** v1.5 records the QAT going live end to end, retake mode (page v1.7), the three-email lifecycle and its two-phase send pipeline (new Section 18), the in-brand `/unsubscribe` page, the Supabase default-grant hazard as Hard Rule 16, and five new gotchas in Section 8. v1.4 recorded the Supabase project moving to the FoodGameMedia Pro organisation and the empty Free organisation being deleted. v1.3 recorded the Quiet Advantage Test build (Sections 14–17), corrected the brand colours and deployment method to match the live site, and added the browser-automation working pattern. v1.2 and earlier are superseded.
 
 > **Session start confirmation line:**
 > "FGM Website SKILL loaded. Ready — what are we working on?"
@@ -130,6 +130,8 @@ The HTML email signature is fully coded and should not be regenerated from scrat
 - Italic tagline: *"The question is whether you're still playing the old game."*
 - Footer links: Newsletter · Consulting · Podcast
 
+**Third-party brand surface.** Any third-party page a customer lands on counts as brand surface and gets FGM voice. The Calendly booking page sat on Calendly's factory default text until 2026-09-02; it now carries FGM copy.
+
 ---
 
 ## 4. Technical Reference
@@ -190,7 +192,8 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | `/contrarian` | Planned | The Contrarian column — embedded from GitHub |
 | `/podcast` | Placeholder | Podcast page — content TBC |
 | `/contact` | Live (index section) | Netlify Forms contact form on index v1.6 |
-| `/quiet-advantage` | Built v1.3, commit + live test pending | The Quiet Advantage Test (Section 14) |
+| `/quiet-advantage` | Live, v1.7 | The Quiet Advantage Test, including retake mode at `?r=<access_token>` (Section 14) |
+| `/unsubscribe` | Live, v1.0 | One-click lifecycle opt-out. Serves `?u=<access_token>`, `noindex` (Section 18) |
 | `/diagnostic` | Planned | Live nine-question Diagnostic Card, pattern result (Section 15) |
 | `/matrix-mate` | Planned | Matrix Mate explainer page (Section 16) |
 | `/venue-by-design` | Planned | Venue by Design explainer page (Section 16) |
@@ -255,9 +258,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | 10 | Never create a new page without matching the existing nav and footer exactly |
 | 11 | Never use the pinks (`#f4a7b9`, `#e91e8c`) for body copy — accent and CTAs only |
 | 14 | Never offer a direct download of any FGM instrument (Diagnostic Card PDF etc). Delivery is by email after capture, or a live online version. See Section 15 |
-| 15 | The Supabase publishable key and Worker URL may live in page source (they are public by design, protected by row-level security and CORS). The Supabase secret/service_role key, database password, and Resend API key never appear in any file or page |
+| 15 | The Supabase publishable key and Worker URL may live in page source (they are public by design, protected by row-level security and CORS). The Supabase secret/service_role key, database password, and Resend API key never appear in any file or page. Stronger as of v1.7: the service_role key is **never used at all** — the lifecycle scheduler runs inside Supabase on `pg_cron` and `pg_net`, so no privileged Supabase key exists outside the database |
 | 12 | Never sign off newsletter content as anything other than JB |
 | 13 | When rendering stored issue data (titles, taglines), decode HTML entities once before re-escaping. Some legacy data is already encoded, and escaping it again double-encodes it |
+| 16 | On Supabase, `revoke ... from public` does **not** close a function off. Default privileges separately grant EXECUTE to `anon` and `authenticated`, and those grants survive. Any function that must not be reachable from a browser must name all three roles: `revoke execute on function f() from public, anon, authenticated;`. Verify with `has_function_privilege('anon', oid, 'EXECUTE')`, never by reading the migration |
 
 ---
 
@@ -275,6 +279,11 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Base64 images | Large base64 embedded images make files slow to open in editors — use sparingly outside of brand suite exports |
 | Cloudflare Worker | If Claude API calls fail in the newsletter engine, check Worker is deployed and API key env var is set |
 | Double-encoded titles | Legacy issue data in `archive.json` can store a title already HTML-encoded (e.g. issue #25's apostrophe saved as `&#39;`, from an older FGWW engine build). Rendering that through `escapeHTML()` double-encodes it, so the browser prints a literal `&#39;`. Fixed in `newsletter.html`: `escapeHTML()` now decodes entities once (`decodeEntities()`) before re-escaping. Keep new issue titles plain in the data source |
+| RLS blocks an insert that asks for the row back | `.insert(...).select("id").single()` makes PostgREST apply the SELECT policy to the returned row. Anonymous submitters have no SELECT policy, so the whole insert aborts with `42501` and rolls back. Symptom is a 401 at the gateway and an empty table. Insert without `RETURNING` and treat the absence of an error as success |
+| Supabase default grants reach every new function | `revoke ... from public` leaves the `anon` and `authenticated` grants in place (Hard Rule 16). Found in production 2026-09-02: `anon` could have called `qat_dispatch_due()` with nothing but the publishable key |
+| `pg_net` is asynchronous | `net.http_post` returns a request id immediately; the response lands later in `net._http_response`. Never write a "sent" flag at dispatch time. Dispatch, then settle from the response, and write the flag only on a 200 |
+| Never call a mutating function from a SELECT column list | `select ..., (select qat_dispatch_due()) as x` actually dispatches. It cost a duplicate send during testing |
+| Supabase SQL editor renders blank in fresh tabs under load | `document.body.innerText.length` comes back 0 and hard navigation does not fix it. What does: find a tab where the dashboard is already rendered and click through to the SQL editor in the left sidebar, which routes inside the SPA |
 
 ---
 
@@ -291,6 +300,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Resend | Transactional email sending | `RESEND_API_KEY` as encrypted secret in Worker `fgm-mail` (key name `fgm-mail-worker`, sending-only) | Domain foodgamemedia.com.au verified: DKIM `resend._domainkey`, MX + SPF on `send`, DMARC `_dmarc` p=none, all in Netlify DNS |
 | Cloudflare Worker `fgm-mail` | Email dispatch for QAT result (live), card delivery and diagnostic result (scaffolded) | No key in code; CORS locked to foodgamemedia.com.au and www | `https://fgm-mail.julian-68d.workers.dev` |
 | Netlify Forms | Contact form capture | none | index v1.6 |
+| Cloudflare Worker `fgm-lifecycle` | The three anniversary emails and the unsubscribe fallback | `RESEND_API_KEY` and `DISPATCH_SECRET` as Worker secrets; `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `UNSUB_BASE` as plain text | `POST /send` is gated on an `x-fgm-dispatch` header, because CORS does not stop a server-to-server call. Secret shared with the Supabase Vault entry `fgm_dispatch_secret` |
+| Calendly | The free 30-min discovery call | none | One event, "Free 30-min Call". Free plan: one active event type and **no webhooks**, so a booking cannot be detected programmatically |
+
+Resend holds a second sending key, `fgm-lifecycle`, alongside the `fgm-mail` one. The dead `fgm-mail-worker` key was deleted 2026-09-02.
 
 ---
 
@@ -311,6 +324,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Resend team | `foodgamemedia` (also holds venuebydesign.com.au verified, matrixmate.com.au not started) |
 | Anthropic API key | `sk-ant-...` [stored in Worker env var — never paste here] |
 | Substack URL | https://foodgameweeklywrap.substack.com/ |
+| Cloudflare Worker (lifecycle) | fgm-lifecycle.julian-68d.workers.dev |
+| Calendly | calendly.com/julian-foodgamemedia |
+| Supabase Vault secret | `fgm_dispatch_secret`, shared with the lifecycle Worker |
+| Supabase extensions enabled | `pg_cron` 1.6.4, `pg_net` 0.20.4 on `fgm-quiet-advantage` |
 
 ---
 
@@ -319,7 +336,10 @@ Substack **strips custom HTML** from newsletter bodies. The workaround is a **hy
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Home page | Live | index v1.6 on Netlify; Netlify Forms contact form |
-| Quiet Advantage Test | Built v1.3; commit to main and live end-to-end test pending | Section 14 |
+| Quiet Advantage Test | Live and working end to end | Page v1.7 on main; result stored, result email delivered, retake mode verified on production 2026-09-02. Section 14 |
+| QAT lifecycle emails | Built and scheduled | Migrations 001–003 applied. `qat-dispatch` Tuesdays 22:00 UTC, `qat-settle` hourly at :07. Section 18 |
+| QAT retake mode | Live | `/quiet-advantage?r=<access_token>`. Landing, comparison, help capture and call CTA all verified against production |
+| Unsubscribe | Live | `unsubscribe.html` v1.0, one click, idempotent |
 | Diagnostic Card (current PDF) | Live but flawed | Ungated direct download on index; footer defect; eight questions. Being replaced (Section 15) |
 | Matrix Mate / Venue by Design pages | Planned | Section 16 |
 | About page | Not confirmed live | Planned |
@@ -400,6 +420,14 @@ Fields: first/last name, email, mobile (AU), venue name, venue type, role, stree
 
 **Decisions on record.** Pattern of the funnel: QAT is the self-serve instrument (score + two fixes); the Diagnostic Card is the guided one (pattern + consult). Accounts are the seed of the group customer record; consent is scoped to Food Game Media only; cross-product sharing (Matrix Mate, Xenvia, Venue by Design) requires its own explicit, revocable consent when the hub exists.
 
+**Amendments, 2026-09-02.**
+
+- The page inserts **without** `RETURNING` and sends no `submission_id` to the Worker (Section 8).
+- `fgm-mail` sends as `Food Game Media <Julian@foodgamemedia.com.au>`, reply-to `julian@`. The old `test@` sender is gone; it was a spam-filter liability on a new domain.
+- The result email lands in Gmail's **Updates** tab, not spam. Acceptable and not worth chasing.
+- Retake mode is v1.7: `?r=<access_token>` renders the previous answers read-only, never preselected, skips the details form, and ends on a movement comparison, one free-text question and the call. All reads and writes go through the security-definer functions, so the page never touches a table and never sees a contact field. A retake sends no result email, because the page cannot obtain the address by design.
+- The comparison line says "Last time you scored…", not "Three months ago…", because a retake can land at any interval.
+
 ---
 
 ## 15. Diagnostic Card — decisions and pending rebuild
@@ -434,3 +462,21 @@ Learned 2026-08-25/27 driving Resend, Netlify, Cloudflare, Supabase and GitHub.
 - **Large payloads:** never hand-transcribe more than ~20KB of base64 into a call; corruption is likely. Chunk to ~6KB with length/edge verification per chunk, or hand the file to Julian for a 60-second upload.
 - **Connection drops** every few minutes under load and recover minutes later; each site also needs its own extension permission grant on first visit. Keep Chrome foregrounded; save server-side progress before each step; report exact state on every drop so nothing is redone.
 - Every browser-driven build ends with the on-prod vs pending ledger.
+
+---
+
+## 18. The QAT lifecycle
+
+Three emails, then stop. Month one and month two each carry an anchor, a book excerpt and one small move, chosen from that person's own priority questions. Month three invites a retake. **A retake restarts the sequence** (decision, 2026-09-02).
+
+Excerpt selection is derived by hashing `access_token`, so a retake — which mints a new token — does not repeat a passage.
+
+Sends run Wednesday morning Sydney (`0 22 * * 2` UTC), never Monday, because the Wrap goes out then. Settle runs hourly at :07.
+
+The pipeline is two-phase because `pg_net` is asynchronous: `qat_dispatch_due()` posts and logs the request id and sets no flags; `qat_settle_sends()` reads the response and writes `mN_sent_at` only on a 200. A failed send stays unsent and is retried, rather than being silently recorded as delivered.
+
+Ordering is enforced: m2 requires `m1_sent_at`, m3 requires `m2_sent_at`. A backlog therefore drains one email per week per person, in order, rather than arriving as a pile.
+
+Unsubscribe is one click, no confirmation, idempotent, and served from `/unsubscribe` in brand — never a `workers.dev` URL.
+
+Authority documents, all approved: `QAT_Lifecycle_Spec_v1.1`, `QAT_Copy_Deck_v1.4`, `QAT_Excerpt_Library_v1.0`, `QAT_Send_Pipeline_v1.0`.
