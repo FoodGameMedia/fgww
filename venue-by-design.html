@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     VENUE BY DESIGN — Food Game Media platform page
+     File: venue-by-design.html
+     Version: 1.0 | 2026-09-03 (Sydney)
+     Source: FGM_Platform_Pages_Copy_Deck_v1.0 (approved 2026-09-02)
+             Drafted from venuebydesign.com.au (read 2026-09-02) and
+             The_Calm_Venue_MASTER_ManuscriptV2.docx (chapters 1 and 2).
+     Terminology per SKILL Section 16, reproduced exactly:
+       Calm Index (out of 10), seven domains, Structural Risk 0-4 /
+       Functional but Fragile 5-7 / Designed for Calm 8-10.
+     Routing (settled 2026-09-02): The Calm Venue funnels to this
+       platform. The QAT and the Diagnostic Card feed consulting and
+       are deliberately NOT cross-sold here.
+     Design system: inherited exactly from live index.html (main branch).
+     CTA: Book your Deep Diagnostic -> venuebydesign.com.au.
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue by Design — Food Game Media</title>
+<meta name="description" content="Calm is not a personality trait. It is a design outcome. Score a normal trading day across seven domains, get one change at a time, and keep going until the venue carries itself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV (inherited from index) ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px; cursor: pointer;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ BUTTONS (inherited) ═══ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.25s; border: none; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+
+/* ═══ SECTIONS (inherited) ═══ */
+.section { padding: var(--section-gap) 40px; max-width: 1200px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--pink); font-weight: 700; margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900; line-height: 1.1; margin-bottom: 20px;
+}
+.section-title span { color: var(--pink); }
+.section-intro {
+  font-size: 17px; color: var(--text-body);
+  max-width: 680px; line-height: 1.8; margin-bottom: 56px;
+}
+.section-narrow { max-width: 780px; }
+.section-narrow p { color: var(--text-body); font-size: 17px; margin-bottom: 22px; }
+.section-narrow p:last-child { margin-bottom: 0; }
+.section-narrow strong { color: var(--white); }
+
+/* ═══ HERO ═══ */
+.hero { max-width: 1200px; margin: 0 auto; padding: 160px 40px 80px; }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5.4vw, 60px);
+  font-weight: 900; line-height: 1.08; margin-bottom: 26px;
+  max-width: 900px;
+}
+.hero h1 span { color: var(--pink); }
+.hero-intro {
+  font-size: 18px; color: var(--text-body);
+  max-width: 700px; line-height: 1.8; margin-bottom: 36px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* ═══ DOMAINS ═══ */
+.dom-list {
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.dom {
+  display: grid; grid-template-columns: 220px 1fr;
+  border-top: 1px solid var(--border);
+}
+.dom:first-child { border-top: none; }
+.dom-name {
+  padding: 22px 28px;
+  font-family: 'Playfair Display', serif;
+  font-size: 19px; font-weight: 700; color: var(--pink);
+  background: rgba(244,167,185,0.05);
+}
+.dom-q { padding: 22px 28px; color: var(--text-body); font-size: 15px; }
+
+/* ═══ BANDS ═══ */
+.band-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.band {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 30px 32px;
+}
+.band-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px; font-weight: 900; color: var(--pink); line-height: 1;
+}
+.band h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-weight: 700; margin: 12px 0 12px;
+}
+.band p { color: var(--text-body); font-size: 15px; }
+
+/* ═══ STEPS ═══ */
+.step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.step {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 32px;
+}
+.step-num {
+  font-size: 11px; letter-spacing: 2.4px; text-transform: uppercase;
+  color: var(--pink); font-weight: 700; margin-bottom: 14px;
+}
+.step h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; margin-bottom: 12px;
+}
+.step p { color: var(--text-body); font-size: 15px; }
+
+/* ═══ PULL QUOTE ═══ */
+.pull {
+  border-left: 3px solid var(--pink);
+  padding: 6px 0 6px 32px;
+  margin: 48px 0;
+  max-width: 780px;
+}
+.pull p {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(19px, 2.3vw, 24px);
+  line-height: 1.55; color: var(--white); margin: 0;
+}
+
+/* ═══ CLOSE ═══ */
+.close-box {
+  background: linear-gradient(135deg, rgba(244,167,185,0.10) 0%, rgba(233,30,140,0.04) 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 56px 48px; text-align: center;
+}
+.close-box p {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 2.6vw, 27px);
+  line-height: 1.5; color: var(--white);
+  max-width: 760px; margin: 0 auto 32px;
+}
+
+/* ═══ FOOTER (inherited) ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--pink); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); width: 100%; text-align: center; margin-top: 24px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .hero { padding: 120px 24px 60px; }
+  .section { padding: 80px 24px; }
+  .dom { grid-template-columns: 1fr; }
+  .dom-q { padding-top: 0; }
+  .band-grid, .step-grid { grid-template-columns: 1fr; }
+  .pull { padding-left: 22px; }
+  .close-box { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#book" onclick="closeMobile()">Books</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<header class="hero">
+  <div class="section-eyebrow">Platforms &mdash; Venue by Design</div>
+  <h1>Calm is not a personality trait. <span>It is a design outcome.</span></h1>
+  <p class="hero-intro">You already work hard, and that was never the problem. The problem is that the day is held together by effort and memory rather than design &mdash; so the same things break at the same times, one absence changes the whole service, and the moment you step out of the building it starts to wobble. Venue by Design is the weekly system that fixes that, one default at a time.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="https://venuebydesign.com.au" target="_blank" rel="noopener">Book your Deep Diagnostic &rarr;</a>
+    <a class="btn btn-outline" href="https://venuebydesign.com.au" target="_blank" rel="noopener">See how it works</a>
+  </div>
+</header>
+
+<!-- ═══════ WHAT CALM MEANS ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">What calm actually means</div>
+  <h2 class="section-title">The thermostat you <span>never think about.</span></h2>
+  <div class="section-narrow">
+    <p>There is a device in your home you never think about, which is the surest measure of how well it works. A thermostat holds a room at a temperature not by being fiddled with all day, but by absorbing the variance the world throws at it &mdash; the door left open, the afternoon sun, the cold snap overnight &mdash; and correcting for each one before anybody has to feel it. You notice climate control only when it fails.</p>
+    <p>A venue works the same way, and calm is misunderstood in exactly the same manner comfort is. People hear the word and think of temperament: a relaxed owner, an unflappable manager. That is not it, and the difference matters, because temperament cannot be rostered and does not survive a bad Tuesday.</p>
+  </div>
+
+  <div class="pull">
+    <p>Calm is a property of the operation: the degree to which the venue absorbs ordinary variance before it reaches a person who then has to feel it and fix it on the floor.</p>
+  </div>
+
+  <div class="section-narrow">
+    <p>Not the absence of pressure &mdash; the absence of the <strong>unnecessary</strong> pressure, the kind that only reaches the pass because nothing in the building was built to catch it first.</p>
+  </div>
+</section>
+
+<!-- ═══════ SEVEN DOMAINS ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The instrument</div>
+  <h2 class="section-title">Seven domains. <span>One ordinary day.</span></h2>
+  <p class="section-intro">The diagnostic scores a normal trading day across seven areas. Not your best service, not your worst &mdash; the ordinary middle of your week.</p>
+
+  <div class="dom-list">
+    <div class="dom">
+      <div class="dom-name">Throughput</div>
+      <div class="dom-q">When volume peaks, does the system hold, or does someone carry it?</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">Pacing</div>
+      <div class="dom-q">Does prep finish before doors, or do the first guests pay for it?</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">Defaults</div>
+      <div class="dom-q">When something goes wrong and you are not on the floor, does the team do what you would have done?</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">People Load</div>
+      <div class="dom-q">Is the unnamed, unrostered work visible and shared, or sitting on one person?</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">Signals</div>
+      <div class="dom-q">What the room tells a guest in the first thirty seconds, before anyone speaks.</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">Endings</div>
+      <div class="dom-q">The last ninety seconds &mdash; the bill, the farewell, the door.</div>
+    </div>
+    <div class="dom">
+      <div class="dom-name">Operational Memory</div>
+      <div class="dom-q">When the same problem happens a third time, does it get fixed, or just handled again?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CALM INDEX ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The Calm Index</div>
+  <h2 class="section-title">A score is not a grade. <span>It is a map.</span></h2>
+  <p class="section-intro">Your seven scores become one number out of ten &mdash; a map of how much variance the system absorbs before it reaches a person.</p>
+
+  <div class="band-grid">
+    <div class="band">
+      <div class="band-num">0&ndash;4</div>
+      <h3>Structural Risk</h3>
+      <p>The operation is held together by effort, not design. Fragile under any pressure.</p>
+    </div>
+    <div class="band">
+      <div class="band-num">5&ndash;7</div>
+      <h3>Functional but Fragile</h3>
+      <p>It works, but it needs constant attention. One disruption changes the whole day.</p>
+    </div>
+    <div class="band">
+      <div class="band-num">8&ndash;10</div>
+      <h3>Designed for Calm</h3>
+      <p>The system absorbs pressure. Problems stay contained. You can work <em>on</em> the business, not just in it.</p>
+    </div>
+  </div>
+
+  <div class="section-narrow" style="margin-top:48px;">
+    <p>The number matters less than the shape underneath it. Your two lowest domains are where the design pressure lives &mdash; and where the cheapest, largest gains are waiting.</p>
+  </div>
+</section>
+
+<!-- ═══════ HOW THE SYSTEM RUNS ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">How the system runs</div>
+  <h2 class="section-title">Find the pressure. Make one change. <span>Let it compound.</span></h2>
+
+  <div class="step-grid">
+    <div class="step">
+      <div class="step-num">Step 1</div>
+      <h3>Diagnose</h3>
+      <p>A short diagnostic scores a normal trading day across the seven domains and gives you your Calm Index, plus a shortlist of where to start.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">Step 2</div>
+      <h3>Prescribe</h3>
+      <p>One design change per domain, sequenced into ninety days, shortest stave first. One change at a time, made real before the next begins.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">Step 3</div>
+      <h3>The weekly loop</h3>
+      <p>Once a week the app brings you back, re-asks the questions, plots your number over time, and puts the next small change in front of you once the last has held.</p>
+    </div>
+  </div>
+
+  <div class="pull">
+    <p>Every change passes one test: does it hold on the night its author is rostered off? If it needs you in the building, it is not yet a design.</p>
+  </div>
+</section>
+
+<!-- ═══════ THE BOOK ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">Where this comes from</div>
+  <h2 class="section-title">The book tells you what to do. <span>The platform makes you do it.</span></h2>
+  <div class="section-narrow">
+    <p><strong>The Calm Venue</strong> is the second of two books. <em>The Food Game</em> is the diagnosis &mdash; why running a venue has come to feel the way it does, and why that feeling is a design outcome rather than a personal failing. <em>The Calm Venue</em> is the other half. Not why, but how: twenty-five chapters, one default at a time.</p>
+    <p>Here is the honest problem with any book, though, and it is worth saying out loud rather than pretending otherwise. You can read all of it, agree with all of it, and change nothing by Tuesday. Not from lack of intent &mdash; because a trading week is louder than a good idea, and the plan quietly slides while you deal with what is in front of you.</p>
+    <p>That is the entire reason Venue by Design exists. It is not a summary of the book and it is not a companion app. It is the part that keeps the method alive after the week gets loud: once a week it brings you back, holds the plan, re-scores you, and puts the next small change in front of you once the last one has held.</p>
+    <p><strong>Read the book and you will know what to do. Run the platform and you will actually do it.</strong></p>
+  </div>
+</section>
+
+<!-- ═══════ THE HARD PART ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The hard part</div>
+  <h2 class="section-title">It is not starting. <span>It is not stopping.</span></h2>
+  <div class="section-narrow">
+    <p>The method is not hard. It is long. The plan is a quiet tail of small changes, and the only thing that beats it is stopping. The commitment is not one big push &mdash; it is showing up to the next small change, week after week, until it holds.</p>
+  </div>
+</section>
+
+<!-- ═══════ CLOSE ═══════ -->
+<section class="section">
+  <div class="close-box">
+    <p>Calm does not show up in your dining room as anything dramatic. It shows up as a place that runs well whoever is on, keeps what it has learned, and quietly compounds &mdash; while the venue down the road is still trying harder.</p>
+    <a class="btn btn-primary" href="https://venuebydesign.com.au" target="_blank" rel="noopener">Book your Deep Diagnostic &rarr;</a>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+/* Nav helpers (inherited pattern) */
+function toggleMobile(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+</script>
+
+</body>
+</html>
