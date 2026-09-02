@@ -2,7 +2,14 @@
 <!-- ═══════════════════════════════════════════════════════════════
      THE QUIET ADVANTAGE TEST — Food Game Media
      File: quiet-advantage.html
-     Version: 1.6 | 2026-09-01 (Sydney)
+     Version: 1.7 | 2026-09-02 (Sydney)
+     v1.7: retake mode behind ?r=<access_token>. Landing shows the previous
+           answers (never preselected), the questions carry a quiet reminder
+           of the last answer, the details form is skipped because the person
+           is already known, the result gains a movement comparison, and the
+           run ends with the one free-text question and the call. All reads
+           and writes go through the security-definer functions, so the page
+           never touches a table and never sees a contact field.
      v1.6: worked examples added to Q2 and Q3 behind a help toggle, collapsed by
            default; Calendly booking CTA on the result and done pages, with the
            mailto kept beneath it. Copy per QAT_Copy_Deck_v1.2 (approved).
@@ -219,6 +226,31 @@ h2.qat-h2 {
 .q-help p { font-size: 14px; color: var(--text-body); margin-bottom: 10px; }
 .q-help p:last-child { margin-bottom: 0; }
 .q-help strong { color: var(--white); }
+
+/* Retake mode (v1.7) */
+.q-prev {
+  font-size: 13px; color: var(--grey); font-style: italic;
+  margin: 0 0 16px; padding-left: 14px; border-left: 2px solid var(--border);
+}
+.rt-list { margin: 26px 0 8px; }
+.rt-item {
+  border-left: 2px solid var(--border); padding: 2px 0 2px 16px; margin-bottom: 16px;
+}
+.rt-item .rt-q { font-size: 13px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--pink); margin-bottom: 4px; }
+.rt-item .rt-a { font-size: 15px; color: var(--text-body); }
+.r-compare {
+  color: var(--text-body); font-size: 15px; max-width: 620px;
+  margin: 18px auto 0; text-align: left; padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.help-box textarea {
+  width: 100%; min-height: 130px; resize: vertical;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--white);
+  transition: border-color 0.2s; outline: none;
+}
+.help-box textarea:focus { border-color: var(--pink); }
 
 .qat-actions { margin-top: 40px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .qat-note { font-size: 13px; color: var(--grey); }
@@ -557,6 +589,7 @@ h2.qat-h2 {
       <div class="r-score"><span id="rScore">0</span><small> / 20</small></div>
       <div class="r-band" id="rBand"></div>
       <p class="r-reading" id="rReading"></p>
+      <p class="r-compare" id="rCompare" style="display:none;"></p>
     </div>
 
     <div class="r-priorities">
@@ -575,9 +608,12 @@ h2.qat-h2 {
 
     <p class="r-emailnote" id="rEmailNote">A copy of this result is on its way to your inbox.</p>
 
-    <div class="qat-actions">
+    <div class="qat-actions" id="resultActions">
       <button class="btn btn-primary" onclick="QAT.toAccount()">Save my result</button>
       <button class="btn btn-outline" onclick="QAT.finish()">Skip for now</button>
+    </div>
+    <div class="qat-actions" id="retakeResultActions" style="display:none;">
+      <button class="btn btn-primary" onclick="QAT.toHelp()">One last thing</button>
     </div>
   </section>
 
@@ -610,6 +646,42 @@ h2.qat-h2 {
     <h2 class="qat-h2" id="doneHead">Done.</h2>
     <p class="qat-sub" id="doneBody">Your result is in your inbox. Install one default a week, in the dull midweek hours when there is actually room to do it. The score that matters is the one that moves: come back in three months.</p>
     <p class="qat-sub" style="margin-bottom:0;">Or talk it through first. A free thirty-minute call, no pitch: we read your result together and you leave knowing what to fix first, whether or not we ever speak again.</p>
+    <div class="qat-actions">
+      <a class="btn btn-primary" href="https://calendly.com/julian-foodgamemedia" target="_blank" rel="noopener">Book a call</a>
+      <a class="btn btn-outline" href="/">Back to Food Game Media</a>
+    </div>
+  </section>
+
+  <!-- ═══════ RETAKE LANDING ═══════ -->
+  <section class="qat-step" id="step-retake">
+    <div class="qat-kicker">Welcome back</div>
+    <h1>Welcome back.</h1>
+    <p class="qat-sub" id="rtIntro" style="font-size:17px;color:var(--text-body);"></p>
+    <p class="qat-sub">Below are the answers you gave. Read them, then answer the same five questions for the venue as it is now. Answer for an ordinary day, not your best one, exactly as you did the first time.</p>
+    <div class="rt-list" id="rtAnswers"></div>
+    <div class="qat-actions">
+      <button class="btn btn-primary" onclick="QAT.startRetake()">Start the retake</button>
+    </div>
+    <div class="qat-alert" id="rtAlert">That link did not work. Write to julian@foodgamemedia.com.au and I will sort it out.</div>
+  </section>
+
+  <!-- ═══════ ONE LAST THING ═══════ -->
+  <section class="qat-step" id="step-help">
+    <div class="acct-box help-box">
+      <h2>One last thing.</h2>
+      <p id="helpIntro">If there is one thing you would like help with, what is it? One line is enough. It goes to Julian, and to nobody else.</p>
+      <textarea id="helpText" maxlength="2000" placeholder="One line is enough."></textarea>
+      <div class="qat-actions" style="margin-top:20px;">
+        <button class="btn btn-primary" id="helpBtn" onclick="QAT.submitHelp()">Send it</button>
+        <button class="btn btn-outline" onclick="QAT.helpDone()">Skip</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ AFTER THE RETAKE ═══════ -->
+  <section class="qat-step" id="step-thanks">
+    <h2 class="qat-h2">Thank you.</h2>
+    <p class="qat-sub" id="thanksBody">That is on its way to me. If it is the sort of thing better talked through than typed, the call below is free and there is nothing to prepare for it.</p>
     <div class="qat-actions">
       <a class="btn btn-primary" href="https://calendly.com/julian-foodgamemedia" target="_blank" rel="noopener">Book a call</a>
       <a class="btn btn-outline" href="/">Back to Food Game Media</a>
@@ -790,6 +862,41 @@ if (configured) {
   console.warn("QAT: Supabase not configured. The test runs, but nothing is stored or emailed. Paste the project URL and anon key into QAT_CONFIG.");
 }
 
+/* ═══ Retake mode (v1.7) ═══
+   Entered by ?r=<access_token> from the month-three email. There is no
+   sign-in: the token is the authorisation, and the function behind it
+   returns answers, score and band only, never contact details. */
+const RETAKE = { active: false, token: null, prev: null };
+
+async function rpc(fn, body) {
+  const r = await fetch(`${QAT_CONFIG.SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: QAT_CONFIG.SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${QAT_CONFIG.SUPABASE_ANON_KEY}`
+    },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(`${fn} ${r.status}`);
+  const text = await r.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/* The answer text for a stored score, so a previous answer can be shown
+   back as the sentence the person actually chose. */
+function optText(qid, score) {
+  const q = QUESTIONS.find(x => x.id === qid);
+  const o = q && q.opts.find(x => x.s === score);
+  return o ? o.t : "";
+}
+
+function fmtDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
+  } catch (e) { return "your first sitting"; }
+}
+
 /* ═══ Engine ═══ */
 window.QAT = {
   result: null,
@@ -824,10 +931,115 @@ window.QAT = {
     }
     document.getElementById("qAlert").classList.toggle("show", !ok);
     if (!ok) return;
+    /* A retaker has already given their details. Asking again would be
+       rude and would create a second record of the same person. */
+    if (RETAKE.active) { this.submitRetake(); return; }
     this.showStep("step-details");
   },
 
   backToQuestions() { this.showStep("step-questions"); },
+
+  /* ── Retake ─────────────────────────────────────────────────── */
+
+  renderRetakeLanding() {
+    const p = RETAKE.prev;
+    document.getElementById("rtIntro").textContent =
+      `You took the Quiet Advantage Test on ${fmtDate(p.taken_at)} and scored ${p.score} out of 20, which read as ${p.band}.`;
+    document.getElementById("rtAnswers").innerHTML = QUESTIONS.map((q, i) => {
+      const a = p.answers ? p.answers[q.id] : null;
+      if (a == null) return "";
+      return `<div class="rt-item">
+        <div class="rt-q">Question ${i + 1}</div>
+        <div class="rt-a">${optText(q.id, a)}</div>
+      </div>`;
+    }).join("");
+    this.showStep("step-retake");
+  },
+
+  startRetake() {
+    /* Previous answers are shown but never preselected. Preselecting
+       harvests the old answer back and destroys the measurement. */
+    const p = RETAKE.prev;
+    QUESTIONS.forEach(q => {
+      const card = document.getElementById(`card-${q.id}`);
+      if (!card || card.querySelector(".q-prev")) return;
+      const a = p.answers ? p.answers[q.id] : null;
+      if (a == null) return;
+      const line = document.createElement("p");
+      line.className = "q-prev";
+      line.textContent = `Last time you answered: ${optText(q.id, a)}`;
+      card.querySelector(".q-opts").before(line);
+    });
+    const btn = document.querySelector('#step-questions button.btn-primary');
+    if (btn) btn.textContent = "See what moved";
+    this.showStep("step-questions");
+  },
+
+  async submitRetake() {
+    const answers = this.getAnswers();
+    const { score, band, priorities } = this.scoreAnswers(answers);
+    this.result = { details: { first_name: RETAKE.prev.first_name, venue_name: RETAKE.prev.venue_name },
+                    answers, score, band, priorities };
+
+    const btn = document.querySelector('#step-questions button.btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = "Scoring\u2026"; }
+
+    try {
+      const newToken = await rpc("qat_submit_retake", {
+        p_token: RETAKE.token, p_answers: answers,
+        p_score: score, p_band: band.name, p_priorities: priorities
+      });
+      if (newToken) RETAKE.token = newToken;
+    } catch (e) {
+      console.error("QAT: retake save failed", e);
+    }
+
+    this.renderResult(false);
+    this.renderComparison();
+    if (btn) { btn.disabled = false; btn.textContent = "See what moved"; }
+    this.showStep("step-result");
+  },
+
+  renderComparison() {
+    const prev = RETAKE.prev.score;
+    const now  = this.result.score;
+    let text;
+    if (now > prev) {
+      text = `Last time you scored ${prev}. Today you scored ${now}. That is movement, and movement of this kind does not arrive by luck; something in the venue is being held by its design now that used to be held by a person. Keep the thing that changed, and know which one it was.`;
+    } else if (now === prev) {
+      text = `Last time you scored ${prev}. Today you scored the same. It is worth saying plainly rather than dressing it up: nothing moved. That is not a failure so much as information, and the most common reason is not laziness but that the fix chosen last time was too large to install in the middle of a working quarter. Pick a smaller one below.`;
+    } else {
+      text = `Last time you scored ${prev}. Today you scored ${now}. Before you take that personally, two honest readings. The first is that something in the venue genuinely got harder, in which case the two questions below are now the right ones. The second is that you are answering more honestly than you did last time, which is not a decline at all. Only you know which it is, and it is worth sitting with the question for a minute before deciding.`;
+    }
+    const el = document.getElementById("rCompare");
+    el.textContent = text;
+    el.style.display = "block";
+    document.getElementById("resultActions").style.display = "none";
+    document.getElementById("retakeResultActions").style.display = "flex";
+    document.getElementById("rEmailNote").style.display = "none";
+  },
+
+  toHelp() { this.showStep("step-help"); },
+
+  async submitHelp() {
+    const text = document.getElementById("helpText").value.trim();
+    const btn = document.getElementById("helpBtn");
+    btn.disabled = true;
+    if (text) {
+      try { await rpc("qat_submit_help", { p_token: RETAKE.token, p_text: text }); }
+      catch (e) { console.error("QAT: help request failed", e); }
+    }
+    btn.disabled = false;
+    this.helpDone(!text);
+  },
+
+  helpDone(skipped) {
+    if (skipped) {
+      document.getElementById("thanksBody").textContent =
+        "Your result is recorded. If something does need a second pair of eyes, the call below is free and there is nothing to prepare for it.";
+    }
+    this.showStep("step-thanks");
+  },
 
   toggleHelp(id) {
     const panel = document.getElementById(`help-${id}`);
@@ -1031,6 +1243,27 @@ list.innerHTML = QUESTIONS.map((q, i) => `
         </label>`).join("")}
     </div>
   </div>`).join("");
+
+/* ═══ Boot: retake mode if the URL carries a token ═══ */
+const retakeToken = new URLSearchParams(location.search).get("r") || "";
+if (/^[0-9a-f-]{36}$/i.test(retakeToken)) {
+  RETAKE.active = true;
+  RETAKE.token  = retakeToken;
+  document.getElementById("step-questions").classList.remove("active");
+  try {
+    const rows = await rpc("qat_fetch_submission", { p_token: retakeToken });
+    const prev = Array.isArray(rows) ? rows[0] : rows;
+    if (!prev) throw new Error("no such submission");
+    RETAKE.prev = prev;
+    QAT.renderRetakeLanding();
+  } catch (e) {
+    console.error("QAT: retake lookup failed", e);
+    RETAKE.active = false;
+    document.getElementById("step-retake").classList.add("active");
+    document.getElementById("rtIntro").textContent = "";
+    document.getElementById("rtAlert").classList.add("show");
+  }
+}
 
 list.addEventListener("change", e => {
   if (e.target.type !== "radio") return;
