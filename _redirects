@@ -20,3 +20,8 @@
 # shadows diagnostic-card.pdf, which stays in the repo until the rebuilt
 # card is bundled into the Worker and delivered by email only.
 /diagnostic-card.pdf   /                                                   301!
+
+# Platform pages. 200 rewrite, same pattern as /newsletter, so the pretty
+# URL serves the file without a visible .html.
+/matrix-mate           /matrix-mate.html                                   200
+/venue-by-design       /venue-by-design.html                               200
