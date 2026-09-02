@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     MATRIX MATE — Food Game Media platform page
+     File: matrix-mate.html
+     Version: 1.0 | 2026-09-03 (Sydney)
+     Source: FGM_Platform_Pages_Copy_Deck_v1.0 (approved 2026-09-02)
+             Copy drafted from matrixmate.com.au (read 2026-09-02).
+     Terminology per SKILL Section 16, reproduced exactly:
+       Intelligent Equipment Management, MM8, IUM, IUM record, IUM Tag.
+     Design system: inherited exactly from live index.html (main branch).
+     CTA: Book a Demo -> matrixmate.com.au (mirrors their own site).
+     No forms, no capture, no backend on this page.
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrix Mate — Food Game Media</title>
+<meta name="description" content="Intelligent Equipment Management for hospitality. Every machine gets a tag, a record, and an agent that already knows its history. From Food Game Media.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV (inherited from index) ═══ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white);
+  letter-spacing: -0.3px; cursor: pointer;
+}
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey);
+  transition: color 0.2s; text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--navy) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px;
+  flex-direction: column; gap: 24px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ BUTTONS (inherited) ═══ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.25s; border: none; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+
+/* ═══ SECTIONS (inherited) ═══ */
+.section { padding: var(--section-gap) 40px; max-width: 1200px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--pink); font-weight: 700; margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900; line-height: 1.1; margin-bottom: 20px;
+}
+.section-title span { color: var(--pink); }
+.section-intro {
+  font-size: 17px; color: var(--text-body);
+  max-width: 680px; line-height: 1.8; margin-bottom: 56px;
+}
+.section-narrow { max-width: 780px; }
+.section-narrow p { color: var(--text-body); font-size: 17px; margin-bottom: 22px; }
+.section-narrow p:last-child { margin-bottom: 0; }
+.section-narrow strong { color: var(--white); }
+
+/* ═══ HERO ═══ */
+.hero { max-width: 1200px; margin: 0 auto; padding: 160px 40px 80px; }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5.4vw, 60px);
+  font-weight: 900; line-height: 1.08; margin-bottom: 26px;
+  max-width: 900px;
+}
+.hero h1 span { color: var(--pink); }
+.hero-intro {
+  font-size: 18px; color: var(--text-body);
+  max-width: 700px; line-height: 1.8; margin-bottom: 36px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* ═══ STAT ROW ═══ */
+.stat-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  margin-top: 64px; padding-top: 44px;
+  border-top: 1px solid var(--border);
+}
+.stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px; font-weight: 900; color: var(--pink); line-height: 1.1;
+}
+.stat-lbl {
+  font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--grey); margin-top: 8px;
+}
+
+/* ═══ COST CARDS ═══ */
+.cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.cost-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--pink);
+  border-radius: 14px; padding: 30px 32px;
+}
+.cost-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-weight: 700; margin-bottom: 12px;
+}
+.cost-card p { color: var(--text-body); font-size: 15px; }
+
+/* ═══ STEPS ═══ */
+.step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.step {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 32px;
+}
+.step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px; font-weight: 900;
+  color: rgba(244,167,185,0.35); line-height: 1; margin-bottom: 14px;
+}
+.step h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; margin-bottom: 12px;
+}
+.step p { color: var(--text-body); font-size: 15px; }
+
+/* ═══ COMPARISON ═══ */
+.cmp {
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.cmp-head, .cmp-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.cmp-head > div {
+  padding: 18px 28px;
+  font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase;
+  font-weight: 700;
+  background: rgba(255,255,255,0.04);
+}
+.cmp-head > div:first-child { color: var(--grey); }
+.cmp-head > div:last-child { color: var(--pink); }
+.cmp-row > div {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  font-size: 15px; color: var(--text-body);
+}
+.cmp-row > div:first-child { color: var(--grey); }
+.cmp-row > div:last-child {
+  color: var(--white);
+  background: rgba(244,167,185,0.05);
+  border-left: 1px solid var(--border);
+}
+
+/* ═══ CLOSE ═══ */
+.close-box {
+  background: linear-gradient(135deg, rgba(244,167,185,0.10) 0%, rgba(233,30,140,0.04) 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 56px 48px; text-align: center;
+}
+.close-box p {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 2.6vw, 27px);
+  line-height: 1.5; color: var(--white);
+  max-width: 720px; margin: 0 auto 32px;
+}
+
+/* ═══ FOOTER (inherited) ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 24px;
+}
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--pink); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); width: 100%; text-align: center; margin-top: 24px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .hero { padding: 120px 24px 60px; }
+  .section { padding: 80px 24px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .cost-grid, .step-grid { grid-template-columns: 1fr; }
+  .cmp-head, .cmp-row { grid-template-columns: 1fr; }
+  .cmp-row > div:last-child { border-left: none; }
+  .cmp-head > div:first-child { display: none; }
+  .close-box { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#book" onclick="closeMobile()">Books</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<header class="hero">
+  <div class="section-eyebrow">Platforms &mdash; Matrix Mate</div>
+  <h1>Your gear is telling you something. <span>Nobody is writing it down.</span></h1>
+  <p class="hero-intro">A kitchen hand notices the cool room seal is loose on Tuesday. You find out when the combi oven dies at six on Friday. In between, nothing happened &mdash; not because nobody knew, but because knowing had nowhere to go. Matrix Mate is the layer that catches it.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="https://matrixmate.com.au" target="_blank" rel="noopener">Book a Demo &rarr;</a>
+    <a class="btn btn-outline" href="https://matrixmate.com.au" target="_blank" rel="noopener">See the platform</a>
+  </div>
+
+  <div class="stat-row">
+    <div>
+      <div class="stat-val">1 fee</div>
+      <div class="stat-lbl">per IUM</div>
+    </div>
+    <div>
+      <div class="stat-val">Unlimited</div>
+      <div class="stat-lbl">users per venue</div>
+    </div>
+    <div>
+      <div class="stat-val">MM8</div>
+      <div class="stat-lbl">every tier, day one</div>
+    </div>
+    <div>
+      <div class="stat-val">IUM Tag</div>
+      <div class="stat-lbl">scan, MM8 activates</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ WHAT IT IS ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">What it actually is</div>
+  <h2 class="section-title">Every machine gets a record, <span>and an agent that already read it.</span></h2>
+  <div class="section-narrow">
+    <p>Matrix Mate is <strong>Intelligent Equipment Management</strong> for hospitality. Every piece of equipment gets an <strong>IUM Tag</strong> &mdash; a durable QR sticker, no app to download, any smartphone, any staff member. Scanning it opens the <strong>IUM record</strong> for that machine, and <strong>MM8</strong>, the platform's agent, is already active on it.</p>
+    <p>MM8 is not an upsell. It is included on every IUM, in every tier, from day one, at no additional cost. It already holds the OEM baseline, the full service history, every fault ever logged and every repair ever made. It does not need to be briefed.</p>
+  </div>
+</section>
+
+<!-- ═══════ THE FGM ANGLE ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The part nobody costs</div>
+  <h2 class="section-title">This is a design problem <span>wearing an equipment costume.</span></h2>
+  <p class="section-intro">Three costs, none of which ever appear on an invoice as themselves.</p>
+
+  <div class="cost-grid">
+    <div class="cost-card">
+      <h3>You always pay the emergency rate</h3>
+      <p>No fault history means nothing to argue with. No documentation means no defence. The operator without data pays the premium rate, the overtime rate, and the parts rate they did not have to &mdash; every time, and never knowing by how much.</p>
+    </div>
+    <div class="cost-card">
+      <h3>The knowledge leaves with the person</h3>
+      <p>The one who knew which machine sulks in humidity, which supplier actually turns up, what was tried last time. When they go, it goes. The venue then relearns, at full price, what it already knew.</p>
+    </div>
+    <div class="cost-card">
+      <h3>Compliance is a gap you cannot see</h3>
+      <p>When a regulator, insurer or auditor asks for documented maintenance evidence, most operators cannot produce it. Not through negligence &mdash; because nothing was collecting it.</p>
+    </div>
+  </div>
+
+  <div class="section-narrow" style="margin-top:48px;">
+    <p>None of these are equipment problems. They are memory problems, which is why buying better gear never fixes them.</p>
+  </div>
+</section>
+
+<!-- ═══════ HOW IT WORKS ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">How it works</div>
+  <h2 class="section-title">One tag. One scan. <span>The record builds itself.</span></h2>
+
+  <div class="step-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Tag every piece of equipment</h3>
+      <p>A durable QR sticker on each item. From day one the platform retrieves the full OEM record &mdash; age, warranty status, service history &mdash; before the first scan is ever made.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Scan. MM8 activates.</h3>
+      <p>It knows the equipment and guides the person through the right process for their context. A kitchen hand logging a fault is prompted differently to a technician arriving to fix one.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>The right people know</h3>
+      <p>The moment a fault is logged, the venue manager, operations director and owner are notified by email or SMS. No dashboard to check. No chasing. Every interaction sharpens the IUM record.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MARKETPLACE ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The Marketplace</div>
+  <h2 class="section-title">One repair job. Multiple bids. <span>The history already attached.</span></h2>
+  <div class="section-narrow">
+    <p>Route a fault to a preferred supplier already in the system, or open it to the Matrix Mate Marketplace and let registered technicians compete &mdash; each of them seeing the documented history before they quote.</p>
+    <p>No phone call describing a problem you can barely articulate. The technician arrives prepared, the cost is competitive, and the job is tracked from log to close, with every step added back to the IUM record.</p>
+  </div>
+</section>
+
+<!-- ═══════ COMPARISON ═══════ -->
+<section class="section">
+  <div class="section-eyebrow">The difference</div>
+  <h2 class="section-title">Before Matrix Mate. <span>After.</span></h2>
+  <p class="section-intro">Same kitchen, same equipment, same people. The only thing that changed is whether anything was written down.</p>
+
+  <div class="cmp">
+    <div class="cmp-head">
+      <div>Without Matrix Mate</div>
+      <div>With Matrix Mate</div>
+    </div>
+    <div class="cmp-row">
+      <div>Faults reported verbally, or not at all</div>
+      <div>Every fault logged on scan &mdash; timestamped, photographed, structured</div>
+    </div>
+    <div class="cmp-row">
+      <div>Manager finds out when the damage is done</div>
+      <div>Automatic notification the moment a fault is logged</div>
+    </div>
+    <div class="cmp-row">
+      <div>Technician arrives with no context</div>
+      <div>MM8 briefs them before they arrive &mdash; OEM baseline, full history, prior repairs</div>
+    </div>
+    <div class="cmp-row">
+      <div>Emergency callout rate, every time</div>
+      <div>Competitive bids from providers who already have the documentation</div>
+    </div>
+    <div class="cmp-row">
+      <div>Compliance records that do not exist</div>
+      <div>Built automatically, as a byproduct of normal use</div>
+    </div>
+    <div class="cmp-row">
+      <div>Equipment story told in guesswork at sale</div>
+      <div>Pre-Sale Audit generated from IUM history &mdash; documented and evidenced</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CLOSE ═══════ -->
+<section class="section">
+  <div class="close-box">
+    <p>Equipment is the one part of a venue that keeps a record of how it has been treated, whether or not anyone reads it. Matrix Mate reads it.</p>
+    <a class="btn btn-primary" href="https://matrixmate.com.au" target="_blank" rel="noopener">Book a Demo &rarr;</a>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+/* Nav helpers (inherited pattern) */
+function toggleMobile(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+</script>
+
+</body>
+</html>
