@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Food Game Media — The Rules Have Changed</title>
-<meta name="description" content="Food Game Media. Behavioural, systems-led insight for Australian hospitality. Consulting, newsletter, podcast, and the upcoming book by Julian Blok.">
+<meta name="description" content="Food Game Media. Behavioural, systems-led insight for Australian hospitality. Consulting, newsletter, and the upcoming book by Julian Blok.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -723,7 +723,7 @@ body {
       <a href="#about" onclick="smoothNav('about')">About</a>
       <a href="#consulting" onclick="smoothNav('consulting')">Services</a>
       <a href="#book" onclick="smoothNav('book')">Books</a>
-      <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a>
+      <!-- HIDDEN 2026-09-02: <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a> -->
       <a href="/newsletter.html">Newsletter</a>
       <a href="/contrarian.html">The Contrarian</a>
       <a href="#" class="nav-cta" onclick="navigateTo('contact'); return false;">Contact</a>
@@ -735,7 +735,7 @@ body {
   <a href="#about" onclick="smoothNav('about'); closeMobile();">About</a>
   <a href="#consulting" onclick="smoothNav('consulting'); closeMobile();">Services</a>
   <a href="#book" onclick="smoothNav('book'); closeMobile();">Books</a>
-  <a href="#podcast" onclick="smoothNav('podcast'); closeMobile();">Podcast</a>
+  <!-- HIDDEN 2026-09-02: <a href="#podcast" onclick="smoothNav('podcast'); closeMobile();">Podcast</a> -->
   <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
   <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
   <a href="#" onclick="navigateTo('contact'); closeMobile(); return false;">Contact</a>
@@ -836,7 +836,7 @@ body {
         <p>Eight questions. Five minutes. A clear picture of where your design problems actually live.</p>
         <p>You&rsquo;ve diagnosed the problem a dozen times. Wrong roster. Wrong hire. Wrong week. That diagnosis never quite fixes it &mdash; because it&rsquo;s aimed at the wrong cause. The Diagnostic Card gives you a different starting point: the six domains where design problems hide in plain sight, costing you in ways that are hard to name until you know what you&rsquo;re looking for.</p>
         <p>The pattern your answers produce tells you which part of your operation is carrying the most load &mdash; and exactly where calm is farthest away. It&rsquo;s the first step in every engagement we run, and it&rsquo;s free.</p>
-        <a href="diagnostic-card.pdf" class="btn btn-primary" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+        <a href="#" class="btn btn-primary" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
       </div>
       <div>
         <div class="diag-domains">
@@ -915,7 +915,7 @@ body {
               <div class="acc-sec-label">Investment</div>
               <p>From <strong>$3,800</strong> &mdash; internal / CPD events<br>From <strong>$5,500</strong> &mdash; conference / external events</p>
               <div class="acc-ctas">
-                <a href="diagnostic-card.pdf" class="btn btn-primary btn-sm" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+                <a href="#" class="btn btn-primary btn-sm" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
                 <a href="#" class="btn btn-outline btn-sm" onclick="navigateTo('contact'); return false;">Enquire about a keynote &rarr;</a>
               </div>
             </div>
@@ -957,7 +957,7 @@ body {
               <div class="acc-sec-label">Investment</div>
               <p><strong>$1,500</strong> standalone<br><strong>Complimentary</strong> following an S1 keynote engagement</p>
               <div class="acc-ctas">
-                <a href="diagnostic-card.pdf" class="btn btn-primary btn-sm" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+                <a href="#" class="btn btn-primary btn-sm" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
                 <a href="#" class="btn btn-outline btn-sm" onclick="navigateTo('contact'); return false;">Book a Systems Conversation &rarr;</a>
               </div>
             </div>
@@ -999,7 +999,7 @@ body {
               <div class="acc-sec-label">Investment</div>
               <p>From <strong>$2,250</strong> &mdash; single venue<br>From <strong>$6,500</strong> &mdash; conference / open cohort</p>
               <div class="acc-ctas">
-                <a href="diagnostic-card.pdf" class="btn btn-primary btn-sm" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+                <a href="#" class="btn btn-primary btn-sm" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
                 <a href="#" class="btn btn-outline btn-sm" onclick="navigateTo('contact'); return false;">Enquire about a workshop &rarr;</a>
               </div>
             </div>
@@ -1040,7 +1040,7 @@ body {
               <div class="acc-sec-label">Investment</div>
               <p><strong>$4,250</strong> &mdash; single venue<br><strong>$7,500</strong> &mdash; two venues, comparative<br><strong>$800</strong> &mdash; optional 60-day follow-up call</p>
               <div class="acc-ctas">
-                <a href="diagnostic-card.pdf" class="btn btn-primary btn-sm" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+                <a href="#" class="btn btn-primary btn-sm" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
                 <a href="#" class="btn btn-outline btn-sm" onclick="navigateTo('contact'); return false;">Enquire about a Venue Review &rarr;</a>
               </div>
             </div>
@@ -1079,7 +1079,7 @@ body {
               <div class="acc-sec-label">Investment</div>
               <p><strong>$1,990</strong> per month &mdash; 6-month minimum<br><em>Includes monthly session, written advisory note, one emergency call, quarterly review</em></p>
               <div class="acc-ctas">
-                <a href="diagnostic-card.pdf" class="btn btn-primary btn-sm" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+                <a href="#" class="btn btn-primary btn-sm" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
                 <a href="#" class="btn btn-outline btn-sm" onclick="navigateTo('contact'); return false;">Enquire about retained advisory &rarr;</a>
               </div>
             </div>
@@ -1173,7 +1173,7 @@ body {
   <!-- SECTION CLOSE CTA -->
   <div style="margin-top: 60px; text-align: center;" class="reveal">
     <p style="color: var(--text-body); font-size: 16px; max-width: 540px; margin: 0 auto 28px; line-height: 1.8;">Not sure where to start? Start with the card. It takes five minutes and tells you more than most consultants find in a day.</p>
-    <a href="diagnostic-card.pdf" class="btn btn-primary" download>Download the Diagnostic Card &mdash; Free &rarr;</a>
+    <a href="#" class="btn btn-primary" onclick="navigateTo('contact'); return false;">Request the Diagnostic Card &mdash; Free &rarr;</a>
   </div>
 
 </section>
@@ -1269,6 +1269,7 @@ body {
 </section>
 
 <!-- PODCAST -->
+<!-- HIDDEN 2026-09-02 — podcast section. Restore by deleting this comment wrapper.
 <section class="section" id="podcast">
   <div class="podcast-section">
     <div>
@@ -1299,6 +1300,7 @@ body {
     </div>
   </div>
 </section>
+-->
 
 <!-- NEWSLETTER CTA -->
 <section class="section" id="newsletter">
@@ -1379,7 +1381,7 @@ body {
           <select id="c-interest" name="interest">
             <option value="consulting">Consulting &amp; Advisory</option>
             <option value="newsletter">Food Game Weekly Wrap</option>
-            <option value="podcast">Podcast (Guest / Collaboration)</option>
+            <option value="diagnostic">The Diagnostic Card</option>
             <option value="book">Books</option>
             <option value="general">General Enquiry</option>
           </select>
@@ -1404,7 +1406,7 @@ body {
       <a href="#about" onclick="smoothNav('about')">About</a>
       <a href="#consulting" onclick="smoothNav('consulting')">Services</a>
       <a href="#book" onclick="smoothNav('book')">Books</a>
-      <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a>
+      <!-- HIDDEN 2026-09-02: <a href="#podcast" onclick="smoothNav('podcast')">Podcast</a> -->
       <a href="/newsletter.html">Newsletter</a>
       <a href="/contrarian.html">The Contrarian</a>
       <a href="#" onclick="navigateTo('contact'); return false;">Contact</a>
