@@ -25,3 +25,6 @@
 # URL serves the file without a visible .html.
 /matrix-mate           /matrix-mate.html                                   200
 /venue-by-design       /venue-by-design.html                               200
+
+# The live Diagnostic Card. Same 200-rewrite pattern as the others.
+/diagnostic            /diagnostic.html                                    200
