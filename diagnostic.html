@@ -367,9 +367,9 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
     <h3>Why</h3>
     <p>To work out your pattern, show it to you, email you a copy, and follow up if you ask us to. If you left the newsletter box ticked, we also add you to the Food Game Weekly Wrap, and every issue has an unsubscribe link.</p>
     <h3>Where it lives</h3>
-    <p>In a secured database hosted in Sydney. Your data stays in Australia, and only Food Game Media can read it.</p>
+    <p>Your answers and contact details are stored in a secured database hosted in Sydney. A few trusted services help us deliver things: our email provider sends your result, our booking tool runs the free call, and our newsletter platform handles the Weekly Wrap if you asked for it. Some of those are based overseas. They act only on our instructions.</p>
     <h3>What we do not do</h3>
-    <p>We do not sell your information. We do not share it with anyone outside Food Game Media. If that ever changes for a new product, we will ask you first, and you can say no.</p>
+    <p>We do not sell your information, and we do not hand it to anyone for their own purposes. If we ever want to use it for something new, we will ask you first, and you can say no.</p>
     <h3>Your rights</h3>
     <p>Ask us what we hold, ask us to correct it, or ask us to delete it, any time: <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a>. We handle personal information in line with the Australian Privacy Principles.</p>
     <button class="btn btn-primary pv-close" onclick="closePrivacy()">Close</button>
@@ -608,25 +608,11 @@ window.DC = {
       }
     }
 
-    let emailed = false;
-    if (DC_CONFIG.EMAIL_WORKER_URL && stored) {
-      try {
-        const r = await fetch(DC_CONFIG.EMAIL_WORKER_URL + "/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            kind: "dc_result",
-            to: details.email,
-            first_name: details.first_name,
-            venue_name: details.venue_name,
-            domain_scores, calm_reading, priorities
-          })
-        });
-        emailed = r.ok;
-      } catch (e) {
-        console.error("DC: result email failed", e);
-      }
-    }
+    /* The email is sent server-side by a trigger on dc_submissions,
+       carrying the vault secret. The browser cannot call the Worker
+       (no CORS) and an anonymous send endpoint would be an open
+       relay, so if the row stored, the email is on its way. */
+    const emailed = stored;
 
     this.render(emailed);
     btn.disabled = false; btn.textContent = "Show me the pattern";
