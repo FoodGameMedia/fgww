@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     THE DIAGNOSTIC CARD — Food Game Media
+     File: diagnostic.html
+     Version: 1.0 | 2026-09-03 (Sydney)
+     Source: DC_Instrument_Spec_v1.0 (approved 2026-09-03)
+     Instrument: nine questions across the seven Venue by Design
+       domains, plus two calm readings. Q1 redrafted to a severity
+       ladder, old Q2 retired, old Q4 relabelled to Pacing, new
+       Signals and Endings questions added. All approved 2026-09-03.
+     Output: pattern, not prescription (Section 15). No total score,
+       no fixes. The two domains carrying the most pressure, then
+       the free call. The prescription is what the call is for.
+     Routing: this funnels to consulting. No cross-sell to the QAT
+       or to Venue by Design.
+     Backend: Supabase dc_submissions (migration 005). Insert only,
+       no RETURNING — see Section 8, the 42501 trap.
+     Design system: inherited exactly from live index.html.
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Diagnostic Card — Food Game Media</title>
+<meta name="description" content="Nine questions. Five minutes. Free. A clear picture of where your venue's design problems actually live, across seven domains. From Food Game Media.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a2f52;
+  --navy-light: #243b6b;
+  --pink: #f4a7b9;
+  --pink-light: #fce4ec;
+  --pink-bright: #e91e8c;
+  --white: #ffffff;
+  --cream: #fdf8f5;
+  --grey: #8a9ab5;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --border: rgba(244,167,185,0.22);
+  --text-body: rgba(255,255,255,0.82);
+  --section-gap: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ NAV (inherited) ═══ */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,31,56,0.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.nav-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900;
+  text-decoration: none; color: var(--white); letter-spacing: -0.3px; cursor: pointer; }
+.nav-brand span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { font-size: 12px; font-weight: 600; letter-spacing: 1.2px;
+  text-decoration: none; color: var(--grey); transition: color 0.2s; text-transform: uppercase; }
+.nav-links a:hover { color: var(--pink); }
+.nav-cta { background: var(--pink) !important; color: var(--navy) !important;
+  padding: 8px 20px !important; border-radius: 6px; transition: all 0.2s !important; }
+.nav-cta:hover { background: var(--pink-bright) !important; color: var(--white) !important; }
+.nav-toggle { display: none; background: none; border: none; color: var(--white); font-size: 24px; cursor: pointer; }
+.mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+  background: var(--navy-mid); padding: 40px; flex-direction: column; gap: 24px; z-index: 999; }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { font-size: 18px; font-weight: 500; color: var(--white);
+  text-decoration: none; padding: 12px 0; border-bottom: 1px solid var(--border); }
+
+/* ═══ BUTTONS (inherited) ═══ */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
+  border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: all 0.25s; border: none; letter-spacing: 0.3px; }
+.btn-primary { background: var(--pink); color: var(--navy); }
+.btn-primary:hover { background: var(--pink-bright); color: var(--white); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+/* ═══ FORMS (inherited) ═══ */
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label { font-size: 12px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--grey); }
+.form-group input {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; color: var(--white); transition: border-color 0.2s; outline: none; }
+.form-group input:focus { border-color: var(--pink); }
+.form-error { color: var(--red); font-size: 12px; margin-top: 4px; display: none; }
+.form-group.has-error input { border-color: var(--red); }
+.form-group.has-error .form-error { display: block; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* ═══ PAGE ═══ */
+.dc-wrap { max-width: 860px; margin: 0 auto; padding: 150px 40px 100px; }
+.dc-step { display: none; }
+.dc-step.active { display: block; animation: fadeUp 0.5s ease forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.dc-kicker { font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--pink); margin-bottom: 18px; }
+h1 { font-family: 'Playfair Display', serif; font-size: clamp(34px, 5vw, 52px);
+  font-weight: 900; line-height: 1.15; margin-bottom: 26px; }
+.dc-intro p { color: var(--text-body); font-size: 17px; margin-bottom: 18px; max-width: 660px; }
+h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 700; margin: 0 0 10px; }
+.dc-sub { color: var(--grey); font-size: 15px; margin-bottom: 36px; }
+
+/* Questions */
+.q-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 14px; padding: 30px 32px; margin-bottom: 26px; }
+.q-num { font-size: 12px; font-weight: 700; letter-spacing: 1.6px;
+  color: var(--pink); text-transform: uppercase; margin-bottom: 4px; }
+.q-domain { font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 12px; }
+.q-text { font-size: 17px; font-weight: 500; line-height: 1.6; margin-bottom: 20px; }
+.q-opts { display: flex; flex-direction: column; gap: 10px; }
+.q-opt { display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--border);
+  border-radius: 10px; padding: 13px 16px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s; font-size: 15px; color: var(--text-body); }
+.q-opt:hover { border-color: var(--pink); }
+.q-opt input { accent-color: var(--pink-bright); margin-top: 5px; flex-shrink: 0; }
+.q-opt.selected { border-color: var(--pink); background: rgba(244,167,185,0.07); color: var(--white); }
+.q-missing { border-color: var(--red) !important; }
+
+.dc-actions { margin-top: 40px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.dc-note { font-size: 13px; color: var(--grey); }
+.dc-alert { display: none; margin-top: 18px; padding: 14px 18px;
+  border: 1px solid var(--red); border-radius: 10px; color: var(--red); font-size: 14px; }
+.dc-alert.show { display: block; }
+
+/* Capture */
+.dc-form { display: flex; flex-direction: column; gap: 20px; max-width: 620px; }
+.dc-check { display: flex; align-items: flex-start; gap: 12px; font-size: 14px;
+  color: var(--text-body); cursor: pointer; }
+.dc-check input { accent-color: var(--pink-bright); margin-top: 5px; flex-shrink: 0; }
+.dc-check a { color: var(--pink); }
+.hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+
+/* Result — the ranked domains */
+.r-lead { font-family: 'DM Serif Display', serif; font-size: clamp(19px, 2.3vw, 24px);
+  line-height: 1.55; color: var(--white); margin-bottom: 40px; max-width: 720px; }
+.dom-rank { border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; margin-bottom: 44px; }
+.dr { display: grid; grid-template-columns: 210px 1fr 92px;
+  align-items: center; border-top: 1px solid var(--border); }
+.dr:first-child { border-top: none; }
+.dr.hot { background: rgba(244,167,185,0.07); }
+.dr-name { padding: 16px 24px; font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 700; }
+.dr.hot .dr-name { color: var(--pink); }
+.dr-bar-wrap { padding: 16px 12px; }
+.dr-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.dr-bar span { display: block; height: 100%; border-radius: 4px; background: var(--pink); }
+.dr.hot .dr-bar span { background: var(--pink-bright); }
+.dr-lbl { padding: 16px 24px; font-size: 12px; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--grey); text-align: right; white-space: nowrap; }
+
+.p-block { background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-left: 3px solid var(--pink); border-radius: 12px;
+  padding: 28px 30px; margin-bottom: 22px; }
+.p-block .p-dom { font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 10px; }
+.p-block h4 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+.p-block p { color: var(--text-body); font-size: 15px; }
+
+.r-close { color: var(--text-body); font-size: 16px; max-width: 720px; margin: 34px 0 0; }
+.r-cta { background: linear-gradient(135deg, rgba(244,167,185,0.10) 0%, rgba(233,30,140,0.04) 100%);
+  border: 1px solid var(--border); border-radius: 16px; padding: 36px 38px; margin-top: 44px; }
+.r-cta .r-cta-kicker { font-size: 11px; letter-spacing: 2.4px; text-transform: uppercase;
+  color: var(--pink); font-weight: 700; margin-bottom: 12px; }
+.r-cta h3 { font-family: 'Playfair Display', serif; font-size: 23px; font-weight: 700; margin-bottom: 14px; }
+.r-cta p { color: var(--text-body); font-size: 15px; margin-bottom: 22px; }
+.r-emailnote { font-size: 13px; color: var(--grey); margin-top: 22px; }
+
+/* The quiet paper option */
+.paper { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--border); }
+.paper p { font-size: 13px; color: var(--grey); }
+.paper a { color: var(--grey); text-decoration: underline; }
+.paper a:hover { color: var(--pink); }
+
+/* Privacy modal (inherited) */
+.pv-overlay { display: none; position: fixed; inset: 0; z-index: 2000;
+  background: rgba(15,31,56,0.85); backdrop-filter: blur(6px); padding: 24px; overflow-y: auto; }
+.pv-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.pv-modal { background: var(--navy-mid); border: 1px solid var(--border);
+  border-radius: 16px; max-width: 640px; width: 100%; padding: 40px; margin: 60px 0; }
+.pv-modal h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+.pv-modal h3 { font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  color: var(--pink); margin: 20px 0 6px; }
+.pv-modal p { color: var(--text-body); font-size: 15px; }
+.pv-modal a { color: var(--pink); }
+.pv-close { margin-top: 28px; }
+
+/* ═══ FOOTER (inherited) ═══ */
+.footer { border-top: 1px solid var(--border); padding: 56px 40px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex;
+  justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 900; }
+.footer-brand span { color: var(--pink); }
+.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--pink); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); width: 100%; text-align: center; margin-top: 24px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .dc-wrap { padding: 120px 24px 80px; }
+  .form-row { grid-template-columns: 1fr; }
+  .q-card { padding: 24px 20px; }
+  .dr { grid-template-columns: 1fr 76px; }
+  .dr-bar-wrap { grid-column: 1 / -1; padding: 0 24px 16px; }
+  .dr-name { padding-bottom: 8px; }
+  .dr-lbl { padding-top: 16px; }
+  .pv-modal { padding: 30px 22px; }
+  .r-cta { padding: 28px 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Food Game <span>Media</span></a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#platforms">Platforms</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#about" onclick="closeMobile()">About</a>
+  <a href="/#consulting" onclick="closeMobile()">Services</a>
+  <a href="/#platforms" onclick="closeMobile()">Platforms</a>
+  <a href="/#book" onclick="closeMobile()">Books</a>
+  <a href="/newsletter.html" onclick="closeMobile()">Newsletter</a>
+  <a href="/contrarian.html" onclick="closeMobile()">The Contrarian</a>
+  <a href="/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<div class="dc-wrap">
+
+  <!-- ═══════ STEP 1: INTRO + QUESTIONS ═══════ -->
+  <section class="dc-step active" id="step-questions">
+    <div class="dc-intro">
+      <div class="dc-kicker">Free &middot; Five minutes &middot; Nine questions</div>
+      <h1>The Diagnostic Card</h1>
+      <p>You have diagnosed the problem a dozen times. Wrong roster. Wrong hire. Wrong week. The diagnosis never quite fixes it, because it is aimed at the wrong cause.</p>
+      <p>This card gives you a different starting point: the seven domains where design problems hide in plain sight, costing you in ways that are hard to name until you know what you are looking for. Nine questions, answered honestly about an ordinary day, and the pattern tells you which part of your operation is carrying the most load.</p>
+      <p>It does not tell you what to do about it. That is deliberate, and it is what the free call at the end is for.</p>
+    </div>
+
+    <h2 class="dc-h2">Nine questions about an ordinary day</h2>
+    <p class="dc-sub">Not your best service, not your worst. The ordinary middle of your week.</p>
+
+    <div id="questionList"><!-- built by JS --></div>
+
+    <div class="dc-actions">
+      <button class="btn btn-primary" onclick="DC.toCapture()">Continue</button>
+      <span class="dc-note">Your pattern is worked out on the next screen.</span>
+    </div>
+    <div class="dc-alert" id="qAlert">Answer all nine questions to continue. The unanswered ones are marked.</div>
+  </section>
+
+  <!-- ═══════ STEP 2: CAPTURE ═══════ -->
+  <section class="dc-step" id="step-capture">
+    <h2 class="dc-h2">Where to send it</h2>
+    <p class="dc-sub">Three fields. Your pattern appears on screen either way; this is so you have a copy, and so I know which venue I am reading.</p>
+
+    <div class="dc-form" id="captureForm">
+      <p class="hp-field"><label>Leave this field empty: <input type="text" id="f-company" name="company" tabindex="-1" autocomplete="off"></label></p>
+
+      <div class="form-row">
+        <div class="form-group" data-field="first_name">
+          <label for="f-first">First name</label>
+          <input type="text" id="f-first" autocomplete="given-name">
+          <span class="form-error">Enter your first name.</span>
+        </div>
+        <div class="form-group" data-field="venue_name">
+          <label for="f-venue">Venue name</label>
+          <input type="text" id="f-venue" autocomplete="organization">
+          <span class="form-error">Enter your venue name.</span>
+        </div>
+      </div>
+
+      <div class="form-group" data-field="email">
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" placeholder="you@venue.com.au" autocomplete="email">
+        <span class="form-error">Enter a valid email address. Your copy lands here.</span>
+      </div>
+
+      <label class="dc-check">
+        <input type="checkbox" id="f-fgww" checked>
+        <span>Send me the Food Game Weekly Wrap. Free, weekly, no fluff. Unsubscribe any time.</span>
+      </label>
+
+      <div class="form-group" data-field="privacy_consent" style="gap:4px;">
+        <label class="dc-check" style="text-transform:none; letter-spacing:0; font-size:14px;">
+          <input type="checkbox" id="f-privacy">
+          <span>I agree to Food Game Media storing this to send my result and follow up. <a href="#" onclick="openPrivacy(); return false;">Privacy, in plain English</a>.</span>
+        </label>
+        <span class="form-error">The result cannot be sent without this.</span>
+      </div>
+
+      <div class="dc-actions">
+        <button class="btn btn-outline" onclick="DC.backToQuestions()">Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="DC.submit()">Show me the pattern</button>
+      </div>
+      <div class="dc-alert" id="cAlert">Fix the marked fields to continue.</div>
+    </div>
+  </section>
+
+  <!-- ═══════ STEP 3: RESULT ═══════ -->
+  <section class="dc-step" id="step-result">
+    <div class="dc-kicker">Your pattern</div>
+    <h2 class="dc-h2" id="rHead">Where the load is concentrated</h2>
+    <p class="r-lead" id="rLead"></p>
+
+    <div class="dom-rank" id="rRank"></div>
+
+    <h2 class="dc-h2" style="margin-bottom:24px;" id="rBlocksHead">The two carrying the most</h2>
+    <div id="rBlocks"></div>
+
+    <p class="r-close" id="rClose"></p>
+
+    <div class="r-cta">
+      <div class="r-cta-kicker">Free &mdash; 30 minutes</div>
+      <h3>Not sure what your pattern means? I will read it with you.</h3>
+      <p>A free thirty-minute call. We walk through your pattern together, I tell you where your design problems are actually concentrated, and you leave with a clear picture of what calm would look like in your specific operation. No pitch, no obligation, and it is useful whether or not we ever work together.</p>
+      <a class="btn btn-primary" href="https://calendly.com/julian-foodgamemedia" target="_blank" rel="noopener">Book the free call &rarr;</a>
+    </div>
+
+    <p class="r-emailnote" id="rEmailNote">A copy of this pattern is on its way to your inbox.</p>
+
+    <div class="paper">
+      <p>Prefer it on paper? There is a printable version of the card you can fill in by hand and bring to the call. <a href="#" onclick="DC.requestCard(); return false;" id="paperLink">Have it emailed to you</a>.</p>
+      <p id="paperMsg" style="display:none; margin-top:10px; color:var(--pink);"></p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════ PRIVACY MODAL ═══════ -->
+<div class="pv-overlay" id="pvOverlay" onclick="if(event.target===this)closePrivacy()">
+  <div class="pv-modal">
+    <h2>Privacy, in plain English</h2>
+    <h3>What we collect</h3>
+    <p>Your first name, email, venue name and your nine answers, exactly as you entered them.</p>
+    <h3>Why</h3>
+    <p>To work out your pattern, show it to you, email you a copy, and follow up if you ask us to. If you left the newsletter box ticked, we also add you to the Food Game Weekly Wrap, and every issue has an unsubscribe link.</p>
+    <h3>Where it lives</h3>
+    <p>In a secured database hosted in Sydney. Your data stays in Australia, and only Food Game Media can read it.</p>
+    <h3>What we do not do</h3>
+    <p>We do not sell your information. We do not share it with anyone outside Food Game Media. If that ever changes for a new product, we will ask you first, and you can say no.</p>
+    <h3>Your rights</h3>
+    <p>Ask us what we hold, ask us to correct it, or ask us to delete it, any time: <a href="mailto:julian@foodgamemedia.com.au">julian@foodgamemedia.com.au</a>. We handle personal information in line with the Australian Privacy Principles.</p>
+    <button class="btn btn-primary pv-close" onclick="closePrivacy()">Close</button>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Food Game <span>Media</span></div>
+    <div class="footer-links">
+      <a href="/#about">About</a>
+      <a href="/#consulting">Services</a>
+      <a href="/#platforms">Platforms</a>
+      <a href="/#book">Books</a>
+      <a href="/newsletter.html">Newsletter</a>
+      <a href="/contrarian.html">The Contrarian</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Food Game Media Pty Ltd. All rights reserved. Sydney, Australia.</div>
+  </div>
+</footer>
+
+<script>
+function toggleMobile(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+function openPrivacy(){ document.getElementById('pvOverlay').classList.add('open'); }
+function closePrivacy(){ document.getElementById('pvOverlay').classList.remove('open'); }
+</script>
+
+<script type="module">
+/* ═══ Configuration ═══
+   The publishable key is public by design. dc_submissions is
+   insert-only for anon with no SELECT policy, so this key grants
+   nothing beyond writing a row. */
+const DC_CONFIG = {
+  SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
+  EMAIL_WORKER_URL: "https://fgm-lifecycle.julian-68d.workers.dev"
+};
+
+/* ═══ The instrument (DC_Instrument_Spec_v1.0, approved) ═══
+   Options are ordered best to worst and score 3/2/1/0, matching
+   The Calm Venue so a domain score here reads the same way. */
+const QUESTIONS = [
+  { id:"q1", domain:"throughput", label:"Throughput",
+    text:"On your busiest realistic service, when the volume peaks, what happens?",
+    opts:["The system holds. People know their lanes and it runs",
+          "It strains, but recovers without anyone's night being ruined",
+          "One or two people carry it through effort, and you can see the cost",
+          "Something gives way and the night becomes about survival"] },
+  { id:"q2", domain:"pacing", label:"Pacing",
+    text:"How would you describe the last twenty minutes before service begins?",
+    opts:["Calm and deliberate. Everyone knows their role, the space is ready",
+          "Busy but functional. We get there",
+          "Rushed. Finishing setup when the first guests arrive",
+          "Chaotic. Prep discipline is our biggest unsolved problem"] },
+  { id:"q3", domain:"defaults", label:"Defaults",
+    text:"When something goes wrong mid-service and you are not available, what happens?",
+    opts:["The team handles it. There is a protocol and they use it",
+          "Someone senior steps in. The same person every time",
+          "It gets managed, but inconsistently. It depends who is on",
+          "It usually escalates until I am involved"] },
+  { id:"q4", domain:"people_load", label:"People Load",
+    text:"Is there one person whose absence would immediately and materially affect service quality?",
+    opts:["No. The system is built so no single person is irreplaceable",
+          "Yes, and it is not me",
+          "Yes, and it is me",
+          "Yes, and there is more than one of them"] },
+  { id:"q5", domain:"signals", label:"Signals",
+    text:"How often do your staff have to verbally correct a guest, explaining how ordering works, what the venue does not do, or where they should be?",
+    opts:["Rarely. The room teaches the rules before anyone has to speak",
+          "Occasionally. A few predictable corrections each service",
+          "Regularly. The same explanations every shift, to guests who could not have known",
+          "Constantly. Correcting guests is simply part of the job here"] },
+  { id:"q6", domain:"endings", label:"Endings",
+    text:"The last ninety seconds of a guest's visit, the bill, the farewell, the door, are:",
+    opts:["Owned by someone, and they feel the same every time",
+          "Usually warm, depending on how busy we are",
+          "Whatever happens, whenever someone gets to them",
+          "Rushed or forgotten, and we know it"] },
+  { id:"q7", domain:"operational_memory", label:"Operational Memory",
+    text:"When a problem repeats, the same thing going wrong twice, what happens?",
+    opts:["We identify the design cause and change the system so it cannot repeat",
+          "We debrief, agree on a fix, but rarely follow through",
+          "We deal with it each time it happens and move on",
+          "We have stopped debriefing. There is no time and nothing seems to stick"] },
+  { id:"q8", domain:"calm", label:"Calm Index",
+    text:"On a normal trading day, not a crisis, how would you describe the energy in your operation?",
+    opts:["Calm and deliberate. The system runs and I can work on the business",
+          "Busy but managed. It works, but requires constant attention",
+          "Reactive. Responding all day rather than executing a plan",
+          "On the edge. One unexpected thing and the day changes character"] },
+  { id:"q9", domain:"calm", label:"Calm Index",
+    text:"When did you last finish a service and feel it ran exactly as you designed it to run?",
+    opts:["Recently. This is a regular experience",
+          "Occasionally. Maybe once or twice a month",
+          "Rarely. I can remember specific instances but they are unusual",
+          "I am not sure we have a design. We have a routine that mostly holds"] }
+];
+
+const DOMAINS = [
+  ["throughput","Throughput"], ["pacing","Pacing"], ["defaults","Defaults"],
+  ["people_load","People Load"], ["signals","Signals"], ["endings","Endings"],
+  ["operational_memory","Operational Memory"]
+];
+
+/* What pressure in each domain actually means. Pattern, not prescription:
+   these name the problem and stop short of the fix on purpose. */
+const READING = {
+  throughput: { title:"The night that has to be carried",
+    body:"When volume peaks, the design stops doing the work and people start. That is survivable and it is expensive, because the cost is paid in effort rather than in anything that shows up on a line item. It is also the domain that hides best: a busy room looks like success right up until the week someone is away." },
+  pacing: { title:"Starting the day already behind",
+    body:"Prep that runs into service does not cost you twenty minutes. It costs you the whole night, because the first guests absorb the shortfall and the room never quite catches up. Pacing problems look like effort problems and almost never are." },
+  defaults: { title:"Decisions made from scratch, every service",
+    body:"When the answer depends on who is standing there, the venue does not have a rule, it has a lottery. Staff feel it before guests do, in the small stall and the glance toward the pass. Most margin leakage lives in this domain, quietly, one improvised call at a time." },
+  people_load: { title:"The operation that runs on a person",
+    body:"Somewhere in the building a person is doing a system's job, and the business is paying them in goodwill rather than design. It works, visibly and well, until they are away. This is the single most common pattern in Australian hospitality and the one operators are least able to see from the inside." },
+  signals: { title:"A room that is not doing its share",
+    body:"Every correction your staff have to make out loud is a message the space failed to deliver. That work does not disappear when the room stays silent, it just moves onto people, all night, in small pieces nobody counts. Guests read the correction as friction and rarely blame the room." },
+  endings: { title:"The last ninety seconds, unowned",
+    body:"The ending is the part of the visit guests remember most accurately and venues design least. When the bill, the farewell and the door are whatever is left over, an otherwise good service gets filed under something less than it was." },
+  operational_memory: { title:"Solving the same problem twice",
+    body:"A problem that recurs is not bad luck, it is an unwritten decision. The operation is relearning, at full price, something it already knew, and the cost compounds because nothing accumulates. This is the cheapest domain to change and the most expensive to leave." }
+};
+
+const CALM_READING = [
+  { min:5, text:"On an ordinary day this operation is largely running to a design, which is rarer than you would think. The pattern below is about protecting that as people change, rather than rescuing anything." },
+  { min:3, text:"On an ordinary day this operation works, and it works because it is being watched. That is a fair position to be in and it is not free: the attention it takes is attention not going anywhere else." },
+  { min:0, text:"On an ordinary day this operation is being survived rather than run. Nothing in that is an accusation. It says the design is absent, and design is a thing that can be installed." }
+];
+
+/* ═══ Supabase ═══ */
+let supabase = null;
+try {
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  supabase = createClient(DC_CONFIG.SUPABASE_URL, DC_CONFIG.SUPABASE_ANON_KEY);
+} catch (e) {
+  console.error("DC: Supabase client failed to load", e);
+}
+
+window.DC = {
+  result: null,
+
+  getAnswers() {
+    const a = {};
+    for (const q of QUESTIONS) {
+      const sel = document.querySelector(`input[name="${q.id}"]:checked`);
+      if (sel) a[q.id] = parseInt(sel.value, 10);
+    }
+    return a;
+  },
+
+  score(answers) {
+    const domain_scores = {};
+    for (const [key] of DOMAINS) {
+      const q = QUESTIONS.find(x => x.domain === key);
+      domain_scores[key] = answers[q.id];
+    }
+    const calm_reading = answers.q8 + answers.q9;
+    /* Only domains actually under pressure can be priorities. Without this
+       guard a venue scoring 3 across the board would still be told two
+       domains were carrying the most load, which is nonsense and would
+       destroy the credibility of everything above it. */
+    const priorities = DOMAINS
+      .map(([k]) => k)
+      .filter(k => domain_scores[k] < 3)
+      .sort((a, b) => (domain_scores[a] - domain_scores[b]) ||
+                      (DOMAINS.findIndex(d=>d[0]===a) - DOMAINS.findIndex(d=>d[0]===b)))
+      .slice(0, 2);
+    return { domain_scores, calm_reading, priorities };
+  },
+
+  toCapture() {
+    const answers = this.getAnswers();
+    let ok = true;
+    for (const q of QUESTIONS) {
+      const card = document.getElementById(`card-${q.id}`);
+      const missing = !(q.id in answers);
+      card.classList.toggle("q-missing", missing);
+      if (missing) ok = false;
+    }
+    document.getElementById("qAlert").classList.toggle("show", !ok);
+    if (!ok) return;
+    this.show("step-capture");
+  },
+
+  backToQuestions() { this.show("step-questions"); },
+
+  validate() {
+    const get = id => document.getElementById(id).value.trim();
+    const v = {
+      first_name: get("f-first"),
+      venue_name: get("f-venue"),
+      email: get("f-email"),
+      fgww_optin: document.getElementById("f-fgww").checked,
+      privacy_consent: document.getElementById("f-privacy").checked
+    };
+    const errors = {};
+    if (!v.first_name) errors.first_name = 1;
+    if (!v.venue_name) errors.venue_name = 1;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = 1;
+    if (!v.privacy_consent) errors.privacy_consent = 1;
+    document.querySelectorAll("#captureForm .form-group[data-field]").forEach(g => {
+      g.classList.toggle("has-error", g.dataset.field in errors);
+    });
+    document.getElementById("cAlert").classList.toggle("show", Object.keys(errors).length > 0);
+    return Object.keys(errors).length ? null : v;
+  },
+
+  async submit() {
+    if (document.getElementById("f-company").value) return; /* honeypot */
+    const details = this.validate();
+    if (!details) return;
+
+    const answers = this.getAnswers();
+    const { domain_scores, calm_reading, priorities } = this.score(answers);
+    this.result = { details, answers, domain_scores, calm_reading, priorities };
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true; btn.textContent = "Reading…";
+
+    let stored = false;
+    if (supabase) {
+      try {
+        /* No .select() here on purpose. Asking for the row back requires a
+           SELECT policy, and anonymous submitters have none, so PostgREST
+           aborts the whole insert with 42501. Insert only. */
+        const { error } = await supabase.from("dc_submissions").insert({
+          ...details, answers, domain_scores, calm_reading, priorities
+        });
+        if (error) throw error;
+        stored = true;
+      } catch (e) {
+        console.error("DC: submission storage failed", e);
+      }
+    }
+
+    let emailed = false;
+    if (DC_CONFIG.EMAIL_WORKER_URL && stored) {
+      try {
+        const r = await fetch(DC_CONFIG.EMAIL_WORKER_URL + "/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kind: "dc_result",
+            to: details.email,
+            first_name: details.first_name,
+            venue_name: details.venue_name,
+            domain_scores, calm_reading, priorities
+          })
+        });
+        emailed = r.ok;
+      } catch (e) {
+        console.error("DC: result email failed", e);
+      }
+    }
+
+    this.render(emailed);
+    btn.disabled = false; btn.textContent = "Show me the pattern";
+    this.show("step-result");
+  },
+
+  render(emailed) {
+    const { domain_scores, calm_reading, priorities } = this.result;
+    document.getElementById("rLead").textContent =
+      (CALM_READING.find(c => calm_reading >= c.min) || CALM_READING[CALM_READING.length-1]).text;
+
+    const ranked = DOMAINS.slice().sort((a,b) => domain_scores[a[0]] - domain_scores[b[0]]);
+    document.getElementById("rRank").innerHTML = ranked.map(([k,name]) => {
+      const s = domain_scores[k];
+      const hot = priorities.includes(k);
+      const lbl = ["Most pressure","Under pressure","Holding","Designed"][s];
+      return `<div class="dr${hot ? " hot" : ""}">
+        <div class="dr-name">${name}</div>
+        <div class="dr-bar-wrap"><div class="dr-bar"><span style="width:${(s/3)*100}%"></span></div></div>
+        <div class="dr-lbl">${lbl}</div>
+      </div>`;
+    }).join("");
+
+    const heads = document.getElementById("rBlocksHead");
+    document.getElementById("rBlocks").innerHTML = priorities.map(k => {
+      const d = READING[k];
+      const name = DOMAINS.find(x => x[0] === k)[1];
+      return `<div class="p-block">
+        <div class="p-dom">${name}</div>
+        <h4>${d.title}</h4>
+        <p>${d.body}</p>
+      </div>`;
+    }).join("");
+
+    const names = priorities.map(k => DOMAINS.find(x => x[0] === k)[1]);
+    const vals = DOMAINS.map(([k]) => domain_scores[k]);
+    const flat = Math.max(...vals) === Math.min(...vals);
+    let close;
+
+    if (priorities.length === 0) {
+      /* Every domain scored 3. Saying nothing is under pressure is the
+         honest reading; inventing a weakest domain would not be. */
+      heads.style.display = "none";
+      close = "Nothing here is under design pressure, which almost nobody can say and is worth pausing on. The work in front of you is not improvement, it is protection: these answers describe the venue as it runs today, with the people who are on today. Score it again in three months and see whether the result belongs to the design or to a good quarter.";
+    } else if (priorities.length === 1) {
+      heads.textContent = "The one carrying the most";
+      close = `${names[0]} is the single place your design is being asked to do more than it can, and everything else is holding. That is a narrow, cheap problem to have. What this card does not do is tell you which change to make first, because that depends on your site, your team and your week.`;
+    } else if (flat) {
+      heads.textContent = "Where I would start";
+      close = `Your seven domains scored evenly, which means the pressure is spread rather than concentrated. That is a different problem from a venue with one bad domain, and usually a more honest starting point: nothing is broken, and nothing is being carried by design either. ${names[0]} and ${names[1]} are simply where I would start.`;
+    } else {
+      heads.textContent = "The two carrying the most";
+      close = `${names[0]} and ${names[1]} are where your design pressure is concentrated, which means they are also where the cheapest and largest gains are waiting. What this card does not do is tell you which change to make first. That depends on your site, your team and your week, and it is a conversation rather than a formula.`;
+    }
+    document.getElementById("rClose").textContent = close;
+
+    document.getElementById("rEmailNote").textContent = emailed
+      ? "A copy of this pattern is on its way to your inbox."
+      : "Save or screenshot this page; the emailed copy could not be sent just now.";
+  },
+
+  async requestCard() {
+    const msg = document.getElementById("paperMsg");
+    const link = document.getElementById("paperLink");
+    if (!this.result) return;
+    link.style.pointerEvents = "none";
+    msg.style.display = "block";
+    msg.textContent = "Sending…";
+    let ok = false;
+    if (supabase) {
+      try {
+        const { details } = this.result;
+        const { error } = await supabase.from("card_downloads").insert({
+          first_name: details.first_name,
+          email: details.email,
+          venue_name: details.venue_name,
+          fgww_optin: details.fgww_optin
+        });
+        if (error) throw error;
+        ok = true;
+      } catch (e) {
+        console.error("DC: card request failed", e);
+      }
+    }
+    msg.textContent = ok
+      ? "Noted. The printable card is on its way to your inbox."
+      : "That did not go through. Email julian@foodgamemedia.com.au and I will send it across.";
+    link.style.pointerEvents = "";
+  },
+
+  show(id) {
+    document.querySelectorAll(".dc-step").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+/* ═══ Build the cards ═══ */
+const list = document.getElementById("questionList");
+list.innerHTML = QUESTIONS.map((q, i) => `
+  <div class="q-card" id="card-${q.id}">
+    <div class="q-num">Question ${i + 1} of 9</div>
+    <div class="q-domain">${q.label}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="q-opts">
+      ${q.opts.map((t, n) => `
+        <label class="q-opt">
+          <input type="radio" name="${q.id}" value="${3 - n}">
+          <span>${t}</span>
+        </label>`).join("")}
+    </div>
+  </div>`).join("");
+
+list.addEventListener("change", e => {
+  if (e.target.type !== "radio") return;
+  const card = e.target.closest(".q-card");
+  card.classList.remove("q-missing");
+  card.querySelectorAll(".q-opt").forEach(l => l.classList.remove("selected"));
+  e.target.closest(".q-opt").classList.add("selected");
+});
+</script>
+
+</body>
+</html>
