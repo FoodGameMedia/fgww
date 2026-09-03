@@ -364,36 +364,25 @@ window.DASH = {
     if (!subject || !body) { m.className="msg err"; m.textContent="Subject and message are both needed."; return; }
     b.disabled = true; m.className="msg"; m.textContent="";
 
-    /* Log first with ok null, then send, then settle the row. Same
-       honesty as the lifecycle pipeline: a failure stays visible
-       rather than being recorded as delivered. */
-    const { data: logged, error: le } = await sb.from("outbound_log")
-      .insert({ to_email: to, subject, body, sent_by: this.user.id })
-      .select("id").single();
-    if (le) { b.disabled=false; m.className="msg err"; m.textContent="Could not log: "+le.message; return; }
+    /* Everything happens server-side. The browser cannot call the
+       Worker (no CORS), and an anonymous send endpoint would be an
+       open relay, so the RPC logs the email and dispatches it from
+       inside the database using the vault secret. This page holds
+       nothing secret. */
+    const { error } = await sb.rpc("fgm_send_outbound", { p_to: to, p_subject: subject, p_body: body });
+    if (error) { b.disabled = false; m.className = "msg err"; m.textContent = "Not sent: " + error.message; return; }
 
-    let ok = false, status = null, detail = null;
-    try {
-      /* The Worker is authorised by this admin's own Supabase session,
-         not by a shared secret. Nothing secret is held in this page,
-         and the token only unlocks "outbound" at the far end. */
-      const { data:{ session } } = await sb.auth.getSession();
-      const r = await fetch(CFG.WORKER + "/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + session.access_token
-        },
-        body: JSON.stringify({ kind:"outbound", to, subject, body,
-                               reply_to:"julian@foodgamemedia.com.au" })
-      });
-      status = r.status; detail = (await r.text()).slice(0,300); ok = r.ok;
-    } catch (e) { detail = String(e); }
-
-    await sb.from("outbound_log").update({ ok, http_status: status, detail }).eq("id", logged.id);
+    /* pg_net is asynchronous: the send is away but the outcome is not
+       known yet. Settle, then report what actually happened. */
+    await new Promise(r => setTimeout(r, 2500));
+    await sb.rpc("fgm_settle_all");
+    const { data: rows } = await sb.from("outbound_log").select("ok,http_status")
+      .ilike("to_email", to).order("sent_at", { ascending: false }).limit(1);
+    const res = rows && rows[0];
     b.disabled = false;
-    if (ok) { m.className="msg ok"; m.textContent="Sent."; setTimeout(()=>{ this.closeCmp(); this.open(to); }, 900); }
-    else { m.className="msg err"; m.textContent = `Not sent (${status||"no response"}). Logged as failed.`; }
+    if (res && res.ok) { m.className = "msg ok"; m.textContent = "Sent."; setTimeout(() => { this.closeCmp(); this.open(to); }, 900); }
+    else if (res && res.ok === false) { m.className = "msg err"; m.textContent = `Not sent (${res.http_status || "no response"}). Logged as failed.`; }
+    else { m.className = "msg ok"; m.textContent = "Queued. It will show in their history once it lands."; setTimeout(() => { this.closeCmp(); this.open(to); }, 1200); }
   },
 
   async signOut(){ await sb.auth.signOut(); location.reload(); }
