@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════
+     FOOD GAME MEDIA — CUSTOMER DASHBOARD
+     File: admin.html   Version: 1.0 | 2026-09-03 (Sydney)
+     Scope: Food Game Media only. Matrix Mate, Venue by Design and
+       Xenvia are a later job (FGM_Dashboard_Architecture_v1.0).
+     Security: every read is gated by public.is_admin() in the
+       database (migration 006). The publishable key below grants
+       nothing without an admin JWT: sign in as a non-admin and every
+       query returns zero rows. No service_role key (Hard Rule 15).
+     Read-only against customer data. The only write is outbound_log.
+     Not in sitemap.xml, noindex, no link from any public page.
+     ═══════════════════════════════════════════════════════════════ -->
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Customer Dashboard — Food Game Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1f38;--navy-mid:#1a2f52;--pink:#f4a7b9;--pink-bright:#e91e8c;
+--white:#ffffff;--grey:#8a9ab5;--green:#4ade80;--amber:#fbbf24;--red:#f87171;
+--border:rgba(244,167,185,0.22);--text-body:rgba(255,255,255,0.82);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--pink)}
+.hide{display:none!important}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:50;background:rgba(15,31,56,.95);backdrop-filter:blur(16px);
+border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:900}
+.brand span{color:var(--pink)}
+.who{font-size:12px;color:var(--grey);display:flex;align-items:center;gap:14px}
+
+/* buttons + inputs */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:7px;
+font:600 13px 'DM Sans',sans-serif;cursor:pointer;border:none;transition:.2s;text-decoration:none}
+.btn-p{background:var(--pink);color:var(--navy)}
+.btn-p:hover{background:var(--pink-bright);color:#fff}
+.btn-o{background:transparent;color:var(--white);border:1px solid var(--border)}
+.btn-o:hover{border-color:var(--pink);color:var(--pink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:6px 12px;font-size:12px}
+input,textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;
+padding:11px 14px;font:400 14px 'DM Sans',sans-serif;color:var(--white);outline:none;width:100%}
+input:focus,textarea:focus{border-color:var(--pink)}
+textarea{resize:vertical;min-height:160px;line-height:1.7}
+label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);display:block;margin-bottom:6px}
+
+/* sign in */
+.signin{max-width:380px;margin:14vh auto;padding:36px 34px;background:rgba(255,255,255,.03);
+border:1px solid var(--border);border-radius:14px}
+.signin h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:8px}
+.signin p{color:var(--grey);font-size:14px;margin-bottom:24px}
+.fld{margin-bottom:16px}
+.msg{font-size:13px;margin-top:14px;display:none}
+.msg.err{color:var(--red);display:block}
+.msg.ok{color:var(--green);display:block}
+
+/* layout */
+.wrap{max-width:1400px;margin:0 auto;padding:26px 24px 80px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;padding:16px 18px}
+.stat b{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--pink);display:block;line-height:1.1}
+.stat span{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--grey)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+.panel{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.phead{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.phead h2{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.pbody{padding:18px 20px}
+.scroll{max-height:62vh;overflow-y:auto}
+
+/* customer rows */
+.row{padding:13px 20px;border-bottom:1px solid rgba(244,167,185,.12);cursor:pointer;transition:background .15s}
+.row:hover{background:rgba(244,167,185,.06)}
+.row.sel{background:rgba(244,167,185,.10);border-left:3px solid var(--pink);padding-left:17px}
+.row .r1{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.row .nm{font-weight:600;font-size:14px}
+.row .em{font-size:12px;color:var(--grey);word-break:break-all}
+.row .vn{font-size:12px;color:var(--text-body);margin-top:2px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{font-size:10px;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;
+border:1px solid var(--border);color:var(--grey)}
+.tag.qat{border-color:rgba(244,167,185,.5);color:var(--pink)}
+.tag.dc{border-color:rgba(74,222,128,.4);color:var(--green)}
+.tag.card{border-color:rgba(251,191,36,.4);color:var(--amber)}
+.tag.unsub{border-color:rgba(248,113,113,.5);color:var(--red)}
+
+/* detail */
+.det h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
+.det .sub{color:var(--grey);font-size:13px;margin-top:2px;word-break:break-all}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:13px;margin:16px 0 20px}
+.kv dt{color:var(--grey);font-size:11px;letter-spacing:.8px;text-transform:uppercase;padding-top:2px}
+.kv dd{color:var(--text-body)}
+.sec{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.sec h4{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px}
+.item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:9px;font-size:13px}
+.item .t{font-size:11px;color:var(--grey);margin-bottom:5px}
+.item .q{color:var(--text-body);margin-top:5px}
+.empty{color:var(--grey);font-size:13px;font-style:italic}
+
+/* email composer */
+.cmp{position:fixed;inset:0;z-index:100;background:rgba(15,31,56,.86);backdrop-filter:blur(6px);
+padding:24px;overflow-y:auto;display:none}
+.cmp.open{display:flex;align-items:flex-start;justify-content:center}
+.cmpbox{background:var(--navy-mid);border:1px solid var(--border);border-radius:14px;
+max-width:640px;width:100%;padding:28px;margin:6vh 0}
+.cmpbox h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px}
+.cmpact{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
+.note{font-size:12px;color:var(--grey)}
+
+@media(max-width:1080px){.cols{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ══ SIGN IN ══ -->
+<div id="gate">
+  <div class="signin">
+    <h1>Customer Dashboard</h1>
+    <p>Food Game Media. Sign in with your admin account.</p>
+    <div class="fld"><label for="e">Email</label><input type="email" id="e" autocomplete="username"></div>
+    <div class="fld"><label for="p">Password</label><input type="password" id="p" autocomplete="current-password"></div>
+    <button class="btn btn-p" id="inBtn" style="width:100%;justify-content:center;">Sign in</button>
+    <div class="msg" id="inMsg"></div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="app" class="hide">
+  <div class="bar">
+    <div class="brand">Food Game <span>Media</span> &nbsp;&middot;&nbsp; Customers</div>
+    <div class="who"><span id="whoami"></span><button class="btn btn-o btn-sm" id="outBtn">Sign out</button></div>
+  </div>
+
+  <div class="wrap">
+    <div class="stats" id="stats"></div>
+
+    <div class="cols">
+      <div class="panel">
+        <div class="phead">
+          <h2>Customers</h2>
+          <input id="q" placeholder="Search name, email, venue…" style="max-width:230px;padding:8px 12px;font-size:13px;">
+        </div>
+        <div class="scroll" id="list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="phead">
+          <h2 id="detTitle">Nobody selected</h2>
+          <button class="btn btn-p btn-sm hide" id="mailBtn">Email</button>
+        </div>
+        <div class="pbody scroll det" id="detail">
+          <p class="empty">Pick someone on the left to see everything Food Game Media holds on them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMPOSER ══ -->
+<div class="cmp" id="cmp" onclick="if(event.target===this)DASH.closeCmp()">
+  <div class="cmpbox">
+    <h3>Email <span id="cmpTo"></span></h3>
+    <div class="fld"><label for="cs">Subject</label><input id="cs"></div>
+    <div class="fld"><label for="cb">Message</label><textarea id="cb" placeholder="Plain text. It is sent as Food Game Media, reply-to julian@foodgamemedia.com.au."></textarea></div>
+    <div class="cmpact">
+      <button class="btn btn-p" id="sendBtn">Send</button>
+      <button class="btn btn-o" onclick="DASH.closeCmp()">Cancel</button>
+      <span class="note" id="cmpNote"></span>
+    </div>
+    <div class="msg" id="cmpMsg"></div>
+  </div>
+</div>
+
+<script type="module">
+/* The publishable key is public by design. Every customer table is
+   RLS-gated on public.is_admin(); without an admin JWT this key
+   returns zero rows everywhere. */
+const CFG = {
+  URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
+  KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
+  WORKER: "https://fgm-lifecycle.julian-68d.workers.dev"
+};
+
+const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+const sb = createClient(CFG.URL, CFG.KEY);
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt = d => d ? new Date(d).toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}) : "—";
+const fmtT = d => d ? new Date(d).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : "—";
+
+window.DASH = {
+  rows: [], sel: null, user: null,
+
+  async boot() {
+    const { data:{ session } } = await sb.auth.getSession();
+    if (session) return this.enter(session);
+    $("gate").classList.remove("hide");
+  },
+
+  async signIn() {
+    const b = $("inBtn"), m = $("inMsg");
+    b.disabled = true; m.className = "msg";
+    const { data, error } = await sb.auth.signInWithPassword({
+      email: $("e").value.trim(), password: $("p").value
+    });
+    b.disabled = false;
+    if (error) { m.className = "msg err"; m.textContent = error.message; return; }
+    this.enter(data.session);
+  },
+
+  async enter(session) {
+    /* Being signed in is not the same as being an admin. Ask the
+       database, and refuse rather than render an empty dashboard
+       that looks broken. */
+    const { data: ok, error } = await sb.rpc("is_admin");
+    if (error || !ok) {
+      $("inMsg").className = "msg err";
+      $("inMsg").textContent = "That account is not an administrator.";
+      await sb.auth.signOut();
+      $("gate").classList.remove("hide");
+      return;
+    }
+    this.user = session.user;
+    $("gate").classList.add("hide");
+    $("app").classList.remove("hide");
+    $("whoami").textContent = session.user.email;
+    await this.load();
+  },
+
+  async load() {
+    const { data, error } = await sb.rpc("fgm_customers");
+    if (error) { $("list").innerHTML = `<div class="pbody empty">Could not load: ${esc(error.message)}</div>`; return; }
+    this.rows = data || [];
+    this.stats();
+    this.render();
+  },
+
+  stats() {
+    const r = this.rows;
+    const sum = k => r.reduce((a,x)=>a+(x[k]||0),0);
+    const cards = [
+      [r.length, "People"],
+      [sum("qat_count"), "QAT completions"],
+      [sum("dc_count"), "Diagnostic Cards"],
+      [sum("help_count"), "Help requests"],
+      [r.filter(x=>x.fgww_optin && !x.unsubscribed).length, "Newsletter opt-ins"]
+    ];
+    $("stats").innerHTML = cards.map(([n,l])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
+  },
+
+  render() {
+    const q = $("q").value.trim().toLowerCase();
+    const rows = q ? this.rows.filter(r =>
+      [r.email,r.name,r.venue].filter(Boolean).some(v=>v.toLowerCase().includes(q))) : this.rows;
+    if (!rows.length) { $("list").innerHTML = `<div class="pbody empty">${this.rows.length ? "Nobody matches that." : "No customers yet."}</div>`; return; }
+    $("list").innerHTML = rows.map(r => {
+      const t = [];
+      if (r.qat_count)  t.push(`<span class="tag qat">QAT &times;${r.qat_count}</span>`);
+      if (r.dc_count)   t.push(`<span class="tag dc">Card &times;${r.dc_count}</span>`);
+      if (r.card_count) t.push(`<span class="tag card">Printable</span>`);
+      if (r.help_count) t.push(`<span class="tag">Asked for help</span>`);
+      if (r.unsubscribed) t.push(`<span class="tag unsub">Unsubscribed</span>`);
+      return `<div class="row${this.sel===r.email?" sel":""}" data-em="${esc(r.email)}">
+        <div class="r1"><span class="nm">${esc(r.name || "—")}</span><span class="em">${fmt(r.last_seen)}</span></div>
+        <div class="vn">${esc(r.venue || "")}</div>
+        <div class="em">${esc(r.email)}</div>
+        <div class="tags">${t.join("")}</div></div>`;
+    }).join("");
+    [...document.querySelectorAll(".row")].forEach(el =>
+      el.onclick = () => this.open(el.dataset.em));
+  },
+
+  async open(email) {
+    this.sel = email; this.render();
+    const r = this.rows.find(x => x.email === email);
+    $("detTitle").textContent = r.name || email;
+    $("mailBtn").classList.remove("hide");
+    $("detail").innerHTML = `<p class="empty">Loading…</p>`;
+
+    const [qat, dc, cards, out] = await Promise.all([
+      sb.from("qat_submissions").select("*").ilike("email", email).order("created_at",{ascending:false}),
+      sb.from("dc_submissions").select("*").ilike("email", email).order("created_at",{ascending:false}),
+      sb.from("card_downloads").select("*").ilike("email", email).order("created_at",{ascending:false}),
+      sb.from("outbound_log").select("*").ilike("to_email", email).order("sent_at",{ascending:false})
+    ]);
+
+    const ids = (qat.data||[]).map(x=>x.id);
+    let help = { data: [] }, sends = { data: [] };
+    if (ids.length) {
+      help  = await sb.from("qat_help_requests").select("*").in("submission_id", ids).order("created_at",{ascending:false});
+      sends = await sb.from("qat_send_log").select("*").in("submission_id", ids).order("dispatched_at",{ascending:false});
+    }
+
+    const S = (title, body) => `<div class="sec"><h4>${title}</h4>${body}</div>`;
+    const none = t => `<p class="empty">${t}</p>`;
+
+    const head = `<h3>${esc(r.name || "—")}</h3><div class="sub">${esc(r.email)}</div>
+      <dl class="kv">
+        <dt>Venue</dt><dd>${esc(r.venue || "—")}</dd>
+        <dt>Mobile</dt><dd>${esc(r.mobile || "—")}</dd>
+        <dt>Newsletter</dt><dd>${r.unsubscribed ? "Unsubscribed" : (r.fgww_optin ? "Subscribed" : "No")}</dd>
+        <dt>Last seen</dt><dd>${fmt(r.last_seen)}</dd>
+      </dl>`;
+
+    const qatHtml = (qat.data||[]).length ? (qat.data).map(s=>`<div class="item">
+        <div class="t">${fmtT(s.created_at)}${s.retake_of ? " &middot; retake" : ""}</div>
+        <strong>${s.score}/20 &mdash; ${esc(s.band)}</strong>
+        <div class="q">${esc(s.venue_type||"")}${s.suburb?", "+esc(s.suburb):""}${s.state?" "+esc(s.state):""}</div>
+      </div>`).join("") : none("No Quiet Advantage Test.");
+
+    const dcHtml = (dc.data||[]).length ? (dc.data).map(s=>{
+        const p = Array.isArray(s.priorities) ? s.priorities : [];
+        return `<div class="item"><div class="t">${fmtT(s.created_at)}</div>
+        <strong>Pressure: ${p.length ? esc(p.join(", ").replace(/_/g," ")) : "none"}</strong>
+        <div class="q">Calm reading ${s.calm_reading}/6</div></div>`;
+      }).join("") : none("No Diagnostic Card.");
+
+    const helpHtml = (help.data||[]).length ? (help.data).map(h=>`<div class="item">
+        <div class="t">${fmtT(h.created_at)}</div><div class="q">${esc(h.request_text)}</div></div>`).join()
+      : none("Nothing asked for.");
+
+    const comms = [
+      ...(sends.data||[]).map(s=>({t:s.dispatched_at, l:`Lifecycle ${s.kind}`, ok:s.ok})),
+      ...(out.data||[]).map(o=>({t:o.sent_at, l:o.subject, ok:o.ok}))
+    ].sort((a,b)=> new Date(b.t)-new Date(a.t));
+    const commsHtml = comms.length ? comms.map(c=>`<div class="item">
+        <div class="t">${fmtT(c.t)} &middot; ${c.ok===true?"delivered":c.ok===false?"failed":"pending"}</div>
+        ${esc(c.l)}</div>`).join("") : none("Nothing sent yet.");
+
+    const cardHtml = (cards.data||[]).length
+      ? (cards.data).map(c=>`<div class="item"><div class="t">${fmtT(c.created_at)}</div>Printable card ${c.sent_at?"sent":"requested"}</div>`).join("")
+      : "";
+
+    $("detail").innerHTML = head
+      + S("Quiet Advantage Test", qatHtml)
+      + S("Diagnostic Card", dcHtml)
+      + (cardHtml ? S("Printable card", cardHtml) : "")
+      + S("Asked for help with", helpHtml)
+      + S("Communications", commsHtml);
+  },
+
+  openCmp() {
+    if (!this.sel) return;
+    const r = this.rows.find(x=>x.email===this.sel);
+    $("cmpTo").textContent = r.name ? `${r.name} <${r.email}>` : r.email;
+    $("cs").value = ""; $("cb").value = "";
+    $("cmpMsg").className = "msg";
+    $("cmpNote").textContent = r.unsubscribed ? "This person has unsubscribed from lifecycle email." : "";
+    $("cmp").classList.add("open");
+  },
+  closeCmp(){ $("cmp").classList.remove("open"); },
+
+  async send() {
+    const to = this.sel, subject = $("cs").value.trim(), body = $("cb").value.trim();
+    const m = $("cmpMsg"), b = $("sendBtn");
+    if (!subject || !body) { m.className="msg err"; m.textContent="Subject and message are both needed."; return; }
+    b.disabled = true; m.className="msg"; m.textContent="";
+
+    /* Log first with ok null, then send, then settle the row. Same
+       honesty as the lifecycle pipeline: a failure stays visible
+       rather than being recorded as delivered. */
+    const { data: logged, error: le } = await sb.from("outbound_log")
+      .insert({ to_email: to, subject, body, sent_by: this.user.id })
+      .select("id").single();
+    if (le) { b.disabled=false; m.className="msg err"; m.textContent="Could not log: "+le.message; return; }
+
+    let ok = false, status = null, detail = null;
+    try {
+      /* The Worker is authorised by this admin's own Supabase session,
+         not by a shared secret. Nothing secret is held in this page,
+         and the token only unlocks "outbound" at the far end. */
+      const { data:{ session } } = await sb.auth.getSession();
+      const r = await fetch(CFG.WORKER + "/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + session.access_token
+        },
+        body: JSON.stringify({ kind:"outbound", to, subject, body,
+                               reply_to:"julian@foodgamemedia.com.au" })
+      });
+      status = r.status; detail = (await r.text()).slice(0,300); ok = r.ok;
+    } catch (e) { detail = String(e); }
+
+    await sb.from("outbound_log").update({ ok, http_status: status, detail }).eq("id", logged.id);
+    b.disabled = false;
+    if (ok) { m.className="msg ok"; m.textContent="Sent."; setTimeout(()=>{ this.closeCmp(); this.open(to); }, 900); }
+    else { m.className="msg err"; m.textContent = `Not sent (${status||"no response"}). Logged as failed.`; }
+  },
+
+  async signOut(){ await sb.auth.signOut(); location.reload(); }
+};
+
+$("inBtn").onclick = () => DASH.signIn();
+$("p").onkeydown = e => { if (e.key === "Enter") DASH.signIn(); };
+$("outBtn").onclick = () => DASH.signOut();
+$("q").oninput = () => DASH.render();
+$("mailBtn").onclick = () => DASH.openCmp();
+$("sendBtn").onclick = () => DASH.send();
+DASH.boot();
+</script>
+
+</body>
+</html>
