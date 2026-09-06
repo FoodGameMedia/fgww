@@ -21,8 +21,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Diagnostic Card — Food Game Media</title>
-<meta name="description" content="Nine questions. Five minutes. Free. A clear picture of where your venue's design problems actually live, across seven domains. From Food Game Media.">
+<title>The Diagnostic Test — Food Game Media</title>
+<meta name="description" content="Every venue has one thing quietly making everything else harder. This finds yours. A free, on-screen picture of where your venue's design problems actually live, across seven domains. From Food Game Media.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -226,6 +226,23 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
   .pv-modal { padding: 30px 22px; }
   .r-cta { padding: 28px 22px; }
 }
+
+/* Design Score - the seven domains, totalled. */
+.ds-box { border: 1px solid var(--border); border-radius: 16px; background: rgba(255,255,255,0.03); padding: 28px 26px; margin-bottom: 34px; }
+.ds-kicker { font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase; color: var(--pink); margin-bottom: 14px; }
+.ds-num { font-family: 'DM Serif Display', serif; font-size: clamp(38px, 6vw, 54px); line-height: 1; color: var(--white); }
+.ds-num span { font-size: 0.4em; color: var(--grey); letter-spacing: 1px; }
+.ds-band { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--pink); margin: 14px 0 10px; }
+.ds-body { color: var(--text-body); font-size: 15px; }
+.ds-note { color: var(--grey); font-size: 13px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+/* The Base Line - styled deliberately apart from the domain block above it. */
+.bl-box { border: 1px dashed var(--border); border-radius: 16px; padding: 26px; margin: 34px 0; background: rgba(15,31,56,0.45); }
+.bl-kicker { font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; }
+.bl-kicker b { color: var(--pink); font-weight: 600; }
+.bl-num { font-family: 'DM Serif Display', serif; font-size: 30px; line-height: 1; color: var(--white); margin-bottom: 14px; }
+.bl-num span { font-size: 0.45em; color: var(--grey); }
+.bl-body { color: var(--text-body); font-size: 15px; }
+.bl-sep { color: var(--grey); font-size: 13px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -261,8 +278,8 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
   <!-- ═══════ STEP 1: INTRO + QUESTIONS ═══════ -->
   <section class="dc-step active" id="step-questions">
     <div class="dc-intro">
-      <div class="dc-kicker">Free &middot; Five minutes &middot; Nine questions</div>
-      <h1>The Diagnostic Card</h1>
+      <div class="dc-kicker">Free &middot; No sign-up to start</div>
+      <h1>The Diagnostic Test</h1>
       <p>You have diagnosed the problem a dozen times. Wrong roster. Wrong hire. Wrong week. The diagnosis never quite fixes it, because it is aimed at the wrong cause.</p>
       <p>This card gives you a different starting point: the seven domains where design problems hide in plain sight, costing you in ways that are hard to name until you know what you are looking for. Nine questions, answered honestly about an ordinary day, and the pattern tells you which part of your operation is carrying the most load.</p>
       <p>It does not tell you what to do about it. That is deliberate, and it is what the free call at the end is for.</p>
@@ -332,9 +349,24 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
   <section class="dc-step" id="step-result">
     <div class="dc-kicker">Your pattern</div>
     <h2 class="dc-h2" id="rHead">Where the load is concentrated</h2>
-    <p class="r-lead" id="rLead"></p>
+    <p class="r-lead" id="rLead">Two readings, taken separately. What your operation is built to absorb, and what an ordinary day actually feels like.</p>
+
+    <div class="ds-box">
+      <div class="ds-kicker">Design Score &mdash; questions 01 to 07</div>
+      <div class="ds-num" id="rScore"></div>
+      <div class="ds-band" id="rBand"></div>
+      <p class="ds-body" id="rBandBody"></p>
+      <p class="ds-note">Your score is not a grade. It is a map. It says how much of an ordinary week your operation absorbs by design rather than by effort.</p>
+    </div>
 
     <div class="dom-rank" id="rRank"></div>
+
+    <div class="bl-box">
+      <div class="bl-kicker"><b>The Base Line</b> &mdash; questions 08 and 09, separate from the seven domains</div>
+      <div class="bl-num" id="rBase"></div>
+      <p class="bl-body" id="rBaseBody"></p>
+      <p class="bl-sep">The seven domains score how your operation is built. The Base Line does not score a part of it &mdash; it records what an ordinary day feels like right now. It is not added to your Design Score and it does not change your pattern. It is the mark you measure against when you come back.</p>
+    </div>
 
     <h2 class="dc-h2" style="margin-bottom:24px;" id="rBlocksHead">The two carrying the most</h2>
     <div id="rBlocks"></div>
@@ -457,16 +489,16 @@ const QUESTIONS = [
           "We debrief, agree on a fix, but rarely follow through",
           "We deal with it each time it happens and move on",
           "We have stopped debriefing. There is no time and nothing seems to stick"] },
-  { id:"q8", domain:"calm", label:"Calm Index",
+  { id:"q8", domain:"calm", label:"The Base Line",
     text:"On a normal trading day, not a crisis, how would you describe the energy in your operation?",
     opts:["Calm and deliberate. The system runs and I can work on the business",
-          "Busy but managed. It works, but requires constant attention",
+          "Busy but managed. It works, but requires attention",
           "Reactive. Responding all day rather than executing a plan",
           "On the edge. One unexpected thing and the day changes character"] },
-  { id:"q9", domain:"calm", label:"Calm Index",
+  { id:"q9", domain:"calm", label:"The Base Line",
     text:"When did you last finish a service and feel it ran exactly as you designed it to run?",
-    opts:["Recently. This is a regular experience",
-          "Occasionally. Maybe once or twice a month",
+    opts:["Recently. Most services run the way they are meant to",
+          "Occasionally. Maybe once a week",
           "Rarely. I can remember specific instances but they are unusual",
           "I am not sure we have a design. We have a routine that mostly holds"] }
 ];
@@ -495,6 +527,15 @@ const READING = {
   operational_memory: { title:"Solving the same problem twice",
     body:"A problem that recurs is not bad luck, it is an unwritten decision. The operation is relearning, at full price, something it already knew, and the cost compounds because nothing accumulates. This is the cheapest domain to change and the most expensive to leave." }
 };
+
+const DESIGN_BAND = [
+  { min:17, name:"Designed for Calm",
+    text:"Most of the variance in your week is absorbed by how the operation is built rather than by who happens to be on shift. That is rarer than you would think. The pattern below is about protecting it as your people change, not repairing it." },
+  { min:11, name:"Functional but Fragile",
+    text:"The structure holds under normal conditions and gives way under pressure. It works, and it works because people are holding it up at the points where the design stops. The domains below are where it gives way first." },
+  { min:0,  name:"Structural Risk",
+    text:"Too much of your operation depends on people compensating in the moment. That is not a comment on your team, it is close to the opposite: it means the load is sitting on them rather than on the design. It is also the most movable position on this scale." }
+];
 
 const CALM_READING = [
   { min:5, text:"On an ordinary day this operation is largely running to a design, which is rarer than you would think. The pattern below is about protecting that as people change, rather than rescuing anything." },
@@ -530,6 +571,7 @@ window.DC = {
       domain_scores[key] = answers[q.id];
     }
     const calm_reading = answers.q8 + answers.q9;
+    const design_score = DOMAINS.reduce((n, [k]) => n + domain_scores[k], 0);
     /* Only domains actually under pressure can be priorities. Without this
        guard a venue scoring 3 across the board would still be told two
        domains were carrying the most load, which is nonsense and would
@@ -540,7 +582,7 @@ window.DC = {
       .sort((a, b) => (domain_scores[a] - domain_scores[b]) ||
                       (DOMAINS.findIndex(d=>d[0]===a) - DOMAINS.findIndex(d=>d[0]===b)))
       .slice(0, 2);
-    return { domain_scores, calm_reading, priorities };
+    return { domain_scores, calm_reading, design_score, priorities };
   },
 
   toCapture() {
@@ -620,8 +662,15 @@ window.DC = {
   },
 
   render(emailed) {
-    const { domain_scores, calm_reading, priorities } = this.result;
-    document.getElementById("rLead").textContent =
+    const { domain_scores, calm_reading, design_score, priorities } = this.result;
+
+    const band = DESIGN_BAND.find(b => design_score >= b.min) || DESIGN_BAND[DESIGN_BAND.length-1];
+    document.getElementById("rScore").innerHTML = design_score + ' <span>of 21</span>';
+    document.getElementById("rBand").textContent = band.name;
+    document.getElementById("rBandBody").textContent = band.text;
+
+    document.getElementById("rBase").innerHTML = calm_reading + ' <span>of 6</span>';
+    document.getElementById("rBaseBody").textContent =
       (CALM_READING.find(c => calm_reading >= c.min) || CALM_READING[CALM_READING.length-1]).text;
 
     const ranked = DOMAINS.slice().sort((a,b) => domain_scores[a[0]] - domain_scores[b[0]]);
