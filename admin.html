@@ -249,7 +249,7 @@ window.DASH = {
     const cards = [
       [r.length, "People"],
       [sum("qat_count"), "QAT completions"],
-      [sum("dc_count"), "Diagnostic Cards"],
+      [sum("dc_count"), "Diagnostic Tests"],
       [sum("help_count"), "Help requests"],
       [r.filter(x=>x.fgww_optin && !x.unsubscribed).length, "Newsletter opt-ins"]
     ];
@@ -316,12 +316,13 @@ window.DASH = {
         <div class="q">${esc(s.venue_type||"")}${s.suburb?", "+esc(s.suburb):""}${s.state?" "+esc(s.state):""}</div>
       </div>`).join("") : none("No Quiet Advantage Test.");
 
-    const dcHtml = (dc.data||[]).length ? (dc.data).map(s=>{
+    const dsTotal = r => { const d = r.domain_scores; return (d && typeof d === "object") ? Object.values(d).reduce((x,y)=>x+(Number(y)||0),0) + "/21" : "\u2014"; };
+      const dcHtml = (dc.data||[]).length ? (dc.data).map(s=>{
         const p = Array.isArray(s.priorities) ? s.priorities : [];
         return `<div class="item"><div class="t">${fmtT(s.created_at)}</div>
         <strong>Pressure: ${p.length ? esc(p.join(", ").replace(/_/g," ")) : "none"}</strong>
-        <div class="q">Calm reading ${s.calm_reading}/6</div></div>`;
-      }).join("") : none("No Diagnostic Card.");
+        <div class="q">Design Score ${dsTotal(s)} &middot; Base Line ${s.calm_reading}/6</div></div>`;
+      }).join("") : none("No Diagnostic Test.");
 
     const helpHtml = (help.data||[]).length ? (help.data).map(h=>`<div class="item">
         <div class="t">${fmtT(h.created_at)}</div><div class="q">${esc(h.request_text)}</div></div>`).join()
@@ -341,7 +342,7 @@ window.DASH = {
 
     $("detail").innerHTML = head
       + S("Quiet Advantage Test", qatHtml)
-      + S("Diagnostic Card", dcHtml)
+      + S("Diagnostic Test", dcHtml)
       + (cardHtml ? S("Printable card", cardHtml) : "")
       + S("Asked for help with", helpHtml)
       + S("Communications", commsHtml);
