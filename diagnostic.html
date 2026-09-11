@@ -282,7 +282,7 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
       <h1>The Diagnostic Test</h1>
       <p>You have diagnosed the problem a dozen times. Wrong roster. Wrong hire. Wrong week. The diagnosis never quite fixes it, because it is aimed at the wrong cause.</p>
       <p>This card gives you a different starting point: the seven domains where design problems hide in plain sight, costing you in ways that are hard to name until you know what you are looking for. Nine questions, answered honestly about an ordinary day, and the pattern tells you which part of your operation is carrying the most load.</p>
-      <p>It does not tell you what to do about it. That is deliberate, and it is what the free call at the end is for.</p>
+      <p>You get a first move for each of them &mdash; something small enough to do this week without a budget or anyone’s permission. What it will not do is tell you which one to move first, or what it is costing you to leave it. That depends on your site, your team and your week, and it is what the free call at the end is for.</p>
     </div>
 
     <h2 class="dc-h2">Nine questions about an ordinary day</h2>
@@ -349,16 +349,18 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
   <section class="dc-step" id="step-result">
     <div class="dc-kicker">Your pattern</div>
     <h2 class="dc-h2" id="rHead">Where the load is concentrated</h2>
-    <p class="r-lead" id="rLead">Two readings, taken separately. What your operation is built to absorb, and what an ordinary day actually feels like.</p>
+    <p class="r-lead" id="rLead">Not a verdict &mdash; a measurement. One number for how much your operation absorbs on its own, seven domains showing where it stops absorbing, and the two where a change would pay for itself fastest.</p>
 
     <div class="ds-box">
       <div class="ds-kicker">Design Score &mdash; questions 01 to 07</div>
       <div class="ds-num" id="rScore"></div>
       <div class="ds-band" id="rBand"></div>
       <p class="ds-body" id="rBandBody"></p>
-      <p class="ds-note">Your score is not a grade. It is a map. It says how much of an ordinary week your operation absorbs by design rather than by effort.</p>
+      <p class="ds-note"><strong style="color:var(--white);">A score is a starting position, not a report card.</strong> It measures how much of an ordinary week your design absorbs before it reaches a person. It is also the number that moves the moment you change something structural, which is the whole point of measuring it.</p>
     </div>
 
+    <div class="dc-kicker" style="margin-top:34px;">The seven domains &mdash; where that score comes from</div>
+    <p style="color:var(--grey);font-size:13px;margin:-6px 0 14px;">Each scored 0 to 3. The two lowest are where your design is being asked to do the most.</p>
     <div class="dom-rank" id="rRank"></div>
 
     <div class="bl-box">
@@ -372,6 +374,12 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
     <div id="rBlocks"></div>
 
     <p class="r-close" id="rClose"></p>
+
+    <p class="r-close">Here is the part worth sitting with: both of those are <strong style="color:var(--white);">design</strong> problems, and design problems are the fixable kind. They are not about trying harder, hiring better, or caring more. Something in the structure is asking a person to absorb what the system should be absorbing, and structure is the one thing in your venue you can actually change on purpose.</p>
+
+    <div class="dc-kicker" style="margin-top:34px;">Next steps &mdash; start without me</div>
+    <p style="color:var(--grey);font-size:13px;margin:-6px 0 18px;">One small move per domain. None of these need a budget, a consultant or anyone's permission. They are here to prove the domain moves.</p>
+    <div id="rMoves"></div>
 
     <div class="r-cta">
       <div class="r-cta-kicker">Free &mdash; 30 minutes</div>
@@ -537,6 +545,17 @@ const DESIGN_BAND = [
     text:"Too much of your operation depends on people compensating in the moment. That is not a comment on your team, it is close to the opposite: it means the load is sitting on them rather than on the design. It is also the most movable position on this scale." }
 ];
 
+/* One concrete first move per domain, mirrored in the result email. */
+const FIRST_MOVE = {
+  throughput: "Take your busiest half hour and write down every decision someone has to make inside it. Turn the three most repeated into standing rules before next service.",
+  pacing: "Set a hard cutoff: a time by which the pass is clear regardless of what is unfinished. What misses the cutoff tells you exactly what to move earlier, simplify or stop doing.",
+  defaults: "List the five questions your staff ask you most. Write a one-line answer to each and put it where the question gets asked. That is five decisions you never make again.",
+  people_load: "Name the person. Write down the three things only they know. Teach one of the three to someone else this week, and let them do it badly the first time.",
+  signals: "Stand near the entrance for one service and note every question a guest asks. Each one is a sign, a layout change or a menu edit you have not made yet.",
+  endings: "Give the last ninety seconds an owner, by name, on every roster. One person responsible for the bill, the farewell and the door. Change nothing else and watch what happens.",
+  operational_memory: "Keep one page. When something goes wrong twice, write down the design cause rather than the incident. Read the page once a month. It will be shorter than you fear."
+};
+
 const CALM_READING = [
   { min:5, text:"On an ordinary day this operation is largely running to a design, which is rarer than you would think. The pattern below is about protecting that as people change, rather than rescuing anything." },
   { min:3, text:"On an ordinary day this operation works, and it works because it is being watched. That is a fair position to be in and it is not free: the attention it takes is attention not going anywhere else." },
@@ -696,6 +715,16 @@ window.DC = {
       </div>`;
     }).join("");
 
+    document.getElementById("rMoves").innerHTML = priorities.map(k => {
+      const mv = FIRST_MOVE[k];
+      if (!mv) return "";
+      const name = DOMAINS.find(x => x[0] === k)[1];
+      return `<div class="bl-box" style="margin:0 0 16px;">
+        <div class="bl-kicker" style="color:var(--pink);margin-bottom:10px;">${name}</div>
+        <p class="bl-body">${mv}</p>
+      </div>`;
+    }).join("");
+
     const names = priorities.map(k => DOMAINS.find(x => x[0] === k)[1]);
     const vals = DOMAINS.map(([k]) => domain_scores[k]);
     const flat = Math.max(...vals) === Math.min(...vals);
@@ -708,13 +737,13 @@ window.DC = {
       close = "Nothing here is under design pressure, which almost nobody can say and is worth pausing on. The work in front of you is not improvement, it is protection: these answers describe the venue as it runs today, with the people who are on today. Score it again in three months and see whether the result belongs to the design or to a good quarter.";
     } else if (priorities.length === 1) {
       heads.textContent = "The one carrying the most";
-      close = `${names[0]} is the single place your design is being asked to do more than it can, and everything else is holding. That is a narrow, cheap problem to have. What this card does not do is tell you which change to make first, because that depends on your site, your team and your week.`;
+      close = `${names[0]} is the single place your design is being asked to do more than it can, and everything else is holding. That is a narrow, cheap problem to have. What the Test cannot tell you is which change to make first, because that depends on your site, your team and your week.`;
     } else if (flat) {
       heads.textContent = "Where I would start";
       close = `Your seven domains scored evenly, which means the pressure is spread rather than concentrated. That is a different problem from a venue with one bad domain, and usually a more honest starting point: nothing is broken, and nothing is being carried by design either. ${names[0]} and ${names[1]} are simply where I would start.`;
     } else {
       heads.textContent = "The two carrying the most";
-      close = `${names[0]} and ${names[1]} are where your design pressure is concentrated, which means they are also where the cheapest and largest gains are waiting. What this card does not do is tell you which change to make first. That depends on your site, your team and your week, and it is a conversation rather than a formula.`;
+      close = `${names[0]} and ${names[1]} are where your design pressure is concentrated, which means they are also where the cheapest and largest gains are waiting. What the Test cannot tell you is which change to make first. That depends on your site, your team and your week, and it is a conversation rather than a formula.`;
     }
     document.getElementById("rClose").textContent = close;
 
