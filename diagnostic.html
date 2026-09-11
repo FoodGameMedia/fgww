@@ -547,14 +547,36 @@ const DESIGN_BAND = [
 
 /* One concrete first move per domain, mirrored in the result email. */
 const FIRST_MOVE = {
-  throughput: "Take your busiest half hour and write down every decision someone has to make inside it. Turn the three most repeated into standing rules before next service.",
-  pacing: "Set a hard cutoff: a time by which the pass is clear regardless of what is unfinished. What misses the cutoff tells you exactly what to move earlier, simplify or stop doing.",
-  defaults: "List the five questions your staff ask you most. Write a one-line answer to each and put it where the question gets asked. That is five decisions you never make again.",
-  people_load: "Name the person. Write down the three things only they know. Teach one of the three to someone else this week, and let them do it badly the first time.",
-  signals: "Stand near the entrance for one service and note every question a guest asks. Each one is a sign, a layout change or a menu edit you have not made yet.",
-  endings: "Give the last ninety seconds an owner, by name, on every roster. One person responsible for the bill, the farewell and the door. Change nothing else and watch what happens.",
-  operational_memory: "Keep one page. When something goes wrong twice, write down the design cause rather than the incident. Read the page once a month. It will be shorter than you fear."
+  throughput: {
+    move: "Take your busiest half hour and write down every decision someone has to make inside it. Turn the three most repeated into standing rules before next service.",
+    eg: "Seat them now or hold them at the door? Fire the mains or wait for the slow table? Who picks up the phone when both hands are full?",
+    ref: "Chapter 9: Wages Did Not Kill Hospitality. Bad Throughput Did." },
+  pacing: {
+    move: "Set a hard cutoff: a time by which the pass is clear regardless of what is unfinished. Whatever misses the cutoff is your list of what to move earlier, simplify or stop doing.",
+    eg: "Sauces not passed. Specials not briefed. A section still unset at first booking.",
+    ref: "Chapter 19: Pacing" },
+  defaults: {
+    move: "List the five questions your staff ask you most. Write a one-line answer to each and put it where the question gets asked. That is five decisions you never make again.",
+    eg: "Can we split this bill? Can they move tables? Do we comp it? Are we still taking walk-ins? What do I say when the special is gone?",
+    ref: "Chapter 17: Defaults" },
+  people_load: {
+    move: "Name the person. Write down the three things only they know, then teach one of them to someone else this week and let them do it badly the first time.",
+    eg: "Which supplier to call when a delivery is short. How the grinder is dialled in. Which regulars get which table.",
+    ref: "Chapter 28: Hero Culture: When Endurance Becomes the Business Model" },
+  signals: {
+    move: "Stand near the entrance for one service and write down every question a guest asks. Each one is a sign, a layout change or a menu edit you have not made yet.",
+    eg: "Do we order at the counter? Is this table free? Are you still doing food? Where are the toilets?",
+    ref: "Chapter 18: Signals" },
+  endings: {
+    move: "Give the last ninety seconds an owner, by name, on every roster: one person responsible for the bill, the farewell and the door. Change nothing else and watch what happens.",
+    eg: "Who owned it last Friday at nine? If you cannot answer that, nobody did.",
+    ref: "Chapter 20: Endings" },
+  operational_memory: {
+    move: "Keep one page. When something goes wrong twice, write down the design cause rather than the incident. Read the page once a month; it will be shorter than you fear.",
+    eg: "Not \u2018table 12\u2019s mains were late\u2019 but \u2018the pass has no way to see which table is next\u2019.",
+    ref: "Chapter 30: Systems: Why Memory, Heroics, and Hope Are Not Strategies" }
 };
+
 
 const CALM_READING = [
   { min:5, text:"On an ordinary day this operation is largely running to a design, which is rarer than you would think. The pattern below is about protecting that as people change, rather than rescuing anything." },
@@ -721,7 +743,9 @@ window.DC = {
       const name = DOMAINS.find(x => x[0] === k)[1];
       return `<div class="bl-box" style="margin:0 0 16px;">
         <div class="bl-kicker" style="color:var(--pink);margin-bottom:10px;">${name}</div>
-        <p class="bl-body">${mv}</p>
+        <p class="bl-body">${mv.move}</p>
+        <p class="bl-body" style="color:var(--grey);font-style:italic;margin-top:10px;">For example: ${mv.eg}</p>
+        <p class="bl-sep" style="margin-top:12px;padding-top:10px;">Go further: <span style="color:var(--white);">The Food Game</span>, ${mv.ref}</p>
       </div>`;
     }).join("");
 
