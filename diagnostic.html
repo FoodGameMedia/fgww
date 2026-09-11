@@ -628,8 +628,8 @@ window.DC = {
     if (!details) return;
 
     const answers = this.getAnswers();
-    const { domain_scores, calm_reading, priorities } = this.score(answers);
-    this.result = { details, answers, domain_scores, calm_reading, priorities };
+    const { domain_scores, calm_reading, design_score, priorities } = this.score(answers);
+    this.result = { details, answers, domain_scores, calm_reading, design_score, priorities };
 
     const btn = document.getElementById("submitBtn");
     btn.disabled = true; btn.textContent = "Reading…";
