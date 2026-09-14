@@ -126,7 +126,11 @@ max-width:640px;width:100%;padding:28px;margin:6vh 0}
     <p>Food Game Media. Sign in with your admin account.</p>
     <div class="fld"><label for="e">Email</label><input type="email" id="e" autocomplete="username"></div>
     <div class="fld"><label for="p">Password</label><input type="password" id="p" autocomplete="current-password"></div>
+    <div class="fld" id="fldNew" style="display:none"><label for="np">New password</label><input type="password" id="np" autocomplete="new-password"></div>
+    <div class="fld" id="fldNew2" style="display:none"><label for="np2">Confirm new password</label><input type="password" id="np2" autocomplete="new-password"></div>
+    <button class="btn btn-p" id="setBtn" style="display:none;width:100%;justify-content:center;" onclick="DASH.setPassword()">Set new password and sign in</button>
     <button class="btn btn-p" id="inBtn" style="width:100%;justify-content:center;">Sign in</button>
+    <p style="margin-top:14px;font-size:13px;"><a href="#" id="forgot" onclick="DASH.forgot();return false;" style="color:var(--pink);">Forgotten your password?</a></p>
     <div class="msg" id="inMsg"></div>
   </div>
 </div>
@@ -200,9 +204,60 @@ window.DASH = {
   rows: [], sel: null, user: null,
 
   async boot() {
+    /* A recovery link lands here with its token in the URL fragment.
+       supabase-js exchanges it for a session automatically, so the tell
+       is the type=recovery marker rather than the presence of a session.
+       Without this the page simply looked like the website. */
+    const hash = String(location.hash || "");
+    if (hash.includes("error_description")) {
+      $("gate").classList.remove("hide");
+      const m = $("inMsg"); m.className = "msg err";
+      m.textContent = "That reset link has expired or was already used. Ask for a new one below.";
+      history.replaceState(null, "", location.pathname);
+      return;
+    }
+    if (hash.includes("type=recovery")) {
+      history.replaceState(null, "", location.pathname);
+      $("gate").classList.remove("hide");
+      this.showReset();
+      return;
+    }
     const { data:{ session } } = await sb.auth.getSession();
     if (session) return this.enter(session);
     $("gate").classList.remove("hide");
+  },
+
+  showReset() {
+    for (const id of ["fldNew","fldNew2","setBtn"]) $(id).style.display = "";
+    $("setBtn").style.width = "100%";
+    for (const id of ["inBtn","forgot"]) { const el = $(id); if (el) el.style.display = "none"; }
+    for (const id of ["e","p"]) { const el = $(id); if (el && el.parentElement) el.parentElement.style.display = "none"; }
+    const m = $("inMsg"); m.className = "msg";
+    m.textContent = "Choose a new password. You will be signed in straight after.";
+  },
+
+  async setPassword() {
+    const m = $("inMsg"), b = $("setBtn");
+    const a = $("np").value, c = $("np2").value;
+    m.className = "msg";
+    if (a.length < 10) { m.className = "msg err"; m.textContent = "Use at least 10 characters."; return; }
+    if (a !== c)       { m.className = "msg err"; m.textContent = "Those two do not match."; return; }
+    b.disabled = true;
+    const { error } = await sb.auth.updateUser({ password: a });
+    b.disabled = false;
+    if (error) { m.className = "msg err"; m.textContent = error.message; return; }
+    const { data:{ session } } = await sb.auth.getSession();
+    if (session) return this.enter(session);
+    m.className = "msg err"; m.textContent = "Password changed. Reload the page and sign in.";
+  },
+
+  async forgot() {
+    const m = $("inMsg"), email = $("e").value.trim();
+    if (!email) { m.className = "msg err"; m.textContent = "Type your email in the box above first."; return; }
+    m.className = "msg"; m.textContent = "Sending...";
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/admin.html" });
+    if (error) { m.className = "msg err"; m.textContent = error.message; return; }
+    m.className = "msg"; m.textContent = "Sent. Open the newest email at " + email + " and click the link.";
   },
 
   async signIn() {
