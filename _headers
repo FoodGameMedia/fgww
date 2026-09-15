@@ -9,13 +9,21 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
   Cross-Origin-Opener-Policy: same-origin
 
-# The dashboard holds every customer record, so it gets a real CSP.
-# 'unsafe-inline' on script-src is needed because the page logic is
-# inline; no third-party script host is allowed but the pinned build.
+# NOTE: a Content-Security-Policy was tried here on 2026-09-15 and had to
+# be reverted within minutes. admin.html carries its whole application in
+# an inline <script type="module">, and the CSP stopped it executing, so
+# the dashboard rendered its sign-in form and nothing behind it worked.
+# 'unsafe-inline' alone is not enough for that page.
+#
+# To reintroduce CSP safely, do it in this order:
+#   1. Move the inline module out of admin.html into /js/admin.js
+#   2. Then add: script-src 'self' https://cdn.jsdelivr.net
+#   3. Test sign-in, the customer list and the composer BEFORE committing
+# Until then the other headers below still close clickjacking and sniffing.
+
 /admin.html
   X-Frame-Options: DENY
   X-Robots-Tag: noindex, nofollow
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://bokqxbgnbiubwhivedvk.supabase.co; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
 
 /help.html
   X-Robots-Tag: noindex, nofollow
