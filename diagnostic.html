@@ -447,8 +447,9 @@ function closePrivacy(){ document.getElementById('pvOverlay').classList.remove('
    nothing beyond writing a row. */
 const DC_CONFIG = {
   SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
-  EMAIL_WORKER_URL: "https://fgm-lifecycle.julian-68d.workers.dev"
+  SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9"
+  /* EMAIL_WORKER_URL removed 2026-09-16: the browser never called it.
+     The dc_result email is fired by dc_notify() on dc_submissions. */
 };
 
 /* ═══ The instrument (DC_Instrument_Spec_v1.0, approved) ═══

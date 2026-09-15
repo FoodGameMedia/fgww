@@ -188,8 +188,9 @@ max-width:640px;width:100%;padding:28px;margin:6vh 0}
    returns zero rows everywhere. */
 const CFG = {
   URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
-  KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
-  WORKER: "https://fgm-lifecycle.julian-68d.workers.dev"
+  KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9"
+  /* WORKER removed 2026-09-16: the dashboard never called it.
+     Every send is fired by a database trigger. */
 };
 
 const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
@@ -197,8 +198,8 @@ const sb = createClient(CFG.URL, CFG.KEY);
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-const fmt = d => d ? new Date(d).toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}) : ",";
-const fmtT = d => d ? new Date(d).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : ",";
+const fmt = d => d ? new Date(d).toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}) : "not given";
+const fmtT = d => d ? new Date(d).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : "not given";
 
 window.DASH = {
   rows: [], sel: null, user: null,
