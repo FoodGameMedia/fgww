@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ═══════════════════════════════════════════════════════════════
-     THE DIAGNOSTIC CARD — Food Game Media
+     THE DIAGNOSTIC CARD, Food Game Media
      File: diagnostic.html
      Version: 1.0 | 2026-09-03 (Sydney)
      Source: DC_Instrument_Spec_v1.0 (approved 2026-09-03)
@@ -14,14 +14,14 @@
      Routing: this funnels to consulting. No cross-sell to the QAT
        or to Venue by Design.
      Backend: Supabase dc_submissions (migration 005). Insert only,
-       no RETURNING — see Section 8, the 42501 trap.
+       no RETURNING, see Section 8, the 42501 trap.
      Design system: inherited exactly from live index.html.
      ═══════════════════════════════════════════════════════════════ -->
 <html lang="en-AU">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Diagnostic Test — Food Game Media</title>
+<title>The Diagnostic Test: Food Game Media</title>
 <meta name="description" content="Every venue has one thing quietly making everything else harder. This finds yours. A free, on-screen picture of where your venue's design problems actually live, across seven domains. From Food Game Media.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,7 +146,7 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
 .dc-check a { color: var(--pink); }
 .hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
 
-/* Result — the ranked domains */
+/* Result, the ranked domains */
 .r-lead { font-family: 'DM Serif Display', serif; font-size: clamp(19px, 2.3vw, 24px);
   line-height: 1.55; color: var(--white); margin-bottom: 40px; max-width: 720px; }
 .dom-rank { border: 1px solid var(--border); border-radius: 16px;
@@ -282,7 +282,7 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
       <h1>The Diagnostic Test</h1>
       <p>You have diagnosed the problem a dozen times. Wrong roster. Wrong hire. Wrong week. The diagnosis never quite fixes it, because it is aimed at the wrong cause.</p>
       <p>This card gives you a different starting point: the seven domains where design problems hide in plain sight, costing you in ways that are hard to name until you know what you are looking for. Nine questions, answered honestly about an ordinary day, and the pattern tells you which part of your operation is carrying the most load.</p>
-      <p>You get a first move for each of them &mdash; something small enough to do this week without a budget or anyone’s permission. What it will not do is tell you which one to move first, or what it is costing you to leave it. That depends on your site, your team and your week, and it is what the free call at the end is for.</p>
+      <p>You get a first move for each of them, something small enough to do this week without a budget or anyone’s permission. What it will not do is tell you which one to move first, or what it is costing you to leave it. That depends on your site, your team and your week, and it is what the free call at the end is for.</p>
     </div>
 
     <h2 class="dc-h2">Nine questions about an ordinary day</h2>
@@ -349,25 +349,25 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
   <section class="dc-step" id="step-result">
     <div class="dc-kicker">Your pattern</div>
     <h2 class="dc-h2" id="rHead">Where the load is concentrated</h2>
-    <p class="r-lead" id="rLead">Not a verdict &mdash; a measurement. One number for how much your operation absorbs on its own, seven domains showing where it stops absorbing, and the two where a change would pay for itself fastest.</p>
+    <p class="r-lead" id="rLead">Not a verdict, a measurement. One number for how much your operation absorbs on its own, seven domains showing where it stops absorbing, and the two where a change would pay for itself fastest.</p>
 
     <div class="ds-box">
-      <div class="ds-kicker">Design Score &mdash; questions 01 to 07</div>
+      <div class="ds-kicker">Design Score, questions 01 to 07</div>
       <div class="ds-num" id="rScore"></div>
       <div class="ds-band" id="rBand"></div>
       <p class="ds-body" id="rBandBody"></p>
       <p class="ds-note"><strong style="color:var(--white);">A score is a starting position, not a report card.</strong> It measures how much of an ordinary week your design absorbs before it reaches a person. It is also the number that moves the moment you change something structural, which is the whole point of measuring it.</p>
     </div>
 
-    <div class="dc-kicker" style="margin-top:34px;">The seven domains &mdash; where that score comes from</div>
+    <div class="dc-kicker" style="margin-top:34px;">The seven domains, where that score comes from</div>
     <p style="color:var(--grey);font-size:13px;margin:-6px 0 14px;">Each scored 0 to 3. The two lowest are where your design is being asked to do the most.</p>
     <div class="dom-rank" id="rRank"></div>
 
     <div class="bl-box">
-      <div class="bl-kicker"><b>The Base Line</b> &mdash; questions 08 and 09, separate from the seven domains</div>
+      <div class="bl-kicker"><b>The Base Line</b>questions 08 and 09, separate from the seven domains</div>
       <div class="bl-num" id="rBase"></div>
       <p class="bl-body" id="rBaseBody"></p>
-      <p class="bl-sep">The seven domains score how your operation is built. The Base Line does not score a part of it &mdash; it records what an ordinary day feels like right now. It is not added to your Design Score and it does not change your pattern. It is the mark you measure against when you come back.</p>
+      <p class="bl-sep">The seven domains score how your operation is built. The Base Line does not score a part of it, it records what an ordinary day feels like right now. It is not added to your Design Score and it does not change your pattern. It is the mark you measure against when you come back.</p>
     </div>
 
     <h2 class="dc-h2" style="margin-bottom:24px;" id="rBlocksHead">The two carrying the most</h2>
@@ -377,12 +377,12 @@ h2.dc-h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.4vw,
 
     <p class="r-close">Here is the part worth sitting with: both of those are <strong style="color:var(--white);">design</strong> problems, and design problems are the fixable kind. They are not about trying harder, hiring better, or caring more. Something in the structure is asking a person to absorb what the system should be absorbing, and structure is the one thing in your venue you can actually change on purpose.</p>
 
-    <div class="dc-kicker" style="margin-top:34px;">Next steps &mdash; start without me</div>
+    <div class="dc-kicker" style="margin-top:34px;">Next steps, start without me</div>
     <p style="color:var(--grey);font-size:13px;margin:-6px 0 18px;">One small move per domain. None of these need a budget, a consultant or anyone's permission. They are here to prove the domain moves.</p>
     <div id="rMoves"></div>
 
     <div class="r-cta">
-      <div class="r-cta-kicker">Free &mdash; 30 minutes</div>
+      <div class="r-cta-kicker">Free, 30 minutes</div>
       <h3>Not sure what your pattern means? I will read it with you.</h3>
       <p>A free thirty-minute call. We walk through your pattern together, I tell you where your design problems are actually concentrated, and you leave with a clear picture of what calm would look like in your specific operation. No pitch, no obligation, and it is useful whether or not we ever work together.</p>
       <a class="btn btn-primary" href="https://calendly.com/julian-foodgamemedia" target="_blank" rel="noopener">Book the free call &rarr;</a>
@@ -745,7 +745,7 @@ window.DC = {
         <div class="bl-kicker" style="color:var(--pink);margin-bottom:10px;">${name}</div>
         <p class="bl-body">${mv.move}</p>
         <p class="bl-body" style="color:var(--grey);font-style:italic;margin-top:10px;">For example: ${mv.eg}</p>
-        <p class="bl-sep" style="margin-top:12px;padding-top:10px;">Go further: <span style="color:var(--white);">The Food Game</span>, ${mv.ref}</p>
+        <p class="bl-sep" style="margin-top:12px;padding-top:10px;">Go further: <span style="color:var(--white);">The Food Game</span>${mv.ref}</p>
       </div>`;
     }).join("");
 

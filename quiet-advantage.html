@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ═══════════════════════════════════════════════════════════════
-     THE QUIET ADVANTAGE TEST — Food Game Media
+     THE QUIET ADVANTAGE TEST, Food Game Media
      File: quiet-advantage.html
      Version: 1.7 | 2026-09-02 (Sydney)
      v1.7: retake mode behind ?r=<access_token>. Landing shows the previous
@@ -27,14 +27,14 @@
            commercial case for calm added, citation line removed. Approved.
      Source docs: QAT_Instrument_Spec_v1.0 (approved), QAT_Copy_Deck_v1.1 (approved)
      Design system: inherited exactly from live index.html (main branch)
-     Backend: Supabase (see QAT_CONFIG below — paste project URL and anon key)
-     Email: Cloudflare Worker + Resend (stage 4 — EMAIL_WORKER_URL optional)
+     Backend: Supabase (see QAT_CONFIG below, paste project URL and anon key)
+     Email: Cloudflare Worker + Resend (stage 4, EMAIL_WORKER_URL optional)
      ═══════════════════════════════════════════════════════════════ -->
 <html lang="en-AU">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Quiet Advantage Test — Food Game Media</title>
+<title>The Quiet Advantage Test: Food Game Media</title>
 <meta name="description" content="Five questions about a flat Tuesday. Four minutes. Free. Find out whether your venue is held up by its design or carried by its people. From The Food Game by Julian Blok.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,7 +140,7 @@ body {
   font-size: 12px; font-weight: 600;
   letter-spacing: 1px; text-transform: uppercase; color: var(--grey);
 }
-.form-group input, .form-group select {
+.form-group input.form-group select {
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   border-radius: 10px; padding: 14px 18px;
@@ -148,9 +148,9 @@ body {
   font-size: 15px; color: var(--white);
   transition: border-color 0.2s; outline: none;
 }
-.form-group input:focus, .form-group select:focus { border-color: var(--pink); }
+.form-group input:focus.form-group select:focus { border-color: var(--pink); }
 .form-error { color: var(--red); font-size: 12px; margin-top: 4px; display: none; }
-.form-group.has-error input, .form-group.has-error select { border-color: var(--red); }
+.form-group.has-error input.form-group.has-error select { border-color: var(--red); }
 .form-group.has-error .form-error { display: block; }
 .form-group select option { background: var(--navy); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -363,7 +363,7 @@ h2.qat-h2 {
   .form-row { grid-template-columns: 1fr; }
   .q-card { padding: 24px 20px; }
   .r-scorecard { padding: 30px 22px; }
-  .acct-box, .pv-modal { padding: 30px 22px; }
+  .acct-box.pv-modal { padding: 30px 22px; }
 }
 </style>
 </head>
@@ -646,7 +646,7 @@ h2.qat-h2 {
   <!-- ═══════ STEP 5: DONE ═══════ -->
   <section class="qat-step" id="step-done">
     <h2 class="qat-h2" id="doneHead">Done.</h2>
-    <p class="qat-sub" id="doneBody">Your result is in your inbox. Install one default a week, in the dull midweek hours when there is actually room to do it. The score that matters is the one that moves: come back in three months.</p>
+    <p class="qat-sub" id="doneBody">Your result is in your inbox. Install one default this week, then watch it weekly for a month. A default is installed when nobody has to remember it, and that takes about four weeks of noticing. The score that matters is the one that moves: come back in three months.</p>
     <p class="qat-sub" style="margin-bottom:0;">Or talk it through first. A free thirty-minute call, no pitch: we read your result together and you leave knowing what to fix first, whether or not we ever speak again.</p>
     <div class="qat-actions">
       <a class="btn btn-primary" href="https://calendly.com/julian-foodgamemedia" target="_blank" rel="noopener">Book a call</a>
@@ -738,7 +738,7 @@ function closePrivacy(){ document.getElementById('pvOverlay').classList.remove('
 
 <script type="module">
 /* ═══════════════════════════════════════════════════════
-   CONFIGURATION — the only block that needs editing.
+   CONFIGURATION, the only block that needs editing.
    Paste values from the Supabase dashboard (Settings > API).
    The anon key is safe to expose client-side; the database
    is protected by row-level security, not by this key.
@@ -820,7 +820,7 @@ const BANDS = [
   { min: 18, name: "Held", reading: "The quiet advantage is already yours, and it is worth saying that almost nobody scores here. The job now is not improvement. It is protection: keep the defaults alive as staff change, and retake the test in three months to make sure the score belongs to the venue and not to a good month." },
   { min: 14, name: "Built, with gaps", reading: "The design is doing most of the carrying, which puts you ahead of most of the industry. But two or three answers show where a person is still doing a system's job, and those are the places a bad fortnight will find first. Your two priority questions below are the map." },
   { min: 9,  name: "Carried", reading: "This venue works because people hold it up, shift after shift. That is admirable and it is expensive: heroics are being spent daily to cover for decisions the business has not made. The good news is that the first fixes cost nothing but a quiet hour midweek. Start with the two below." },
-  { min: 5,  name: "Running on adrenaline", reading: "The ordinary day is being survived rather than run, and the honest answers you just gave are the reason this score is useful rather than insulting. Nothing here says the venue is doomed. It says the design is absent, and design can be installed: one default a week, starting with the two questions below." }
+  { min: 5,  name: "Running on adrenaline", reading: "The ordinary day is being survived rather than run, and the honest answers you just gave are the reason this score is useful rather than insulting. Nothing here says the venue is doomed. It says the design is absent, and design can be installed: one default at a time, each one watched weekly until it sticks, starting with the two questions below." }
 ];
 
 /* Diagnosis blocks (from QAT_Copy_Deck_v1.0, approved) */

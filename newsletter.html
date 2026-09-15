@@ -22,7 +22,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Food Game Weekly Wrap — Archive | Food Game Media</title>
+<title>Food Game Weekly Wrap: Archive | Food Game Media</title>
 <meta name="description" content="Every issue of the Food Game Weekly Wrap. Behavioural, systems-led analysis for Australian hospitality. No fluff. No sponsors. The supplier's lens on an industry that deserves better analysis.">
 <link rel="alternate" type="application/rss+xml" title="Food Game Weekly Wrap" href="https://newsletter.foodgamemedia.com.au/rss.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +83,7 @@ body {
   text-decoration: none; color: var(--grey);
   transition: color 0.2s; text-transform: uppercase;
 }
-.nav-links a:hover, .nav-links a.active { color: var(--pink); }
+.nav-links a:hover.nav-links a.active { color: var(--pink); }
 .nav-cta {
   background: var(--pink) !important;
   color: var(--navy) !important;
@@ -430,7 +430,7 @@ body {
     <div class="page-eyebrow">Food Game Weekly Wrap</div>
     <h1>Every issue. <span>No fluff.</span></h1>
     <p class="page-header-desc">
-      Australian hospitality, dissected every Friday. The news, data, and behavioural patterns that matter — explained with context and the occasional uncomfortable truth. Written through the supplier's lens.
+      Australian hospitality, dissected every Friday. The news, data, and behavioural patterns that matter, explained with context and the occasional uncomfortable truth. Written through the supplier's lens.
     </p>
     <hr class="header-rule">
   </div>
@@ -441,7 +441,7 @@ body {
 
   <div class="archive-controls">
     <div class="archive-count">
-      <span id="issue-count">—</span> issues published
+      <span id="issue-count"></span> issues published
     </div>
     <div class="archive-actions">
       <a class="rss-link" href="https://newsletter.foodgamemedia.com.au/rss.xml">Subscribe by RSS</a>
@@ -610,7 +610,7 @@ function retryArchive() {
 /* ═══ FETCH ARCHIVE ═══ */
 async function loadArchive() {
   try {
-    // Attempt 1: fetch archive.json (preferred — lightweight, structured)
+    // Attempt 1: fetch archive.json (preferred, lightweight, structured)
     const res = await fetch(ARCHIVE_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error('No JSON');
     const data = await res.json();
@@ -641,7 +641,7 @@ async function loadArchive() {
 }
 
 /*
-  parseArchiveHTML — extracts issue data from the archive.html page
+  parseArchiveHTML, extracts issue data from the archive.html page
   exported by the FGWW engine. Looks for data-* attributes on issue cards:
     data-issue-number, data-issue-date, data-issue-title, data-issue-tagline,
     data-issue-summary, data-issue-image, data-issue-alt, data-issue-url
@@ -670,7 +670,7 @@ function parseArchiveHTML(html) {
     return issues;
   }
 
-  // Method B: heuristic — look for anchor tags pointing to newsletter HTML files
+  // Method B: heuristic, look for anchor tags pointing to newsletter HTML files
   const links = doc.querySelectorAll('a[href*="food-game-wrap-"]');
   links.forEach(link => {
     const match = link.href.match(/food-game-wrap-(\d+)\.html/);
