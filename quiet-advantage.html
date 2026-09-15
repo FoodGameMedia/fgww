@@ -747,7 +747,8 @@ function closePrivacy(){ document.getElementById('pvOverlay').classList.remove('
 const QAT_CONFIG = {
   SUPABASE_URL: "https://bokqxbgnbiubwhivedvk.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_wSd5DcxESk5t8w2rX7-8UQ_KtMyVZM9",
-  EMAIL_WORKER_URL: "https://fgm-mail.julian-68d.workers.dev"
+  /* EMAIL_WORKER_URL removed 2026-09-15: the browser must not be
+     able to trigger email. See migration 012. */
 };
 
 /* ═══ Instrument (from QAT_Instrument_Spec_v1.0, approved) ═══ */
@@ -1130,25 +1131,15 @@ window.QAT = {
       }
     }
 
-    if (QAT_CONFIG.EMAIL_WORKER_URL && stored) {
-      try {
-        const resp = await fetch(QAT_CONFIG.EMAIL_WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            to: details.email,
-            first_name: details.first_name,
-            venue_name: details.venue_name,
-            score,
-            band: band.name,
-            priorities
-          })
-        });
-        emailed = resp.ok;
-      } catch (e) {
-        console.error("QAT: email dispatch failed", e);
-      }
-    }
+    /* The browser no longer sends anything. Until 2026-09-15 this posted
+       straight to fgm-mail, which gated the send on the Origin header
+       alone. Origin is a request header: any HTTP client sets it freely,
+       so that endpoint would mail any address for anyone who asked.
+       The result email is now fired by a trigger on qat_submissions
+       carrying the vault secret (migration 012), exactly as the
+       Diagnostic Test and the printable card already work. A stored row
+       IS the send. */
+    emailed = stored;
 
     this.renderResult(emailed);
     btn.disabled = false; btn.textContent = "Score my venue";
