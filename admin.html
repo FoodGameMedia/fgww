@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ═══════════════════════════════════════════════════════════════
-     FOOD GAME MEDIA, CUSTOMER DASHBOARD
+     FOOD GAME MEDIA: CUSTOMER DASHBOARD
      File: admin.html   Version: 1.0 | 2026-09-03 (Sydney)
      Scope: Food Game Media only. Matrix Mate, Venue by Design and
        Xenvia are a later job (FGM_Dashboard_Architecture_v1.0).
@@ -30,7 +30,7 @@ a{color:var(--pink)}
 .hide{display:none!important}
 
 /* top bar */
-.bar{position:sticky;top:0;z-index:50;background:rgba(15,31,56.95);backdrop-filter:blur(16px);
+.bar{position:sticky;top:0;z-index:50;background:rgba(15,31,56,.95);backdrop-filter:blur(16px);
 border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:900}
 .brand span{color:var(--pink)}
@@ -45,14 +45,14 @@ font:600 13px 'DM Sans',sans-serif;cursor:pointer;border:none;transition:.2s;tex
 .btn-o:hover{border-color:var(--pink);color:var(--pink)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btn-sm{padding:6px 12px;font-size:12px}
-input,textarea{background:rgba(255,255,255.04);border:1px solid var(--border);border-radius:8px;
+input,textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;
 padding:11px 14px;font:400 14px 'DM Sans',sans-serif;color:var(--white);outline:none;width:100%}
 input:focus,textarea:focus{border-color:var(--pink)}
 textarea{resize:vertical;min-height:160px;line-height:1.7}
 label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);display:block;margin-bottom:6px}
 
 /* sign in */
-.signin{max-width:380px;margin:14vh auto;padding:36px 34px;background:rgba(255,255,255.03);
+.signin{max-width:380px;margin:14vh auto;padding:36px 34px;background:rgba(255,255,255,.03);
 border:1px solid var(--border);border-radius:14px}
 .signin h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:8px}
 .signin p{color:var(--grey);font-size:14px;margin-bottom:24px}
@@ -64,21 +64,21 @@ border:1px solid var(--border);border-radius:14px}
 /* layout */
 .wrap{max-width:1400px;margin:0 auto;padding:26px 24px 80px}
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px}
-.stat{background:rgba(255,255,255.03);border:1px solid var(--border);border-radius:11px;padding:16px 18px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;padding:16px 18px}
 .stat b{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--pink);display:block;line-height:1.1}
 .stat span{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--grey)}
 
 .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
-.panel{background:rgba(255,255,255.03);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.panel{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:13px;overflow:hidden}
 .phead{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
 .phead h2{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
 .pbody{padding:18px 20px}
 .scroll{max-height:62vh;overflow-y:auto}
 
 /* customer rows */
-.row{padding:13px 20px;border-bottom:1px solid rgba(244,167,185.12);cursor:pointer;transition:background .15s}
-.row:hover{background:rgba(244,167,185.06)}
-.row.sel{background:rgba(244,167,185.10);border-left:3px solid var(--pink);padding-left:17px}
+.row{padding:13px 20px;border-bottom:1px solid rgba(244,167,185,.12);cursor:pointer;transition:background .15s}
+.row:hover{background:rgba(244,167,185,.06)}
+.row.sel{background:rgba(244,167,185,.10);border-left:3px solid var(--pink);padding-left:17px}
 .row .r1{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
 .row .nm{font-weight:600;font-size:14px}
 .row .em{font-size:12px;color:var(--grey);word-break:break-all}
@@ -86,10 +86,10 @@ border:1px solid var(--border);border-radius:14px}
 .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
 .tag{font-size:10px;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;
 border:1px solid var(--border);color:var(--grey)}
-.tag.qat{border-color:rgba(244,167,185.5);color:var(--pink)}
-.tag.dc{border-color:rgba(74,222,128.4);color:var(--green)}
-.tag.card{border-color:rgba(251,191,36.4);color:var(--amber)}
-.tag.unsub{border-color:rgba(248,113,113.5);color:var(--red)}
+.tag.qat{border-color:rgba(244,167,185,.5);color:var(--pink)}
+.tag.dc{border-color:rgba(74,222,128,.4);color:var(--green)}
+.tag.card{border-color:rgba(251,191,36,.4);color:var(--amber)}
+.tag.unsub{border-color:rgba(248,113,113,.5);color:var(--red)}
 
 /* detail */
 .det h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
@@ -99,13 +99,13 @@ border:1px solid var(--border);color:var(--grey)}
 .kv dd{color:var(--text-body)}
 .sec{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
 .sec h4{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px}
-.item{background:rgba(255,255,255.03);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:9px;font-size:13px}
+.item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:9px;font-size:13px}
 .item .t{font-size:11px;color:var(--grey);margin-bottom:5px}
 .item .q{color:var(--text-body);margin-top:5px}
 .empty{color:var(--grey);font-size:13px;font-style:italic}
 
 /* email composer */
-.cmp{position:fixed;inset:0;z-index:100;background:rgba(15,31,56.86);backdrop-filter:blur(6px);
+.cmp{position:fixed;inset:0;z-index:100;background:rgba(15,31,56,.86);backdrop-filter:blur(6px);
 padding:24px;overflow-y:auto;display:none}
 .cmp.open{display:flex;align-items:flex-start;justify-content:center}
 .cmpbox{background:var(--navy-mid);border:1px solid var(--border);border-radius:14px;
@@ -197,8 +197,8 @@ const sb = createClient(CFG.URL, CFG.KEY);
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-const fmt = d => d ? new Date(d).toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}) : ", ";
-const fmtT = d => d ? new Date(d).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : ", ";
+const fmt = d => d ? new Date(d).toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}) : ",";
+const fmtT = d => d ? new Date(d).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : ",";
 
 window.DASH = {
   rows: [], sel: null, user: null,
@@ -324,7 +324,7 @@ window.DASH = {
       if (r.help_count) t.push(`<span class="tag">Asked for help</span>`);
       if (r.unsubscribed) t.push(`<span class="tag unsub">Unsubscribed</span>`);
       return `<div class="row${this.sel===r.email?" sel":""}" data-em="${esc(r.email)}">
-        <div class="r1"><span class="nm">${esc(r.name || ", ")}</span><span class="em">${fmt(r.last_seen)}</span></div>
+        <div class="r1"><span class="nm">${esc(r.name || "not given")}</span><span class="em">${fmt(r.last_seen)}</span></div>
         <div class="vn">${esc(r.venue || "")}</div>
         <div class="em">${esc(r.email)}</div>
         <div class="tags">${t.join("")}</div></div>`;
@@ -357,10 +357,10 @@ window.DASH = {
     const S = (title, body) => `<div class="sec"><h4>${title}</h4>${body}</div>`;
     const none = t => `<p class="empty">${t}</p>`;
 
-    const head = `<h3>${esc(r.name || ": ")}</h3><div class="sub">${esc(r.email)}</div>
+    const head = `<h3>${esc(r.name || "not given")}</h3><div class="sub">${esc(r.email)}</div>
       <dl class="kv">
-        <dt>Venue</dt><dd>${esc(r.venue || ", ")}</dd>
-        <dt>Mobile</dt><dd>${esc(r.mobile || ", ")}</dd>
+        <dt>Venue</dt><dd>${esc(r.venue || "not given")}</dd>
+        <dt>Mobile</dt><dd>${esc(r.mobile || "not given")}</dd>
         <dt>Newsletter</dt><dd>${r.unsubscribed ? "Unsubscribed" : (r.fgww_optin ? "Subscribed" : "No")}</dd>
         <dt>Last seen</dt><dd>${fmt(r.last_seen)}</dd>
       </dl>`;
@@ -384,7 +384,8 @@ window.DASH = {
       : none("Nothing asked for.");
 
     const comms = [
-      ...(sends.data||[]).map(s=>({t:s.dispatched_at, l:`Lifecycle ${s.kind}`, ok:s.ok}))...(out.data||[]).map(o=>({t:o.sent_at, l:o.subject, ok:o.ok}))
+      ...(sends.data||[]).map(s=>({t:s.dispatched_at, l:`Lifecycle ${s.kind}`, ok:s.ok})),
+      ...(out.data||[]).map(o=>({t:o.sent_at, l:o.subject, ok:o.ok}))
     ].sort((a,b)=> new Date(b.t)-new Date(a.t));
     const commsHtml = comms.length ? comms.map(c=>`<div class="item">
         <div class="t">${fmtT(c.t)} &middot; ${c.ok===true?"delivered":c.ok===false?"failed":"pending"}</div>
