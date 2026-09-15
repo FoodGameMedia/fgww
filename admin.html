@@ -192,7 +192,7 @@ const CFG = {
   WORKER: "https://fgm-lifecycle.julian-68d.workers.dev"
 };
 
-const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
 const sb = createClient(CFG.URL, CFG.KEY);
 
 const $ = id => document.getElementById(id);
@@ -341,10 +341,10 @@ window.DASH = {
     $("detail").innerHTML = `<p class="empty">Loading…</p>`;
 
     const [qat, dc, cards, out] = await Promise.all([
-      sb.from("qat_submissions").select("*").ilike("email", email).order("created_at",{ascending:false}),
-      sb.from("dc_submissions").select("*").ilike("email", email).order("created_at",{ascending:false}),
-      sb.from("card_downloads").select("*").ilike("email", email).order("created_at",{ascending:false}),
-      sb.from("outbound_log").select("*").ilike("to_email", email).order("sent_at",{ascending:false})
+      sb.from("qat_submissions").select("*").eq("email", email).order("created_at",{ascending:false}),
+      sb.from("dc_submissions").select("*").eq("email", email).order("created_at",{ascending:false}),
+      sb.from("card_downloads").select("*").eq("email", email).order("created_at",{ascending:false}),
+      sb.from("outbound_log").select("*").eq("to_email", email).order("sent_at",{ascending:false})
     ]);
 
     const ids = (qat.data||[]).map(x=>x.id);
@@ -367,7 +367,7 @@ window.DASH = {
 
     const qatHtml = (qat.data||[]).length ? (qat.data).map(s=>`<div class="item">
         <div class="t">${fmtT(s.created_at)}${s.retake_of ? " &middot; retake" : ""}</div>
-        <strong>${s.score}/20, ${esc(s.band)}</strong>
+        <strong>${esc(s.score)}/20, ${esc(s.band)}</strong>
         <div class="q">${esc(s.venue_type||"")}${s.suburb?", "+esc(s.suburb):""}${s.state?" "+esc(s.state):""}</div>
       </div>`).join("") : none("No Quiet Advantage Test.");
 
@@ -376,11 +376,11 @@ window.DASH = {
         const p = Array.isArray(s.priorities) ? s.priorities : [];
         return `<div class="item"><div class="t">${fmtT(s.created_at)}</div>
         <strong>Pressure: ${p.length ? esc(p.join(", ").replace(/_/g," ")) : "none"}</strong>
-        <div class="q">Design Score ${dsTotal(s)} &middot; Base Line ${s.calm_reading}/6</div></div>`;
+        <div class="q">Design Score ${dsTotal(s)} &middot; Base Line ${esc(s.calm_reading)}/6</div></div>`;
       }).join("") : none("No Diagnostic Test.");
 
     const helpHtml = (help.data||[]).length ? (help.data).map(h=>`<div class="item">
-        <div class="t">${fmtT(h.created_at)}</div><div class="q">${esc(h.request_text)}</div></div>`).join()
+        <div class="t">${fmtT(h.created_at)}</div><div class="q">${esc(h.request_text)}</div></div>`).join("")
       : none("Nothing asked for.");
 
     const comms = [
@@ -432,7 +432,7 @@ window.DASH = {
     await new Promise(r => setTimeout(r, 2500));
     await sb.rpc("fgm_settle_all");
     const { data: rows } = await sb.from("outbound_log").select("ok,http_status")
-      .ilike("to_email", to).order("sent_at", { ascending: false }).limit(1);
+      .eq("to_email", to).order("sent_at", { ascending: false }).limit(1);
     const res = rows && rows[0];
     b.disabled = false;
     if (res && res.ok) { m.className = "msg ok"; m.textContent = "Sent."; setTimeout(() => { this.closeCmp(); this.open(to); }, 900); }

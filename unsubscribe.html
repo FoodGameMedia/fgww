@@ -16,6 +16,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unsubscribed: Food Game Media</title>
 <meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -190,7 +191,8 @@ h1 {
   <section class="u-state active" id="state-working">
     <div class="u-kicker">One moment</div>
     <h1>Taking you off the list.</h1>
-    <p>This takes a second.</p>
+    <p>Click below and you are off the list. Nothing else happens.</p>
+    <button class="btn btn-primary" id="confirmBtn" style="margin-top:18px;">Confirm unsubscribe</button>
   </section>
 
   <section class="u-state" id="state-done">
@@ -248,13 +250,22 @@ function show(id) {
   document.getElementById(id).classList.add("active");
 }
 
-const token = new URLSearchParams(location.search).get("u") || "";
+/* Prefer the fragment: it is never sent to a server or in a Referer.
+       The query string is still read so links already in inboxes keep working. */
+    const token = (new URLSearchParams(location.hash.replace(/^#/, "")).get("u")
+                || new URLSearchParams(location.search).get("u") || "").trim();
+    history.replaceState(null, "", location.pathname);
 
-if (!/^[0-9a-f-]{36}$/i.test(token)) {
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID.test(token)) {
   show("state-error");
 } else {
-  try {
-    const r = await fetch(CONFIG.SUPABASE_URL + "/rest/v1/rpc/qat_unsubscribe", {
+  /* Wait for a real click. A link scanner that merely fetches the URL,
+     Outlook Safe Links and the like, must not unsubscribe somebody. */
+  document.getElementById("confirmBtn").addEventListener("click", async () => {
+    document.getElementById("confirmBtn").disabled = true;
+    try {
+      const r = await fetch(CONFIG.SUPABASE_URL + "/rest/v1/rpc/fgm_unsubscribe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -263,11 +274,15 @@ if (!/^[0-9a-f-]{36}$/i.test(token)) {
       },
       body: JSON.stringify({ p_token: token })
     });
-    show(r.ok ? "state-done" : "state-error");
-  } catch (e) {
-    console.error("unsubscribe failed", e);
-    show("state-error");
-  }
+    /* fgm_unsubscribe returns true only when a row was actually marked,
+           across BOTH instruments. A bare 2xx is not success. */
+        const marked = r.ok ? await r.json().catch(() => false) : false;
+        show(marked === true ? "state-done" : "state-error");
+    } catch (e) {
+      console.error("unsubscribe failed", e);
+      show("state-error");
+    }
+  });
 }
 </script>
 

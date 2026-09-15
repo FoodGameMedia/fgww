@@ -1,0 +1,24 @@
+# Netlify applies these to every response.
+# Added 2026-09-15 after the security review: the site carried no
+# headers beyond HSTS, so the dashboard could be framed by anyone.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# The dashboard holds every customer record, so it gets a real CSP.
+# 'unsafe-inline' on script-src is needed because the page logic is
+# inline; no third-party script host is allowed but the pinned build.
+/admin.html
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://bokqxbgnbiubwhivedvk.supabase.co; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/help.html
+  X-Robots-Tag: noindex, nofollow
+
+/unsubscribe
+  X-Robots-Tag: noindex, nofollow

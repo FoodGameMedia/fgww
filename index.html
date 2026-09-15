@@ -1637,7 +1637,7 @@ function saveCMS() {
 function applyCMS(d) {
   if (d.heroTagline) document.querySelector('.hero-sub').textContent = d.heroTagline;
   if (d.heroDesc) document.querySelector('.hero-desc').textContent = d.heroDesc;
-  if (d.subscribeUrl) document.getElementById('subscribe-btn').href = d.subscribeUrl;
+  if (d.subscribeUrl && /^https?:\/\//i.test(d.subscribeUrl)) document.getElementById('subscribe-btn').href = d.subscribeUrl;
 }
 
 // Subscribe now routes through the contact form. Preselecting the interest is what

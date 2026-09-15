@@ -467,7 +467,14 @@ function setSort(order) {
   renderArticles();
 }
 
-function renderArticles() {
+/* Never let a URL from the archive feed reach an href unchecked:
+   a javascript: value would execute on click. */
+    function safeUrl(u) {
+      const s = String(u || "");
+      return /^https?:\/\//i.test(s) ? escapeHTML(s) : "#";
+    }
+
+    function renderArticles() {
   const grid = document.getElementById('issueGrid');
   const sorted = sortOrder === 'newest' ? [...allArticles] : [...allArticles].reverse();
 
@@ -481,10 +488,10 @@ function renderArticles() {
   grid.innerHTML = sorted.map((article, idx) => {
     const isLatest = idx === 0 && sortOrder === 'newest';
     return `
-      <a class="issue-card" href="${article.url}" aria-label="Read: ${escapeHTML(article.headline)}">
+      <a class="issue-card" href="${safeUrl(article.url)}" rel="noopener" aria-label="Read: ${escapeHTML(article.headline)}">
         <div class="card-header">
           <div class="issue-number">The Contrarian</div>
-          <div class="issue-date">${article.date || ''}</div>
+          <div class="issue-date">${escapeHTML(article.date || '')}</div>
         </div>
         <div class="card-body">
           <div class="issue-title">${escapeHTML(article.headline || '')}</div>

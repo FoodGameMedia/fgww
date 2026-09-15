@@ -859,7 +859,7 @@ const TIE_ORDER = ["q2", "q3", "q4", "q1", "q5"];
 let supabase = null;
 const configured = QAT_CONFIG.SUPABASE_URL.startsWith("https://");
 if (configured) {
-  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
   supabase = createClient(QAT_CONFIG.SUPABASE_URL, QAT_CONFIG.SUPABASE_ANON_KEY);
 } else {
   console.warn("QAT: Supabase not configured. The test runs, but nothing is stored or emailed. Paste the project URL and anon key into QAT_CONFIG.");

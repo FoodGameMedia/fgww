@@ -534,7 +534,14 @@ function setSort(order) {
   renderIssues();
 }
 
-function renderIssues() {
+/* Never let a URL from the archive feed reach an href unchecked:
+   a javascript: value would execute on click. */
+    function safeUrl(u) {
+      const s = String(u || "");
+      return /^https?:\/\//i.test(s) ? escapeHTML(s) : "#";
+    }
+
+    function renderIssues() {
   const grid = document.getElementById('issueGrid');
   const sorted = [...allIssues].sort((a, b) => {
     return sortOrder === 'newest'
@@ -559,14 +566,14 @@ function renderIssues() {
     const blurb = issue.summary || issue.tagline || issue.description || '';
 
     return `
-      <a class="issue-card" href="${url}" target="_blank" rel="noopener" aria-label="Read issue ${issue.number}: ${escapeHTML(issue.title || '')}">
+      <a class="issue-card" href="${safeUrl(url)}" target="_blank" rel="noopener" aria-label="Read issue ${issue.number}: ${escapeHTML(issue.title || '')}">
         <div class="card-image">
           <img src="${escapeHTML(image)}" alt="${escapeHTML(alt)}" loading="lazy"
                onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">
         </div>
         <div class="card-header">
           <div class="issue-number">Issue #${issue.number}</div>
-          <div class="issue-date">${issue.date || ''}</div>
+          <div class="issue-date">${escapeHTML(issue.date || '')}</div>
         </div>
         <div class="card-body">
           <div class="issue-title">${escapeHTML(issue.title || 'Food Game Weekly Wrap')}</div>

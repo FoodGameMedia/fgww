@@ -587,7 +587,7 @@ const CALM_READING = [
 /* ═══ Supabase ═══ */
 let supabase = null;
 try {
-  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
   supabase = createClient(DC_CONFIG.SUPABASE_URL, DC_CONFIG.SUPABASE_ANON_KEY);
 } catch (e) {
   console.error("DC: Supabase client failed to load", e);
