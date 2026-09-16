@@ -751,6 +751,73 @@ const QAT_CONFIG = {
      able to trigger email. See migration 012. */
 };
 
+/* ═══ Turnstile gated intake (2026-09-16, migration 014) ═══════════
+   The browser no longer writes to Supabase. It asks Cloudflare for a
+   challenge token, posts that to the Worker, and the Worker verifies
+   the token before anything is stored. Until today a direct POST to
+   PostgREST walked straight past the honeypot, which is checked only
+   in this script and therefore only by real browsers. */
+const FGM_SUBMIT_URL = "https://fgm-lifecycle.julian-68d.workers.dev/submit";
+const FGM_SITEKEY    = "0x4AAAAAAE3gLsyHLUhkuM_W";
+
+let __fgmWidget = null, __fgmResolve = null, __fgmReject = null;
+
+function fgmChallengeHost() {
+  let host = document.getElementById("fgm-turnstile");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "fgm-turnstile";
+    /* Fixed and centred so that on the rare occasion Managed mode
+       shows a visible challenge, it is never off screen or buried in
+       a step the person has already scrolled past. */
+    host.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:9999";
+    document.body.appendChild(host);
+  }
+  return host;
+}
+
+/* Resolves with a fresh single-use token, or rejects. It never
+   resolves empty, so a caller cannot mistake a failure for a quiet
+   success and carry on as if the person was checked. */
+function fgmToken() {
+  return new Promise((resolve, reject) => {
+    if (!window.turnstile) return reject(new Error("challenge unavailable"));
+    __fgmResolve = resolve;
+    __fgmReject  = reject;
+    const host = fgmChallengeHost();
+    if (__fgmWidget === null) {
+      __fgmWidget = window.turnstile.render(host, {
+        sitekey: FGM_SITEKEY,
+        callback: t => { const r = __fgmResolve; __fgmResolve = null; __fgmReject = null; if (r) r(t); },
+        "error-callback": () => { const j = __fgmReject; __fgmResolve = null; __fgmReject = null; if (j) j(new Error("challenge failed")); },
+        "expired-callback": () => { if (__fgmWidget !== null) window.turnstile.reset(__fgmWidget); }
+      });
+    } else {
+      const existing = window.turnstile.getResponse(__fgmWidget);
+      if (existing) { __fgmResolve = null; __fgmReject = null; return resolve(existing); }
+      window.turnstile.reset(__fgmWidget);
+    }
+    setTimeout(() => {
+      const j = __fgmReject; __fgmResolve = null; __fgmReject = null;
+      if (j) j(new Error("challenge timed out"));
+    }, 30000);
+  });
+}
+
+async function fgmSubmit(kind, payload) {
+  const token = await fgmToken();
+  const res = await fetch(FGM_SUBMIT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kind, token, payload })
+  });
+  let info = {};
+  try { info = await res.json(); } catch (e) {}
+  if (__fgmWidget !== null && window.turnstile) window.turnstile.reset(__fgmWidget);
+  if (!res.ok) throw new Error(info.error || ("submit failed " + res.status));
+  return info.id || null;
+}
+
 /* ═══ Instrument (from QAT_Instrument_Spec_v1.0, approved) ═══ */
 const QUESTIONS = [
   {
@@ -1115,16 +1182,13 @@ window.QAT = {
            SELECT policy, and anonymous submitters have none, so PostgREST
            aborts the whole insert with 42501. Insert only, then trust the
            absence of an error. */
-        const { error } = await supabase
-          .from("qat_submissions")
-          .insert({
-            ...details,
-            answers,
-            score,
-            band: band.name,
-            priorities
-          });
-        if (error) throw error;
+        await fgmSubmit("qat", {
+          ...details,
+          answers,
+          score,
+          band: band.name,
+          priorities
+        });
         stored = true;
       } catch (e) {
         console.error("QAT: submission storage failed", e);
@@ -1290,5 +1354,6 @@ mobileField.addEventListener("input", () => {
 });
 </script>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </body>
 </html>
